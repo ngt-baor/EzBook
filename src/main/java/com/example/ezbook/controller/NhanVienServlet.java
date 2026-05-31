@@ -18,18 +18,42 @@ import java.io.IOException;
         "/nhan-vien/sua"
 })
 public class NhanVienServlet extends HttpServlet {
-    private NhanVienRepository nhanVienRepository = new NhanVienRepository();
+    private final NhanVienRepository nhanVienRepository = new NhanVienRepository();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String uri = req.getRequestURI();
         if (uri.contains("hien-thi")) {
             hienThi(req, resp);
-        } else if (uri.contains("view-update")) {
-            viewUpdate(req, resp);
-        } else if (uri.contains("xoa")) {
-            xoaNhanVien(req, resp);
+            return;
         }
+        if (uri.contains("view-update")) {
+            viewUpdate(req, resp);
+            return;
+        }
+        if (uri.contains("xoa")) {
+            xoaNhanVien(req, resp);
+            return;
+        }
+        resp.sendRedirect(req.getContextPath() + "/nhan-vien/hien-thi");
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String uri = req.getRequestURI();
+        if (uri.contains("them")) {
+            themNhanVien(req, resp);
+            return;
+        }
+        if (uri.contains("sua")) {
+            suaNhanVien(req, resp);
+            return;
+        }
+        if (uri.contains("xoa")) {
+            xoaNhanVien(req, resp);
+            return;
+        }
+        resp.sendRedirect(req.getContextPath() + "/nhan-vien/hien-thi");
     }
 
     private void hienThi(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -46,17 +70,7 @@ public class NhanVienServlet extends HttpServlet {
     private void xoaNhanVien(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String id = req.getParameter("id");
         nhanVienRepository.xoa(id);
-        resp.sendRedirect("/nhan-vien/hien-thi");
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String uri = req.getRequestURI();
-        if (uri.contains("them")) {
-            themNhanVien(req, resp);
-        } else if (uri.contains("sua")) {
-            suaNhanVien(req, resp);
-        }
+        resp.sendRedirect(req.getContextPath() + "/nhan-vien/hien-thi");
     }
 
     private void themNhanVien(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -65,12 +79,11 @@ public class NhanVienServlet extends HttpServlet {
         String sdt = req.getParameter("sdt");
         String vaiTro = req.getParameter("vai_tro");
         Boolean trangThai = Boolean.valueOf(req.getParameter("trang_thai"));
-        String matKhau = req.getParameter("mat_khau");
 
-        NhanVien nv = new NhanVien(id, hoTen, sdt, vaiTro, trangThai, matKhau);
+        NhanVien nv = new NhanVien(id, hoTen, sdt, vaiTro, trangThai, null);
         nhanVienRepository.them(nv);
 
-        resp.sendRedirect("/nhan-vien/hien-thi");
+        resp.sendRedirect(req.getContextPath() + "/nhan-vien/hien-thi");
     }
 
     private void suaNhanVien(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -79,11 +92,10 @@ public class NhanVienServlet extends HttpServlet {
         String sdt = req.getParameter("sdt");
         String vaiTro = req.getParameter("vai_tro");
         Boolean trangThai = Boolean.valueOf(req.getParameter("trang_thai"));
-        String matKhau = req.getParameter("mat_khau");
 
-        NhanVien nv = new NhanVien(id, hoTen, sdt, vaiTro, trangThai, matKhau);
+        NhanVien nv = new NhanVien(id, hoTen, sdt, vaiTro, trangThai, null);
         nhanVienRepository.update(nv);
 
-        resp.sendRedirect("/nhan-vien/hien-thi");
+        resp.sendRedirect(req.getContextPath() + "/nhan-vien/hien-thi");
     }
 }

@@ -5,7 +5,7 @@
          version="5.0">
 
     <welcome-file-list>
-        <welcome-file>pages/giao-dien-nhan-vien.jsp</welcome-file>
+        <welcome-file>auth/login.jsp</welcome-file>
     </welcome-file-list>
 
 </web-app>

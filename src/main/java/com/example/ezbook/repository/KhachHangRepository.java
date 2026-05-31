@@ -68,6 +68,45 @@ public class KhachHangRepository {
         return null;
     }
 
+    public KhachHang findBySdt(String sdt) {
+        String sql = "SELECT * FROM KhachHang WHERE sdt = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, sdt);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new KhachHang(
+                        rs.getString("id"),
+                        rs.getString("ho_ten"),
+                        rs.getString("sdt"),
+                        rs.getString("ngay_sinh")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String taoKhachHangOnline(String hoTen, String sdt) {
+        String id = "KH" + System.currentTimeMillis();
+        String sql = "INSERT INTO KhachHang (id, ho_ten, sdt, ngay_sinh) VALUES (?, ?, ?, ?)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, id);
+            ps.setString(2, hoTen);
+            ps.setString(3, sdt);
+            ps.setNull(4, Types.DATE);
+            int row = ps.executeUpdate();
+            if (row > 0) {
+                return id;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void update(KhachHang kh) {
         String sql = "UPDATE KhachHang SET ho_ten = ?, sdt = ?, ngay_sinh = ? WHERE id = ?";
         try {

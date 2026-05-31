@@ -292,4 +292,41 @@ public class BookingRepository {
         }
         return result;
     }
+
+    public List<BookingView> getByKhachHangSdt(String sdt) {
+        String sql = "SELECT b.id, b.khach_hang_id, kh.ho_ten AS khach_hang_ten, kh.sdt AS khach_hang_sdt, " +
+                "b.nhan_vien_id, nv.ho_ten AS nhan_vien_ten, b.dich_vu_id, dv.ten_dich_vu, " +
+                "b.thoi_gian_hen, b.trang_thai_booking, b.ghi_chu_khach_hang " +
+                "FROM Booking b " +
+                "JOIN KhachHang kh ON b.khach_hang_id = kh.id " +
+                "LEFT JOIN NhanVien nv ON b.nhan_vien_id = nv.id " +
+                "JOIN DichVu dv ON b.dich_vu_id = dv.id " +
+                "WHERE kh.sdt = ? " +
+                "ORDER BY b.thoi_gian_hen DESC";
+
+        List<BookingView> result = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, sdt);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                result.add(new BookingView(
+                        rs.getString("id"),
+                        rs.getString("khach_hang_id"),
+                        rs.getString("khach_hang_ten"),
+                        rs.getString("khach_hang_sdt"),
+                        rs.getString("nhan_vien_id"),
+                        rs.getString("nhan_vien_ten"),
+                        rs.getString("dich_vu_id"),
+                        rs.getString("ten_dich_vu"),
+                        rs.getTimestamp("thoi_gian_hen"),
+                        normalizeStatus(rs.getString("trang_thai_booking")),
+                        rs.getString("ghi_chu_khach_hang")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

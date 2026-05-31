@@ -1,12 +1,19 @@
 package com.example.ezbook.controller;
 
+import com.example.ezbook.entity.AccountInfo;
 import com.example.ezbook.repository.AccountRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @WebServlet(name = "accountServlet", value = {
@@ -15,15 +22,35 @@ import java.util.UUID;
         "/account/doi-mat-khau",
         "/account/cap-nhat-ho-so",
         "/account/upload-avatar",
+        "/account/ho-so",
+        "/admin/quan-ly-tai-khoan",
         "/admin/quan-ly-tai-khoan/trang-thai"
 })
 @MultipartConfig(
-        fileSizeThreshold = 1024 * 1024 * 2, // 2MB
-        maxFileSize = 1024 * 1024 * 10,      // 10MB
-        maxRequestSize = 1024 * 1024 * 50    // 50MB
+        fileSizeThreshold = 1024 * 1024 * 2,
+        maxFileSize = 1024 * 1024 * 10,
+        maxRequestSize = 1024 * 1024 * 50
 )
 public class AccountServlet extends HttpServlet {
-    private AccountRepository accountRepo = new AccountRepository();
+    private final AccountRepository accountRepo = new AccountRepository();
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String uri = req.getRequestURI();
+        if (uri.contains("/account/ho-so")) {
+            hienThiHoSo(req, resp);
+            return;
+        }
+        if (uri.contains("/admin/quan-ly-tai-khoan/trang-thai")) {
+            xuLyKhoaMoTaiKhoan(req, resp);
+            return;
+        }
+        if (uri.contains("/admin/quan-ly-tai-khoan")) {
+            hienThiQuanLyTaiKhoan(req, resp);
+            return;
+        }
+        resp.sendRedirect(req.getContextPath() + "/auth/login.jsp");
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -31,128 +58,227 @@ public class AccountServlet extends HttpServlet {
 
         if (uri.contains("dang-ky")) {
             xuLyDangKy(req, resp);
-        } else if (uri.contains("quen-mat-khau")) {
+            return;
+        }
+        if (uri.contains("quen-mat-khau")) {
             xuLyQuenMatKhau(req, resp);
-        } else if (uri.contains("doi-mat-khau")) {
+            return;
+        }
+        if (uri.contains("doi-mat-khau")) {
             xuLyDoiMatKhau(req, resp);
-        } else if (uri.contains("cap-nhat-ho-so")) {
+            return;
+        }
+        if (uri.contains("cap-nhat-ho-so")) {
             xuLyCapNhatHoSo(req, resp);
-        } else if (uri.contains("upload-avatar")) {
+            return;
+        }
+        if (uri.contains("upload-avatar")) {
             xuLyUploadAvatar(req, resp);
+            return;
         }
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String uri = req.getRequestURI();
-        if (uri.contains("trang-thai")) {
+        if (uri.contains("/admin/quan-ly-tai-khoan/trang-thai")) {
             xuLyKhoaMoTaiKhoan(req, resp);
+            return;
         }
+
+        resp.sendRedirect(req.getContextPath() + "/auth/login.jsp");
     }
 
-    // =========================================================================
-    // 1. ĐĂNG KÝ (Mặc định vai trò USER - Khách hàng)
-    // =========================================================================
     private void xuLyDangKy(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String sdt = req.getParameter("sdt");
-        String hoTen = req.getParameter("ho_ten");
-        String matKhau = req.getParameter("mat_khau");
+        String sdt = trim(req.getParameter("sdt"));
+        String hoTen = trim(req.getParameter("ho_ten"));
+        String matKhau = trim(req.getParameter("mat_khau"));
 
-        // Gọi Repository tạo đồng thời bản ghi ở bảng TaiKhoan và KhachHang
+        if (sdt == null || hoTen == null || matKhau == null) {
+            resp.sendRedirect(req.getContextPath() + "/khach-hang/dang-ky.jsp?error=missing-data");
+            return;
+        }
+
         boolean thanhCong = accountRepo.registerUser(sdt, matKhau, hoTen);
         if (thanhCong) {
-            resp.sendRedirect("/auth/login.jsp?msg=register-success");
-        } else {
-            resp.sendRedirect("/auth/register.jsp?error=exist");
-        }
-    }
-
-    // =========================================================================
-    // 2. ĐỔI MẬT KHẨU (Khi đã đăng nhập)
-    // =========================================================================
-    private void xuLyDoiMatKhau(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        HttpSession session = req.getSession(false);
-        String username = req.getParameter("username");
-        if ((username == null || username.trim().isEmpty()) && session != null) {
-            username = (String) session.getAttribute("username");
-        }
-        if (username == null || username.trim().isEmpty()) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing username");
+            resp.sendRedirect(req.getContextPath() + "/khach-hang/dang-nhap.jsp?msg=register-success");
             return;
         }
-        String mkCu = req.getParameter("mat_khau_cu");
-        String mkMoi = req.getParameter("mat_khau_moi");
-
-        if (accountRepo.validatePassword(username, mkCu)) {
-            accountRepo.updatePassword(username, mkMoi);
-            resp.sendRedirect("/account/profile.jsp?msg=change-pass-success");
-        } else {
-            resp.sendRedirect("/account/profile.jsp?error=wrong-old-pass");
-        }
+        resp.sendRedirect(req.getContextPath() + "/khach-hang/dang-ky.jsp?error=register-failed");
     }
 
-    // =========================================================================
-    // 3. QUÊN MẬT KHẨU
-    // =========================================================================
     private void xuLyQuenMatKhau(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String username = req.getParameter("username");
-        String usernameSafe = username == null ? "" : username.trim();
-        String mkMoi = req.getParameter("mat_khau_moi");
-        String mkMoiConfirm = req.getParameter("mat_khau_moi_xac_nhan");
+        String username = trim(req.getParameter("username"));
+        String mkMoi = trim(req.getParameter("mat_khau_moi"));
+        String mkMoiConfirm = trim(req.getParameter("mat_khau_moi_xac_nhan"));
 
-        if (usernameSafe.isEmpty()) {
-            resp.sendRedirect("/auth/forgot-password.jsp?error=missing-username");
+        if (username == null) {
+            resp.sendRedirect(req.getContextPath() + "/auth/forgot-password.jsp?error=missing-username");
             return;
         }
-        if (mkMoi == null || mkMoi.trim().isEmpty() || mkMoiConfirm == null || mkMoiConfirm.trim().isEmpty()) {
-            resp.sendRedirect("/auth/forgot-password.jsp?error=missing-data");
+        if (mkMoi == null || mkMoiConfirm == null) {
+            resp.sendRedirect(req.getContextPath() + "/auth/forgot-password.jsp?error=missing-data");
             return;
         }
         if (!mkMoi.equals(mkMoiConfirm)) {
-            resp.sendRedirect("/auth/forgot-password.jsp?error=password-not-match");
+            resp.sendRedirect(req.getContextPath() + "/auth/forgot-password.jsp?error=password-not-match");
             return;
         }
-        if (!accountRepo.existsByUsername(usernameSafe)) {
-            resp.sendRedirect("/auth/forgot-password.jsp?error=username-not-found");
+        if (!accountRepo.existsByUsername(username)) {
+            resp.sendRedirect(req.getContextPath() + "/auth/forgot-password.jsp?error=username-not-found");
             return;
         }
 
-        accountRepo.updatePassword(usernameSafe, mkMoi);
-        resp.sendRedirect("/auth/login.jsp?msg=reset-success");
+        boolean ok = accountRepo.updatePassword(username, mkMoi);
+        if (!ok) {
+            resp.sendRedirect(req.getContextPath() + "/auth/forgot-password.jsp?error=system");
+            return;
+        }
+
+        resp.sendRedirect(req.getContextPath() + "/auth/login.jsp?msg=reset-success");
     }
 
-    // =========================================================================
-    // 4. UPLOAD AVATAR
-    // =========================================================================
-    private void xuLyUploadAvatar(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void xuLyDoiMatKhau(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession(false);
-        String username = req.getParameter("username");
-        if ((username == null || username.trim().isEmpty()) && session != null) {
-            username = (String) session.getAttribute("username");
-        }
-        if (username == null || username.trim().isEmpty()) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing username");
+        String username = resolveUsername(req, session);
+        if (username == null) {
+            resp.sendRedirect(req.getContextPath() + "/auth/login.jsp?error=login-required");
             return;
         }
 
-        // Đường dẫn đến thư mục chứa ảnh trong project
+        String mkCu = trim(req.getParameter("mat_khau_cu"));
+        String mkMoi = trim(req.getParameter("mat_khau_moi"));
+        String mkMoiXacNhan = trim(req.getParameter("mat_khau_moi_xac_nhan"));
+
+        if (mkCu == null || mkMoi == null || mkMoiXacNhan == null) {
+            resp.sendRedirect(req.getContextPath() + "/account/ho-so?error=missing-data");
+            return;
+        }
+        if (!mkMoi.equals(mkMoiXacNhan)) {
+            resp.sendRedirect(req.getContextPath() + "/account/ho-so?error=password-not-match");
+            return;
+        }
+
+        if (!accountRepo.validatePassword(username, mkCu)) {
+            resp.sendRedirect(req.getContextPath() + "/account/ho-so?error=wrong-old-pass");
+            return;
+        }
+
+        boolean ok = accountRepo.updatePassword(username, mkMoi);
+        if (ok) {
+            resp.sendRedirect(req.getContextPath() + "/account/ho-so?msg=change-pass-success");
+            return;
+        }
+        resp.sendRedirect(req.getContextPath() + "/account/ho-so?error=change-pass-failed");
+    }
+
+    private void xuLyUploadAvatar(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession(false);
+        String username = resolveUsername(req, session);
+        if (username == null) {
+            resp.sendRedirect(req.getContextPath() + "/auth/login.jsp?error=login-required");
+            return;
+        }
+
         String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads";
         File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) uploadDir.mkdir();
+        if (!uploadDir.exists()) {
+            uploadDir.mkdir();
+        }
 
         Part part = req.getPart("fileAvatar");
-        String fileName = UUID.randomUUID().toString() + "_" + getFileName(part);
+        String fileName = UUID.randomUUID() + "_" + getFileName(part);
         part.write(uploadPath + File.separator + fileName);
 
-        // Lưu đường dẫn tương đối vào DB
         String avatarUrl = "/uploads/" + fileName;
-        accountRepo.updateAvatar(username, avatarUrl);
+        boolean ok = accountRepo.updateAvatar(username, avatarUrl);
 
-        // Cập nhật lại ảnh hiển thị trong Session hiện tại
-        if (session != null) {
+        if (ok && session != null) {
             session.setAttribute("avatar", avatarUrl);
         }
-        resp.sendRedirect("/account/profile.jsp?msg=upload-success");
+
+        resp.sendRedirect(req.getContextPath() + "/account/ho-so" + (ok ? "?msg=upload-success" : "?error=upload-failed"));
+    }
+
+    private void xuLyCapNhatHoSo(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        HttpSession session = req.getSession(false);
+        String username = resolveUsername(req, session);
+        if (username == null) {
+            resp.sendRedirect(req.getContextPath() + "/auth/login.jsp?error=login-required");
+            return;
+        }
+
+        String role = session == null ? null : (String) session.getAttribute("role");
+        String hoTen = trim(req.getParameter("ho_ten"));
+        String sdt = trim(req.getParameter("sdt"));
+
+        if (hoTen == null || sdt == null) {
+            resp.sendRedirect(req.getContextPath() + "/account/ho-so?error=missing-data");
+            return;
+        }
+
+        boolean ok;
+        if ("USER".equals(role)) {
+            ok = accountRepo.updateKhachHangProfile(username, hoTen, sdt);
+            if (ok) {
+                session.setAttribute("customerName", hoTen);
+                session.setAttribute("customerPhone", sdt);
+            }
+        } else {
+            ok = accountRepo.updateNhanVienProfile(username, hoTen, sdt);
+        }
+
+        if (ok) {
+            session.setAttribute("displayName", hoTen);
+            resp.sendRedirect(req.getContextPath() + "/account/ho-so?msg=update-profile-success");
+            return;
+        }
+
+        resp.sendRedirect(req.getContextPath() + "/account/ho-so?error=update-profile-failed");
+    }
+
+    private void hienThiHoSo(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession(false);
+        String username = session == null ? null : (String) session.getAttribute("username");
+        if (username == null || username.isBlank()) {
+            resp.sendRedirect(req.getContextPath() + "/auth/login.jsp?error=login-required");
+            return;
+        }
+
+        AccountInfo accountInfo = accountRepo.findAccountInfo(username);
+        req.setAttribute("accountInfo", accountInfo);
+        req.getRequestDispatcher("/account/profile.jsp").forward(req, resp);
+    }
+
+    private void hienThiQuanLyTaiKhoan(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<AccountInfo> accounts = accountRepo.getAllAccountInfos();
+        req.setAttribute("accounts", accounts);
+        req.getRequestDispatcher("/admin/quan-ly-tai-khoan.jsp").forward(req, resp);
+    }
+
+    private void xuLyKhoaMoTaiKhoan(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        HttpSession session = req.getSession(false);
+        String currentRole = session == null ? null : (String) session.getAttribute("role");
+        if (!"ADMIN".equals(currentRole)) {
+            resp.sendRedirect(req.getContextPath() + "/auth/login.jsp?error=forbidden");
+            return;
+        }
+
+        String targetUsername = trim(req.getParameter("username"));
+        boolean currentStatus = Boolean.parseBoolean(req.getParameter("currentStatus"));
+        String currentUsername = (String) session.getAttribute("username");
+
+        if (targetUsername == null) {
+            resp.sendRedirect(req.getContextPath() + "/admin/quan-ly-tai-khoan?error=missing-user");
+            return;
+        }
+
+        if (targetUsername.equals(currentUsername) && currentStatus) {
+            resp.sendRedirect(req.getContextPath() + "/admin/quan-ly-tai-khoan?error=cannot-lock-self");
+            return;
+        }
+
+        boolean ok = accountRepo.updateAccountStatus(targetUsername, !currentStatus);
+        if (ok) {
+            resp.sendRedirect(req.getContextPath() + "/admin/quan-ly-tai-khoan?msg=status-updated");
+            return;
+        }
+        resp.sendRedirect(req.getContextPath() + "/admin/quan-ly-tai-khoan?error=status-update-failed");
     }
 
     private String getFileName(Part part) {
@@ -164,44 +290,19 @@ public class AccountServlet extends HttpServlet {
         return "default.png";
     }
 
-    // =========================================================================
-    // 5. CẬP NHẬT HỒ SƠ CÁ NHÂN
-    // =========================================================================
-    private void xuLyCapNhatHoSo(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        HttpSession session = req.getSession(false);
-        String username = req.getParameter("username");
-        if ((username == null || username.trim().isEmpty()) && session != null) {
-            username = (String) session.getAttribute("username");
+    private String resolveUsername(HttpServletRequest req, HttpSession session) {
+        String username = trim(req.getParameter("username"));
+        if (username == null && session != null) {
+            username = trim((String) session.getAttribute("username"));
         }
-        if (username == null || username.trim().isEmpty()) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing username");
-            return;
-        }
-        String role = req.getParameter("role");
-        if ((role == null || role.trim().isEmpty()) && session != null) {
-            role = (String) session.getAttribute("role");
-        }
-        String hoTen = req.getParameter("ho_ten");
-        String sdt = req.getParameter("sdt");
-
-        if ("USER".equals(role)) {
-            accountRepo.updateKhachHangProfile(username, hoTen, sdt);
-        } else {
-            accountRepo.updateNhanVienProfile(username, hoTen, sdt);
-        }
-        resp.sendRedirect("/account/profile.jsp?msg=update-profile-success");
+        return username;
     }
 
-    // =========================================================================
-    // 6. KHÓA / MỞ KHÓA TÀI KHOẢN (Chỉ Admin)
-    // =========================================================================
-    private void xuLyKhoaMoTaiKhoan(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String targetUsername = req.getParameter("username");
-        boolean trangThaiHienTai = Boolean.parseBoolean(req.getParameter("currentStatus"));
-
-        // Đảo ngược trạng thái hiện tại (1 thành 0, 0 thành 1)
-        accountRepo.updateAccountStatus(targetUsername, !trangThaiHienTai);
-
-        resp.sendRedirect("/admin/quan-ly-tai-khoan.jsp?msg=status-updated");
+    private String trim(String value) {
+        if (value == null) {
+            return null;
+        }
+        String v = value.trim();
+        return v.isEmpty() ? null : v;
     }
 }
