@@ -20,6 +20,7 @@
 </head>
 <body>
 <h2>Thêm Nhân Viên Mới</h2>
+<p><a href="${pageContext.request.contextPath}/booking/hien-thi">Mo module Booking + Thong ke doanh thu</a></p>
 <form action="/nhan-vien/them" method="post">
     Mã NV: <input type="text" name="id" required> <br><br>
     Họ tên: <input type="text" name="ho_ten" required> <br><br>

@@ -1,11 +1,14 @@
 package com.example.ezbook.repository;
 
 import com.example.ezbook.entity.HoaDon;
+import com.example.ezbook.entity.MonthlyRevenue;
 import com.example.ezbook.util.DBConnect;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HoaDonRepository {
     private Connection connection = null;
@@ -107,5 +110,31 @@ public class HoaDonRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<MonthlyRevenue> thongKeDoanhThuTheoThang(int year) {
+        String sql = "SELECT MONTH(thoi_gian_thanh_toan) AS thang, SUM(thanh_tien) AS doanh_thu " +
+                "FROM HoaDon " +
+                "WHERE thoi_gian_thanh_toan IS NOT NULL " +
+                "AND YEAR(thoi_gian_thanh_toan) = ? " +
+                "GROUP BY MONTH(thoi_gian_thanh_toan)";
+
+        Map<Integer, Double> monthRevenueMap = new HashMap<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, year);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                monthRevenueMap.put(rs.getInt("thang"), rs.getDouble("doanh_thu"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        List<MonthlyRevenue> result = new ArrayList<>();
+        for (int month = 1; month <= 12; month++) {
+            result.add(new MonthlyRevenue(month, monthRevenueMap.getOrDefault(month, 0.0)));
+        }
+        return result;
     }
 }

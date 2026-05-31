@@ -72,11 +72,14 @@ public class AccountServlet extends HttpServlet {
     // =========================================================================
     private void xuLyDoiMatKhau(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession(false);
-        if (session == null || session.getAttribute("username") == null) {
-            resp.sendRedirect(req.getContextPath() + "/auth/login.jsp?error=timeout");
+        String username = req.getParameter("username");
+        if ((username == null || username.trim().isEmpty()) && session != null) {
+            username = (String) session.getAttribute("username");
+        }
+        if (username == null || username.trim().isEmpty()) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing username");
             return;
         }
-        String username = (String) session.getAttribute("username");
         String mkCu = req.getParameter("mat_khau_cu");
         String mkMoi = req.getParameter("mat_khau_moi");
 
@@ -123,11 +126,14 @@ public class AccountServlet extends HttpServlet {
     // =========================================================================
     private void xuLyUploadAvatar(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
-        if (session == null || session.getAttribute("username") == null) {
-            resp.sendRedirect(req.getContextPath() + "/auth/login.jsp?error=timeout");
+        String username = req.getParameter("username");
+        if ((username == null || username.trim().isEmpty()) && session != null) {
+            username = (String) session.getAttribute("username");
+        }
+        if (username == null || username.trim().isEmpty()) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing username");
             return;
         }
-        String username = (String) session.getAttribute("username");
 
         // Đường dẫn đến thư mục chứa ảnh trong project
         String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads";
@@ -143,7 +149,9 @@ public class AccountServlet extends HttpServlet {
         accountRepo.updateAvatar(username, avatarUrl);
 
         // Cập nhật lại ảnh hiển thị trong Session hiện tại
-        session.setAttribute("avatar", avatarUrl);
+        if (session != null) {
+            session.setAttribute("avatar", avatarUrl);
+        }
         resp.sendRedirect("/account/profile.jsp?msg=upload-success");
     }
 
@@ -161,12 +169,18 @@ public class AccountServlet extends HttpServlet {
     // =========================================================================
     private void xuLyCapNhatHoSo(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession(false);
-        if (session == null || session.getAttribute("username") == null) {
-            resp.sendRedirect(req.getContextPath() + "/auth/login.jsp?error=timeout");
+        String username = req.getParameter("username");
+        if ((username == null || username.trim().isEmpty()) && session != null) {
+            username = (String) session.getAttribute("username");
+        }
+        if (username == null || username.trim().isEmpty()) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing username");
             return;
         }
-        String username = (String) session.getAttribute("username");
-        String role = (String) session.getAttribute("role");
+        String role = req.getParameter("role");
+        if ((role == null || role.trim().isEmpty()) && session != null) {
+            role = (String) session.getAttribute("role");
+        }
         String hoTen = req.getParameter("ho_ten");
         String sdt = req.getParameter("sdt");
 

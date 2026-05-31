@@ -5,7 +5,7 @@
          version="5.0">
 
     <welcome-file-list>
-        <welcome-file>nhan-vien/hien-thi.jsp</welcome-file>
+        <welcome-file>pages/giao-dien-nhan-vien.jsp</welcome-file>
     </welcome-file-list>
 
 </web-app>
