@@ -6,13 +6,15 @@ public class NhanVien {
     private String sdt;
     private String vai_tro;
     private boolean trang_thai;
+    private String mat_khau;
 
-    public NhanVien(String id, String ho_ten, String sdt, String vai_tro, boolean trang_thai) {
+    public NhanVien(String id, String ho_ten, String sdt, String vai_tro, boolean trang_thai, String mat_khau) {
         this.id = id;
         this.ho_ten = ho_ten;
         this.sdt = sdt;
         this.vai_tro = vai_tro;
         this.trang_thai = trang_thai;
+        this.mat_khau = mat_khau;
     }
 
     public String getId() {
@@ -53,5 +55,13 @@ public class NhanVien {
 
     public void setTrang_thai(boolean trang_thai) {
         this.trang_thai = trang_thai;
+    }
+
+    public String getMat_khau() {
+        return mat_khau;
+    }
+
+    public void setMat_khau(String mat_khau) {
+        this.mat_khau = mat_khau;
     }
 }

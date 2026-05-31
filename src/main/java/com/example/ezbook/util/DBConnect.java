@@ -2,37 +2,39 @@ package com.example.ezbook.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 
 public class DBConnect {
-    public static final String HOSTNAME = "localhost";
-    public static final String PORT = "1433";
-    public static final String DBNAME = "EZBookDB";
-    public static final String USERNAME = "sa";
-    public static final String PASSWORD = "123456";
+    // Thay đổi thông tin cho đúng với máy của bạn
+    private static final String HOSTNAME = "localhost";
+    private static final String PORT = "1433";
+    private static final String DATABASENAME = "EZBookDB";
+    private static final String USERNAME = "sa";
+    private static final String PASSWORD = "123456"; // Mật khẩu sa của bạn
 
-    /**
-     * Get connection to MSSQL Server
-     *
-     * @return Connection
-     */
     public static Connection getConnection() {
-
-        // Create a variable for the connection string.
         String connectionUrl = "jdbc:sqlserver://" + HOSTNAME + ":" + PORT + ";"
-                + "databaseName=" + DBNAME + ";encrypt=true;trustServerCertificate=true;";
+                + "databaseName=" + DATABASENAME + ";"
+                + "encrypt=true;trustServerCertificate=true;";
 
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             return DriverManager.getConnection(connectionUrl, USERNAME, PASSWORD);
-        } // Handle any errors that may have occurred.
-        catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace(System.out);
+        } catch (Exception e) {
+            throw new IllegalStateException(
+                    "Khong the ket noi SQL Server. Kiem tra driver, URL, username/password va trang thai SQL Server. URL="
+                            + connectionUrl,
+                    e
+            );
         }
-        return null;
     }
 
+    // Test nhanh xem kết nối chạy được không trước khi bật Tomcat
     public static void main(String[] args) {
-        System.out.println(getConnection());
+        Connection conn = getConnection();
+        if (conn != null) {
+            System.out.println("Kết nối thành công rồi Bảo ơi!");
+        } else {
+            System.out.println("Kết nối thất bại, xem lại tài khoản/mật khẩu SQL hoặc cổng Port nha!");
+        }
     }
 }
