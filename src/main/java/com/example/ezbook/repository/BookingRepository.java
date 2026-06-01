@@ -329,4 +329,20 @@ public class BookingRepository {
         }
         return result;
     }
+
+    public boolean huyBookingChoKhachHang(String bookingId, String sdt) {
+        String sql = "UPDATE b SET b.trang_thai_booking = 'Cancelled' " +
+                "FROM Booking b " +
+                "JOIN KhachHang kh ON b.khach_hang_id = kh.id " +
+                "WHERE b.id = ? AND kh.sdt = ? " +
+                "AND b.trang_thai_booking IN ('Pending', N'Cho xac nhan', 'Confirmed', N'Da xac nhan')";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, bookingId);
+            ps.setString(2, sdt);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

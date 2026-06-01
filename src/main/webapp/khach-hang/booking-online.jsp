@@ -16,13 +16,22 @@
     <c:if test="${param.msg == 'created-success'}">
         <p style="color: green;">Dat lich thanh cong. Booking dang o trang thai Pending.</p>
     </c:if>
+    <c:if test="${param.msg == 'cancel-success'}">
+        <p style="color: green;">Huy lich thanh cong.</p>
+    </c:if>
     <c:if test="${param.error == 'staff-time-conflict'}">
         <p style="color: red;">Nhan vien da co lich o khung gio nay, vui long chon gio khac.</p>
     </c:if>
     <c:if test="${param.error == 'customer-not-found'}">
         <p style="color: red;">Khong tim thay ho so khach hang. Vui long dang nhap lai.</p>
     </c:if>
-    <c:if test="${param.error != null && param.error != 'staff-time-conflict' && param.error != 'customer-not-found'}">
+    <c:if test="${param.error == 'cancel-not-allowed'}">
+        <p style="color: red;">Chi duoc huy lich o trang thai Pending hoac Confirmed.</p>
+    </c:if>
+    <c:if test="${param.error == 'cancel-missing-data'}">
+        <p style="color: red;">Khong du thong tin de huy lich.</p>
+    </c:if>
+    <c:if test="${param.error != null && param.error != 'staff-time-conflict' && param.error != 'customer-not-found' && param.error != 'cancel-not-allowed' && param.error != 'cancel-missing-data'}">
         <p style="color: red;">Co loi: ${param.error}</p>
     </c:if>
 
@@ -82,6 +91,7 @@
                         <th>Nhan vien</th>
                         <th>Thoi gian</th>
                         <th>Trang thai</th>
+                        <th>Hanh dong</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -92,6 +102,17 @@
                             <td>${b.nhanVienTen}</td>
                             <td>${b.thoiGianHenText}</td>
                             <td>${b.trangThaiBooking}</td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${b.trangThaiBooking == 'Pending' || b.trangThaiBooking == 'Confirmed'}">
+                                        <form action="${pageContext.request.contextPath}/khach-hang/booking-online/huy" method="post" style="display:inline;">
+                                            <input type="hidden" name="id" value="${b.id}">
+                                            <button type="submit" onclick="return confirm('Ban co chac muon huy lich nay?')">Huy lich</button>
+                                        </form>
+                                    </c:when>
+                                    <c:otherwise>-</c:otherwise>
+                                </c:choose>
+                            </td>
                         </tr>
                     </c:forEach>
                     </tbody>

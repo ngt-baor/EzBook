@@ -25,7 +25,8 @@ import java.util.List;
 
 @WebServlet(name = "khachHangOnlineBookingServlet", value = {
         "/khach-hang/booking-online",
-        "/khach-hang/booking-online/tao"
+        "/khach-hang/booking-online/tao",
+        "/khach-hang/booking-online/huy"
 })
 public class KhachHangOnlineBookingServlet extends HttpServlet {
     private final KhachHangRepository khachHangRepository = new KhachHangRepository();
@@ -61,11 +62,18 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String uri = req.getRequestURI();
         HttpSession session = req.getSession(false);
         String sdt = session == null ? null : (String) session.getAttribute("customerPhone");
         if (sdt == null || sdt.isBlank()) {
             sdt = session == null ? null : (String) session.getAttribute("customerUsername");
         }
+
+        if (uri.contains("/huy")) {
+            huyBooking(req, resp, sdt);
+            return;
+        }
+
         String dichVuId = trim(req.getParameter("dich_vu_id"));
         String nhanVienId = trim(req.getParameter("nhan_vien_id"));
         String ngayHen = trim(req.getParameter("ngay_hen"));
@@ -115,6 +123,21 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
         } else {
             redirectWithMessage(resp, req.getContextPath() + "/khach-hang/booking-online", "error", "create-booking-failed", sdt);
         }
+    }
+
+    private void huyBooking(HttpServletRequest req, HttpServletResponse resp, String sdt) throws IOException {
+        String bookingId = trim(req.getParameter("id"));
+        if (sdt == null || sdt.isBlank() || bookingId == null) {
+            redirectWithMessage(resp, req.getContextPath() + "/khach-hang/booking-online", "error", "cancel-missing-data", sdt);
+            return;
+        }
+
+        boolean ok = bookingRepository.huyBookingChoKhachHang(bookingId, sdt);
+        if (ok) {
+            redirectWithMessage(resp, req.getContextPath() + "/khach-hang/booking-online", "msg", "cancel-success", sdt);
+            return;
+        }
+        redirectWithMessage(resp, req.getContextPath() + "/khach-hang/booking-online", "error", "cancel-not-allowed", sdt);
     }
 
     private void redirectWithMessage(HttpServletResponse resp, String baseUrl, String key, String value, String sdt) throws IOException {
