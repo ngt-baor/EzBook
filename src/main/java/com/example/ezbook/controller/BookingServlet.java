@@ -83,8 +83,13 @@ public class BookingServlet extends HttpServlet {
                 max = item.getRevenue();
             }
         }
+        double safeMax = max <= 0 ? 1.0 : max;
+        for (MonthlyRevenue item : doanhThuThang) {
+            item.setWidthPercent((item.getRevenue() / safeMax) * 100.0);
+        }
         req.setAttribute("doanhThuThang", doanhThuThang);
-        req.setAttribute("maxDoanhThu", max <= 0 ? 1.0 : max);
+        req.setAttribute("hasRevenueData", max > 0);
+        req.setAttribute("maxDoanhThu", safeMax);
 
         req.getRequestDispatcher("/booking/hien-thi.jsp").forward(req, resp);
     }

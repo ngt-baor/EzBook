@@ -8,7 +8,8 @@
 <div style="width: 1200px; margin: 24px auto; font-family: Arial, sans-serif;">
     <h2>Quan Ly Booking</h2>
     <p>
-        <a href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Quay lai giao dien nhan vien</a>
+        <a href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Ve Trang Chu</a>
+        | <a href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Quan ly dich vu</a>
         | <a href="${pageContext.request.contextPath}/account/ho-so">Ho so ca nhan</a>
         | <a href="${pageContext.request.contextPath}/logout">Dang xuat</a>
     </p>
@@ -179,11 +180,14 @@
 
     <h3 style="margin-top: 24px;">Bieu Do Doanh Thu Thang (${year})</h3>
     <div style="border: 1px solid #ddd; padding: 16px; border-radius: 6px;">
+        <c:if test="${!hasRevenueData}">
+            <p style="color:#666;">Nam nay chua co doanh thu da thanh toan.</p>
+        </c:if>
         <c:forEach items="${doanhThuThang}" var="dt">
             <div style="display:flex; align-items:center; gap: 10px; margin-bottom: 8px;">
                 <div style="width: 70px;">Thang ${dt.month}</div>
                 <div style="background:#eee; height:18px; width: 70%;">
-                    <div style="height:18px; background:#2a7ade; width:${(dt.revenue / maxDoanhThu) * 100}%"></div>
+                    <div style="height:18px; background:#2a7ade; width:${dt.widthPercent}%"></div>
                 </div>
                 <div>${dt.revenue}</div>
             </div>

@@ -35,7 +35,7 @@ public class DichVuRepository {
         return danhSach;
     }
 
-    public void them(DichVu dv) {
+    public boolean them(DichVu dv) {
         String sql = "INSERT INTO DichVu (id, loai_dich_vu_id, ten_dich_vu, gia_tien, trang_thai) VALUES (?, ?, ?, ?, ?)";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -45,8 +45,10 @@ public class DichVuRepository {
             ps.setDouble(4, dv.getGia_tien());
             ps.setBoolean(5, dv.isTrang_thai());
             ps.execute();
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -71,7 +73,7 @@ public class DichVuRepository {
         return null;
     }
 
-    public void update(DichVu dv) {
+    public boolean update(DichVu dv) {
         String sql = "UPDATE DichVu SET loai_dich_vu_id = ?, ten_dich_vu = ?, gia_tien = ?, trang_thai = ? WHERE id = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -80,20 +82,22 @@ public class DichVuRepository {
             ps.setDouble(3, dv.getGia_tien());
             ps.setBoolean(4, dv.isTrang_thai());
             ps.setString(5, dv.getId());
-            ps.execute();
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
-    public void xoa(String id) {
+    public boolean xoa(String id) {
         String sql = "DELETE FROM DichVu WHERE id = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, id);
-            ps.execute();
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 }

@@ -33,7 +33,7 @@ public class LoaiDichVuRepository {
         return danhSach;
     }
 
-    public void them(LoaiDichVu ldv) {
+    public boolean them(LoaiDichVu ldv) {
         String sql = "INSERT INTO LoaiDichVu (id, ten_loai, mo_ta) VALUES (?, ?, ?)";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -41,8 +41,10 @@ public class LoaiDichVuRepository {
             ps.setString(2, ldv.getTen_loai());
             ps.setString(3, ldv.getMo_ta());
             ps.execute();
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -65,27 +67,29 @@ public class LoaiDichVuRepository {
         return null;
     }
 
-    public void update(LoaiDichVu ldv) {
+    public boolean update(LoaiDichVu ldv) {
         String sql = "UPDATE LoaiDichVu SET ten_loai = ?, mo_ta = ? WHERE id = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, ldv.getTen_loai());
             ps.setString(2, ldv.getMo_ta());
             ps.setString(3, ldv.getId());
-            ps.execute();
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
-    public void xoa(String id) {
+    public boolean xoa(String id) {
         String sql = "DELETE FROM LoaiDichVu WHERE id = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, id);
-            ps.execute();
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 }

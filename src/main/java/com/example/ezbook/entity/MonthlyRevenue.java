@@ -3,6 +3,7 @@ package com.example.ezbook.entity;
 public class MonthlyRevenue {
     private final int month;
     private final double revenue;
+    private double widthPercent;
 
     public MonthlyRevenue(int month, double revenue) {
         this.month = month;
@@ -15,5 +16,13 @@ public class MonthlyRevenue {
 
     public double getRevenue() {
         return revenue;
+    }
+
+    public double getWidthPercent() {
+        return widthPercent;
+    }
+
+    public void setWidthPercent(double widthPercent) {
+        this.widthPercent = widthPercent;
     }
 }

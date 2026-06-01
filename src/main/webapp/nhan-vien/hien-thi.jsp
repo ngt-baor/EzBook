@@ -15,8 +15,9 @@
 <div style="width: 980px; margin: 24px auto; font-family: Arial, sans-serif;">
     <h2>Quan Ly Nhan Vien (Admin)</h2>
     <p>
-        <a href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Ve giao dien nhan vien</a>
+        <a href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Ve Trang Chu</a>
         | <a href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Quan ly tai khoan</a>
+        | <a href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Quan ly dich vu</a>
         | <a href="${pageContext.request.contextPath}/account/ho-so">Ho so</a>
         | <a href="${pageContext.request.contextPath}/logout">Dang xuat</a>
     </p>

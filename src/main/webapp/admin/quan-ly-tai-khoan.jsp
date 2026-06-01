@@ -9,6 +9,7 @@
     <h2>Quan Ly Tai Khoan (Admin)</h2>
     <p>
         <a href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Ve giao dien nhan vien</a>
+        | <a href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Quan ly dich vu</a>
         | <a href="${pageContext.request.contextPath}/account/ho-so">Ho so ca nhan</a>
         | <a href="${pageContext.request.contextPath}/logout">Dang xuat</a>
     </p>
