@@ -18,6 +18,7 @@
         <a href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Ve Trang Chu</a>
         | <a href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Quan ly tai khoan</a>
         | <a href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Quan ly dich vu</a>
+        | <a href="${pageContext.request.contextPath}/hoa-don/hien-thi">Quan ly hoa don</a>
         | <a href="${pageContext.request.contextPath}/account/ho-so">Ho so</a>
         | <a href="${pageContext.request.contextPath}/logout">Dang xuat</a>
     </p>

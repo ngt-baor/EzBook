@@ -9,7 +9,10 @@
     <h2>Quan Ly Booking</h2>
     <p>
         <a href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Ve Trang Chu</a>
-        | <a href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Quan ly dich vu</a>
+        <c:if test="${sessionScope.role == 'ADMIN'}">
+            | <a href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Quan ly dich vu</a>
+        </c:if>
+        | <a href="${pageContext.request.contextPath}/hoa-don/hien-thi">Quan ly hoa don</a>
         | <a href="${pageContext.request.contextPath}/account/ho-so">Ho so ca nhan</a>
         | <a href="${pageContext.request.contextPath}/logout">Dang xuat</a>
     </p>
@@ -20,13 +23,19 @@
     <c:if test="${param.msg == 'status-updated'}">
         <p style="color: green;">Cap nhat trang thai thanh cong.</p>
     </c:if>
+    <c:if test="${param.msg == 'status-updated-invoice-created'}">
+        <p style="color: green;">Da chuyen Completed va san sang hoa don o trang thai Chua thanh toan.</p>
+    </c:if>
     <c:if test="${param.error == 'staff-time-conflict'}">
         <p style="color: red;">Nhan vien da co lich o khung gio nay.</p>
     </c:if>
     <c:if test="${param.error == 'invalid-status-transition'}">
         <p style="color: red;">Khong hop le workflow: Pending -> Confirmed -> Completed -> Cancelled.</p>
     </c:if>
-    <c:if test="${param.error != null && param.error != 'staff-time-conflict' && param.error != 'invalid-status-transition'}">
+    <c:if test="${param.error == 'invoice-auto-create-failed'}">
+        <p style="color: red;">Da chuyen Completed nhung tao hoa don tu dong that bai.</p>
+    </c:if>
+    <c:if test="${param.error != null && param.error != 'staff-time-conflict' && param.error != 'invalid-status-transition' && param.error != 'invoice-auto-create-failed'}">
         <p style="color: red;">Co loi: ${param.error}</p>
     </c:if>
 

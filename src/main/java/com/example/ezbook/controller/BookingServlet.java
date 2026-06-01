@@ -164,6 +164,15 @@ public class BookingServlet extends HttpServlet {
 
         boolean ok = bookingRepository.updateStatus(bookingId, nextStatus);
         if (ok) {
+            if ("Completed".equals(nextStatus)) {
+                boolean billOk = hoaDonRepository.taoHoaDonChoBookingHoanThanh(bookingId);
+                if (!billOk) {
+                    redirectWithMessage(resp, req.getContextPath() + "/booking/hien-thi", "error", "invoice-auto-create-failed");
+                    return;
+                }
+                redirectWithMessage(resp, req.getContextPath() + "/booking/hien-thi", "msg", "status-updated-invoice-created");
+                return;
+            }
             redirectWithMessage(resp, req.getContextPath() + "/booking/hien-thi", "msg", "status-updated");
         } else {
             redirectWithMessage(resp, req.getContextPath() + "/booking/hien-thi", "error", "status-update-failed");

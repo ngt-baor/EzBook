@@ -41,21 +41,21 @@ public class HoaDonRepository {
         return danhSach;
     }
 
-    public void them(HoaDon hd) {
+    public boolean them(HoaDon hd) {
         String sql = "INSERT INTO HoaDon (id, booking_id, tong_tien_goc, tien_giam_gia, thanh_tien, phuong_thuc_thanh_toan, thoi_gian_thanh_toan, trang_thai_thanh_toan) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, hd.getId());
             ps.setString(2, hd.getBooking_id());
             ps.setDouble(3, hd.getTong_tien_goc());
             ps.setDouble(4, hd.getTien_giam_gia());
             ps.setDouble(5, hd.getThanh_tien());
             ps.setString(6, hd.getPhuong_thuc_thanh_toan());
-            ps.setString(7, hd.getThoi_gian_thanh_toan());
+            bindPaymentTime(ps, 7, hd.getThoi_gian_thanh_toan());
             ps.setString(8, hd.getTrang_thai_thanh_toan());
-            ps.execute();
-        } catch (Exception e) {
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -83,32 +83,32 @@ public class HoaDonRepository {
         return null;
     }
 
-    public void update(HoaDon hd) {
+    public boolean update(HoaDon hd) {
         String sql = "UPDATE HoaDon SET booking_id = ?, tong_tien_goc = ?, tien_giam_gia = ?, thanh_tien = ?, phuong_thuc_thanh_toan = ?, thoi_gian_thanh_toan = ?, trang_thai_thanh_toan = ? WHERE id = ?";
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, hd.getBooking_id());
             ps.setDouble(2, hd.getTong_tien_goc());
             ps.setDouble(3, hd.getTien_giam_gia());
             ps.setDouble(4, hd.getThanh_tien());
             ps.setString(5, hd.getPhuong_thuc_thanh_toan());
-            ps.setString(6, hd.getThoi_gian_thanh_toan());
+            bindPaymentTime(ps, 6, hd.getThoi_gian_thanh_toan());
             ps.setString(7, hd.getTrang_thai_thanh_toan());
             ps.setString(8, hd.getId());
-            ps.execute();
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
-    public void xoa(String id) {
+    public boolean xoa(String id) {
         String sql = "DELETE FROM HoaDon WHERE id = ?";
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, id);
-            ps.execute();
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -136,5 +136,86 @@ public class HoaDonRepository {
             result.add(new MonthlyRevenue(month, monthRevenueMap.getOrDefault(month, 0.0)));
         }
         return result;
+    }
+
+    public boolean taoHoaDonChoBookingHoanThanh(String bookingId) {
+        if (bookingId == null || bookingId.isBlank()) {
+            return false;
+        }
+        if (existsByBookingId(bookingId)) {
+            return true;
+        }
+
+        String sqlGia = "SELECT dv.gia_tien FROM Booking b " +
+                "JOIN DichVu dv ON b.dich_vu_id = dv.id WHERE b.id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sqlGia)) {
+            ps.setString(1, bookingId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) {
+                    return false;
+                }
+                double tongTienGoc = rs.getDouble("gia_tien");
+                HoaDon autoBill = new HoaDon(
+                        generateHoaDonId(),
+                        bookingId,
+                        tongTienGoc,
+                        0.0,
+                        tongTienGoc,
+                        "",
+                        null,
+                        "Chua thanh toan"
+                );
+                return them(autoBill);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private void bindPaymentTime(PreparedStatement ps, int index, String timeValue) throws SQLException {
+        if (timeValue == null || timeValue.isBlank()) {
+            ps.setNull(index, Types.TIMESTAMP);
+            return;
+        }
+        String normalized = timeValue.trim().replace("T", " ");
+        if (normalized.length() == 16) {
+            normalized = normalized + ":00";
+        }
+        ps.setTimestamp(index, Timestamp.valueOf(normalized));
+    }
+
+    private boolean existsByBookingId(String bookingId) {
+        String sql = "SELECT 1 FROM HoaDon WHERE booking_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, bookingId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean existsById(String id) {
+        String sql = "SELECT 1 FROM HoaDon WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private String generateHoaDonId() {
+        String id = "HD" + System.currentTimeMillis();
+        while (existsById(id)) {
+            id = "HD" + System.currentTimeMillis() + (int) (Math.random() * 1000);
+        }
+        return id;
     }
 }

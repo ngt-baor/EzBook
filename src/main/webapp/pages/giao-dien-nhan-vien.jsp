@@ -18,6 +18,7 @@
             <li><a href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">CRUD loai dich vu + dich vu</a></li>
         </c:if>
         <li><a href="${pageContext.request.contextPath}/booking/hien-thi">Quan ly booking + thong ke</a></li>
+        <li><a href="${pageContext.request.contextPath}/hoa-don/hien-thi">Quan ly hoa don</a></li>
         <li><a href="${pageContext.request.contextPath}/account/ho-so">Ho so ca nhan / doi mat khau</a></li>
         <li><a href="${pageContext.request.contextPath}/logout">Dang xuat</a></li>
     </ul>
