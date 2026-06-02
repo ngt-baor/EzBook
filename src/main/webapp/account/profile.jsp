@@ -3,81 +3,110 @@
 <html>
 <head>
     <title>Ho So Ca Nhan</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css">
 </head>
 <body>
-<div style="width: 760px; margin: 24px auto; font-family: Arial, sans-serif;">
-    <h2>Ho So Ca Nhan</h2>
+<div class="app-shell">
+    <header class="page-header">
+        <div class="page-heading">
+            <p class="eyebrow">Account Center</p>
+            <h1 class="page-title">Ho So Ca Nhan</h1>
+            <p class="page-subtitle">Cap nhat thong tin lien he va doi mat khau tren cung mot man hinh, giu bo cuc on dinh cho ca Admin, Staff va Khach hang.</p>
+        </div>
+        <nav class="toolbar">
+            <c:choose>
+                <c:when test="${sessionScope.role == 'USER'}">
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-khach.jsp">Trang khach hang</a>
+                </c:when>
+                <c:when test="${sessionScope.role == 'ADMIN'}">
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Trang quan tri</a>
+                </c:when>
+                <c:otherwise>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/booking/hien-thi">Booking</a>
+                </c:otherwise>
+            </c:choose>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/logout">Dang xuat</a>
+        </nav>
+    </header>
 
-    <p>
-        <strong>Tai khoan:</strong> ${accountInfo.username} |
-        <strong>Vai tro:</strong> ${accountInfo.role} |
-        <strong>Trang thai:</strong>
-        <c:choose>
-            <c:when test="${accountInfo.active}">Dang hoat dong</c:when>
-            <c:otherwise>Bi khoa</c:otherwise>
-        </c:choose>
-    </p>
-
-    <p>
-        <c:choose>
-            <c:when test="${sessionScope.role == 'USER'}">
-                <a href="${pageContext.request.contextPath}/khach-hang/booking-online">Ve trang khach hang</a>
-            </c:when>
-            <c:when test="${sessionScope.role == 'ADMIN'}">
-                <a href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Ve trang quan tri</a>
-            </c:when>
-            <c:otherwise>
-                <a href="${pageContext.request.contextPath}/booking/hien-thi">Ve trang booking</a>
-            </c:otherwise>
-        </c:choose>
-        | <a href="${pageContext.request.contextPath}/logout">Dang xuat</a>
-    </p>
+    <section class="stat-grid">
+        <article class="stat-card">
+            <span>Tai khoan</span>
+            <strong>${accountInfo.username}</strong>
+        </article>
+        <article class="stat-card">
+            <span>Vai tro</span>
+            <strong>${accountInfo.role}</strong>
+        </article>
+        <article class="stat-card">
+            <span>Trang thai</span>
+            <strong>${accountInfo.active ? 'Dang hoat dong' : 'Bi khoa'}</strong>
+        </article>
+    </section>
 
     <c:if test="${param.msg == 'update-profile-success'}">
-        <p style="color: green;">Cap nhat ho so thanh cong.</p>
+        <p class="alert success">Cap nhat ho so thanh cong.</p>
     </c:if>
     <c:if test="${param.msg == 'change-pass-success'}">
-        <p style="color: green;">Doi mat khau thanh cong.</p>
+        <p class="alert success">Doi mat khau thanh cong.</p>
     </c:if>
     <c:if test="${param.error != null}">
-        <p style="color: red;">Co loi: ${param.error}</p>
+        <p class="alert error">Co loi: ${param.error}</p>
     </c:if>
 
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
-        <div style="border:1px solid #ddd; border-radius:6px; padding:14px;">
-            <h3>Cap Nhat Ho So</h3>
-            <form action="${pageContext.request.contextPath}/account/cap-nhat-ho-so" method="post">
-                <label>Ho ten</label><br>
-                <input type="text" name="ho_ten" value="${accountInfo.fullName}" style="width:100%; padding:6px;" required>
-                <br><br>
+    <section class="workspace-grid equal-col">
+        <article class="panel">
+            <div class="panel-head">
+                <h2>Cap Nhat Ho So</h2>
+                <span class="meta-chip">Profile</span>
+            </div>
+            <div class="panel-body">
+                <form action="${pageContext.request.contextPath}/account/cap-nhat-ho-so" method="post">
+                    <div class="form-grid">
+                        <label class="field">
+                            <span>Ho ten</span>
+                            <input type="text" name="ho_ten" value="${accountInfo.fullName}" required>
+                        </label>
+                        <label class="field">
+                            <span>So dien thoai</span>
+                            <input type="text" name="sdt" value="${accountInfo.phone}" required>
+                        </label>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit">Luu thay doi</button>
+                    </div>
+                </form>
+            </div>
+        </article>
 
-                <label>So dien thoai</label><br>
-                <input type="text" name="sdt" value="${accountInfo.phone}" style="width:100%; padding:6px;" required>
-                <br><br>
-
-                <button type="submit">Luu thay doi</button>
-            </form>
-        </div>
-
-        <div style="border:1px solid #ddd; border-radius:6px; padding:14px;">
-            <h3>Doi Mat Khau</h3>
-            <form action="${pageContext.request.contextPath}/account/doi-mat-khau" method="post">
-                <label>Mat khau cu</label><br>
-                <input type="password" name="mat_khau_cu" style="width:100%; padding:6px;" required>
-                <br><br>
-
-                <label>Mat khau moi</label><br>
-                <input type="password" name="mat_khau_moi" style="width:100%; padding:6px;" required>
-                <br><br>
-
-                <label>Xac nhan mat khau moi</label><br>
-                <input type="password" name="mat_khau_moi_xac_nhan" style="width:100%; padding:6px;" required>
-                <br><br>
-
-                <button type="submit">Doi mat khau</button>
-            </form>
-        </div>
-    </div>
+        <article class="panel">
+            <div class="panel-head">
+                <h2>Doi Mat Khau</h2>
+                <span class="meta-chip">Security</span>
+            </div>
+            <div class="panel-body">
+                <form action="${pageContext.request.contextPath}/account/doi-mat-khau" method="post">
+                    <div class="form-grid">
+                        <label class="field">
+                            <span>Mat khau cu</span>
+                            <input type="password" name="mat_khau_cu" required>
+                        </label>
+                        <label class="field">
+                            <span>Mat khau moi</span>
+                            <input type="password" name="mat_khau_moi" required>
+                        </label>
+                        <label class="field">
+                            <span>Xac nhan mat khau moi</span>
+                            <input type="password" name="mat_khau_moi_xac_nhan" required>
+                        </label>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit">Doi mat khau</button>
+                    </div>
+                </form>
+            </div>
+        </article>
+    </section>
 </div>
 </body>
 </html>

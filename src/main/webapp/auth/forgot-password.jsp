@@ -3,6 +3,7 @@
 <html>
 <head>
   <title>Quen Mat Khau - EZBook</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css">
 </head>
 <body>
 <div style="width: 420px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px;">

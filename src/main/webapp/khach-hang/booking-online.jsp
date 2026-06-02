@@ -3,123 +3,162 @@
 <html>
 <head>
     <title>Dat Lich Online</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css">
 </head>
 <body>
-<div style="width: 1100px; margin: 24px auto; font-family: Arial, sans-serif;">
-    <h2>Khach Hang Dat Lich Online</h2>
-    <p>
-        <a href="${pageContext.request.contextPath}/pages/giao-dien-khach.jsp">Quay lai giao dien khach hang</a>
-        | <a href="${pageContext.request.contextPath}/account/ho-so">Ho so ca nhan</a>
-        | <a href="${pageContext.request.contextPath}/khach-hang/dang-xuat">Dang xuat</a>
-    </p>
+<div class="app-shell">
+    <header class="page-header">
+        <div class="page-heading">
+            <p class="eyebrow">Customer Booking</p>
+            <h1 class="page-title">Dat Lich Online</h1>
+            <p class="page-subtitle">Khach hang co the dat lich theo khung gio, xem lich da dat va huy lich neu trang thai con Pending hoac Confirmed.</p>
+        </div>
+        <nav class="toolbar">
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-khach.jsp">Trang khach hang</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Ho so</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/khach-hang/dang-xuat">Dang xuat</a>
+        </nav>
+    </header>
+
+    <section class="stat-grid">
+        <article class="stat-card">
+            <span>Khach hang</span>
+            <strong>${customerName}</strong>
+        </article>
+        <article class="stat-card">
+            <span>So dien thoai</span>
+            <strong>${sdtTimKiem}</strong>
+        </article>
+        <article class="stat-card">
+            <span>Lich cua toi</span>
+            <strong>${bookingCuaToi.size()}</strong>
+        </article>
+    </section>
 
     <c:if test="${param.msg == 'created-success'}">
-        <p style="color: green;">Dat lich thanh cong. Booking dang o trang thai Pending.</p>
+        <p class="alert success">Dat lich thanh cong. Booking dang o trang thai Pending.</p>
     </c:if>
     <c:if test="${param.msg == 'cancel-success'}">
-        <p style="color: green;">Huy lich thanh cong.</p>
+        <p class="alert success">Huy lich thanh cong.</p>
     </c:if>
     <c:if test="${param.error == 'staff-time-conflict'}">
-        <p style="color: red;">Nhan vien da co lich o khung gio nay, vui long chon gio khac.</p>
+        <p class="alert error">Nhan vien da co lich o khung gio nay, vui long chon gio khac.</p>
     </c:if>
     <c:if test="${param.error == 'customer-not-found'}">
-        <p style="color: red;">Khong tim thay ho so khach hang. Vui long dang nhap lai.</p>
+        <p class="alert error">Khong tim thay ho so khach hang. Vui long dang nhap lai.</p>
     </c:if>
     <c:if test="${param.error == 'cancel-not-allowed'}">
-        <p style="color: red;">Chi duoc huy lich o trang thai Pending hoac Confirmed.</p>
+        <p class="alert error">Chi duoc huy lich o trang thai Pending hoac Confirmed.</p>
     </c:if>
     <c:if test="${param.error == 'cancel-missing-data'}">
-        <p style="color: red;">Khong du thong tin de huy lich.</p>
+        <p class="alert error">Khong du thong tin de huy lich.</p>
     </c:if>
     <c:if test="${param.error != null && param.error != 'staff-time-conflict' && param.error != 'customer-not-found' && param.error != 'cancel-not-allowed' && param.error != 'cancel-missing-data'}">
-        <p style="color: red;">Co loi: ${param.error}</p>
+        <p class="alert error">Co loi: ${param.error}</p>
     </c:if>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-        <div style="border:1px solid #ddd; border-radius: 6px; padding: 16px;">
-            <h3>Form Dat Lich</h3>
-            <p>Xin chao: <strong>${customerName}</strong> (${sdtTimKiem})</p>
-            <form action="${pageContext.request.contextPath}/khach-hang/booking-online/tao" method="post">
-                <label>Dich vu</label><br>
-                <select name="dich_vu_id" style="width:100%; padding:6px;" required>
-                    <option value="">-- Chon dich vu --</option>
-                    <c:forEach items="${listDichVu}" var="dv">
-                        <option value="${dv.id}">${dv.ten_dich_vu}</option>
-                    </c:forEach>
-                </select>
-                <br><br>
+    <section class="workspace-grid equal-col">
+        <article class="panel">
+            <div class="panel-head">
+                <h2>Form Dat Lich</h2>
+                <span class="meta-chip">Online booking</span>
+            </div>
+            <div class="panel-body">
+                <p class="panel-note">Xin chao ${customerName}. Ban co the de trong nhan vien de he thong tu sap xep.</p>
+                <form action="${pageContext.request.contextPath}/khach-hang/booking-online/tao" method="post">
+                    <div class="form-grid">
+                        <label class="field">
+                            <span>Dich vu</span>
+                            <select name="dich_vu_id" required>
+                                <option value="">-- Chon dich vu --</option>
+                                <c:forEach items="${listDichVu}" var="dv">
+                                    <option value="${dv.id}">${dv.ten_dich_vu}</option>
+                                </c:forEach>
+                            </select>
+                        </label>
+                        <label class="field">
+                            <span>Nhan vien</span>
+                            <select name="nhan_vien_id">
+                                <option value="">-- He thong tu sap xep --</option>
+                                <c:forEach items="${listNhanVien}" var="nv">
+                                    <option value="${nv.id}">${nv.ho_ten}</option>
+                                </c:forEach>
+                            </select>
+                        </label>
+                        <label class="field">
+                            <span>Ngay hen</span>
+                            <input type="date" name="ngay_hen" required>
+                        </label>
+                        <label class="field">
+                            <span>Khung gio</span>
+                            <select name="khung_gio" required>
+                                <option value="">-- Chon khung gio --</option>
+                                <c:forEach items="${khungGio}" var="slot">
+                                    <option value="${slot}">${slot}</option>
+                                </c:forEach>
+                            </select>
+                        </label>
+                        <label class="field">
+                            <span>Ghi chu</span>
+                            <textarea name="ghi_chu" rows="4"></textarea>
+                        </label>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit">Dat lich</button>
+                    </div>
+                </form>
+            </div>
+        </article>
 
-                <label>Nhan vien (khong bat buoc)</label><br>
-                <select name="nhan_vien_id" style="width:100%; padding:6px;">
-                    <option value="">-- He thong tu sap xep --</option>
-                    <c:forEach items="${listNhanVien}" var="nv">
-                        <option value="${nv.id}">${nv.ho_ten}</option>
-                    </c:forEach>
-                </select>
-                <br><br>
-
-                <label>Ngay hen</label><br>
-                <input type="date" name="ngay_hen" style="width:100%; padding:6px;" required>
-                <br><br>
-
-                <label>Khung gio</label><br>
-                <select name="khung_gio" style="width:100%; padding:6px;" required>
-                    <option value="">-- Chon khung gio --</option>
-                    <c:forEach items="${khungGio}" var="slot">
-                        <option value="${slot}">${slot}</option>
-                    </c:forEach>
-                </select>
-                <br><br>
-
-                <label>Ghi chu</label><br>
-                <textarea name="ghi_chu" rows="3" style="width:100%; padding:6px;"></textarea>
-                <br><br>
-
-                <button type="submit">Dat Lich</button>
-            </form>
-        </div>
-
-        <div style="border:1px solid #ddd; border-radius: 6px; padding: 16px;">
-            <h3>Lich Da Dat Cua Toi</h3>
-
-            <c:if test="${bookingCuaToi != null}">
-                <table border="1" cellpadding="6" cellspacing="0" style="width:100%; border-collapse: collapse;">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Dich vu</th>
-                        <th>Nhan vien</th>
-                        <th>Thoi gian</th>
-                        <th>Trang thai</th>
-                        <th>Hanh dong</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach items="${bookingCuaToi}" var="b">
+        <article class="panel">
+            <div class="panel-head">
+                <h2>Lich Da Dat Cua Toi</h2>
+                <span class="meta-chip">${bookingCuaToi.size()} lich</span>
+            </div>
+            <div class="table-wrap">
+                <c:if test="${bookingCuaToi != null}">
+                    <table class="data-table">
+                        <thead>
                         <tr>
-                            <td>${b.id}</td>
-                            <td>${b.dichVuTen}</td>
-                            <td>${b.nhanVienTen}</td>
-                            <td>${b.thoiGianHenText}</td>
-                            <td>${b.trangThaiBooking}</td>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${b.trangThaiBooking == 'Pending' || b.trangThaiBooking == 'Confirmed'}">
-                                        <form action="${pageContext.request.contextPath}/khach-hang/booking-online/huy" method="post" style="display:inline;">
-                                            <input type="hidden" name="id" value="${b.id}">
-                                            <button type="submit" onclick="return confirm('Ban co chac muon huy lich nay?')">Huy lich</button>
-                                        </form>
-                                    </c:when>
-                                    <c:otherwise>-</c:otherwise>
-                                </c:choose>
-                            </td>
+                            <th>ID</th>
+                            <th>Dich vu</th>
+                            <th>Nhan vien</th>
+                            <th>Thoi gian</th>
+                            <th>Trang thai</th>
+                            <th>Hanh dong</th>
                         </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
-            </c:if>
-        </div>
-    </div>
+                        </thead>
+                        <tbody>
+                        <c:forEach items="${bookingCuaToi}" var="b">
+                            <tr>
+                                <td>${b.id}</td>
+                                <td>${b.dichVuTen}</td>
+                                <td>${b.nhanVienTen}</td>
+                                <td>${b.thoiGianHenText}</td>
+                                <td>${b.trangThaiBooking}</td>
+                                <td>
+                                    <div class="table-actions">
+                                        <c:choose>
+                                            <c:when test="${b.trangThaiBooking == 'Pending' || b.trangThaiBooking == 'Confirmed'}">
+                                                <form action="${pageContext.request.contextPath}/khach-hang/booking-online/huy" method="post">
+                                                    <input type="hidden" name="id" value="${b.id}">
+                                                    <button type="submit" onclick="return confirm('Ban co chac muon huy lich nay?')">Huy lich</button>
+                                                </form>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="mini-note">Da khoa thao tac</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </c:if>
+            </div>
+        </article>
+    </section>
 </div>
 </body>
 </html>

@@ -3,20 +3,57 @@
 <html>
 <head>
     <title>Giao Dien Khach Hang</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css">
 </head>
 <body>
-<div style="width: 760px; margin: 40px auto; border: 1px solid #ccc; border-radius: 6px; padding: 20px; font-family: Arial, sans-serif;">
-    <h2>Giao Dien Khach Hang</h2>
-    <p>Xin chao: <strong>${sessionScope.displayName}</strong> (${sessionScope.username})</p>
-    <p>Khach hang can dang nhap tai khoan de dat lich online.</p>
+<div class="app-shell">
+    <header class="page-header">
+        <div class="page-heading">
+            <p class="eyebrow">Customer Workspace</p>
+            <h1 class="page-title">Giao Dien Khach Hang</h1>
+            <p class="page-subtitle">Trang dieu huong cho khach hang da dang nhap, tap trung vao booking online, theo doi lich da dat va cap nhat ho so ca nhan.</p>
+        </div>
+        <nav class="toolbar">
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/khach-hang/booking-online">Dat lich</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Ho so</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/khach-hang/dang-xuat">Dang xuat</a>
+        </nav>
+    </header>
 
-    <hr>
-    <h3>Chuc nang</h3>
-    <ul>
-        <li><a href="${pageContext.request.contextPath}/khach-hang/booking-online">Dat lich online</a></li>
-        <li><a href="${pageContext.request.contextPath}/account/ho-so">Cap nhat ho so / doi mat khau</a></li>
-        <li><a href="${pageContext.request.contextPath}/khach-hang/dang-xuat">Dang xuat</a></li>
-    </ul>
+    <section class="stat-grid">
+        <article class="stat-card">
+            <span>Xin chao</span>
+            <strong>${sessionScope.displayName}</strong>
+        </article>
+        <article class="stat-card">
+            <span>Username</span>
+            <strong>${sessionScope.username}</strong>
+        </article>
+        <article class="stat-card">
+            <span>Vai tro</span>
+            <strong>${sessionScope.role}</strong>
+        </article>
+    </section>
+
+    <section class="action-grid">
+        <a class="action-card" href="${pageContext.request.contextPath}/khach-hang/booking-online">
+            <strong>Dat Lich Online</strong>
+            <span>Chon dich vu, khung gio, xem lich da dat va huy lich neu booking van dang cho xu ly.</span>
+            <em>Booking</em>
+        </a>
+
+        <a class="action-card" href="${pageContext.request.contextPath}/account/ho-so">
+            <strong>Ho So Ca Nhan</strong>
+            <span>Cap nhat thong tin lien he, doi mat khau va kiem tra trang thai tai khoan.</span>
+            <em>Profile</em>
+        </a>
+
+        <a class="action-card" href="${pageContext.request.contextPath}/khach-hang/dang-xuat">
+            <strong>Dang Xuat</strong>
+            <span>Ket thuc phien dang nhap khach hang an toan sau khi dat lich xong.</span>
+            <em>Sign out</em>
+        </a>
+    </section>
 </div>
 </body>
 </html>

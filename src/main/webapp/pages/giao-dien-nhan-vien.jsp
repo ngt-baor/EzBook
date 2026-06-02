@@ -3,25 +3,83 @@
 <html>
 <head>
     <title>Trang Chu</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css">
 </head>
 <body>
-<div style="width: 760px; margin: 40px auto; border: 1px solid #ccc; border-radius: 6px; padding: 20px; font-family: Arial, sans-serif;">
-    <h2>Trang Chu</h2>
-    <p>Xin chao: <strong>${sessionScope.displayName}</strong> (${sessionScope.username}) - Role: <strong>${sessionScope.role}</strong></p>
+<div class="app-shell">
+    <header class="page-header">
+        <div class="page-heading">
+            <p class="eyebrow">EZBook Workspace</p>
+            <h1 class="page-title">Trang Chu</h1>
+            <p class="page-subtitle">Man hinh dieu huong chinh cho Admin va Nhan vien, tap trung vao booking, hoa don, dich vu va quan ly tai khoan trong mot bo cuc desktop ro rang.</p>
+        </div>
+        <nav class="toolbar">
+            <c:if test="${sessionScope.role == 'ADMIN'}">
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/nhan-vien/hien-thi">Nhan vien</a>
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Tai khoan</a>
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Dich vu</a>
+            </c:if>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/booking/hien-thi">Booking</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hoa don</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Ho so</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/logout">Dang xuat</a>
+        </nav>
+    </header>
 
-    <hr>
-    <h3>Chuc nang</h3>
-    <ul>
+    <section class="stat-grid">
+        <article class="stat-card">
+            <span>Nguoi dang nhap</span>
+            <strong>${sessionScope.displayName}</strong>
+        </article>
+        <article class="stat-card">
+            <span>Username</span>
+            <strong>${sessionScope.username}</strong>
+        </article>
+        <article class="stat-card">
+            <span>Vai tro</span>
+            <strong>${sessionScope.role}</strong>
+        </article>
+    </section>
+
+    <section class="action-grid">
         <c:if test="${sessionScope.role == 'ADMIN'}">
-            <li><a href="${pageContext.request.contextPath}/nhan-vien/hien-thi">Quan ly nhan vien (Admin)</a></li>
-            <li><a href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Quan ly tai khoan (khoa/mo khoa)</a></li>
-            <li><a href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">CRUD loai dich vu + dich vu</a></li>
+            <a class="action-card" href="${pageContext.request.contextPath}/nhan-vien/hien-thi">
+                <strong>Quan Ly Nhan Vien</strong>
+                <span>Them, sua, xoa nhan vien va theo doi trang thai lam viec trong mot bang desktop rong.</span>
+                <em>Admin only</em>
+            </a>
+
+            <a class="action-card" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">
+                <strong>Quan Ly Tai Khoan</strong>
+                <span>Tach rieng tai khoan nhan vien va khach hang, khoa mo khoa nhanh tu cung mot man hinh.</span>
+                <em>Account control</em>
+            </a>
+
+            <a class="action-card" href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">
+                <strong>Quan Ly Dich Vu</strong>
+                <span>CRUD loai dich vu va dich vu voi form lon, bang ro rang, phu hop thao tac tren PC.</span>
+                <em>Service setup</em>
+            </a>
         </c:if>
-        <li><a href="${pageContext.request.contextPath}/booking/hien-thi">Quan ly booking + thong ke</a></li>
-        <li><a href="${pageContext.request.contextPath}/hoa-don/hien-thi">Quan ly hoa don</a></li>
-        <li><a href="${pageContext.request.contextPath}/account/ho-so">Ho so ca nhan / doi mat khau</a></li>
-        <li><a href="${pageContext.request.contextPath}/logout">Dang xuat</a></li>
-    </ul>
+
+        <a class="action-card" href="${pageContext.request.contextPath}/booking/hien-thi">
+            <strong>Quan Ly Booking</strong>
+            <span>Dat lich theo khung gio, kiem tra trung lich, loc trang thai va xem doanh thu theo thang.</span>
+            <em>Operations</em>
+        </a>
+
+        <a class="action-card" href="${pageContext.request.contextPath}/hoa-don/hien-thi">
+            <strong>Quan Ly Hoa Don</strong>
+            <span>Theo doi thanh toan, cap nhat phuong thuc thanh toan va xu ly hoa don cho booking hoan thanh.</span>
+            <em>Billing</em>
+        </a>
+
+        <a class="action-card" href="${pageContext.request.contextPath}/account/ho-so">
+            <strong>Ho So Ca Nhan</strong>
+            <span>Cap nhat thong tin tai khoan, doi mat khau va kiem tra vai tro dang duoc cap.</span>
+            <em>Profile</em>
+        </a>
+    </section>
 </div>
 </body>
 </html>

@@ -3,6 +3,7 @@
 <html>
 <head>
     <title>Khach Hang Dang Ky</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css">
 </head>
 <body>
 <div style="width: 420px; margin: 40px auto; border: 1px solid #ccc; border-radius: 6px; padding: 20px; font-family: Arial, sans-serif;">
