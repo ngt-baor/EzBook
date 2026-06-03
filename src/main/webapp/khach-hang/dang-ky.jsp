@@ -6,39 +6,52 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css">
 </head>
 <body>
-<div style="width: 420px; margin: 40px auto; border: 1px solid #ccc; border-radius: 6px; padding: 20px; font-family: Arial, sans-serif;">
-    <h2 style="text-align: center;">Dang Ky Tai Khoan Khach Hang</h2>
+<div class="auth-shell">
+    <h1 class="auth-title">Dang Ky Khach Hang</h1>
+    <p class="auth-subtitle">Tao tai khoan de booking online</p>
 
     <c:if test="${param.error == 'missing-data'}">
-        <p style="color: red;">Vui long nhap day du thong tin.</p>
+        <p class="alert error">Vui long nhap day du thong tin.</p>
     </c:if>
     <c:if test="${param.error == 'password-not-match'}">
-        <p style="color: red;">Mat khau xac nhan khong khop.</p>
+        <p class="alert error">Mat khau xac nhan khong khop.</p>
     </c:if>
     <c:if test="${param.error == 'register-failed'}">
-        <p style="color: red;">Dang ky that bai. So dien thoai co the da ton tai.</p>
+        <p class="alert error">Dang ky that bai. So dien thoai co the da ton tai.</p>
     </c:if>
 
     <form action="${pageContext.request.contextPath}/khach-hang/dang-ky" method="post">
-        <label>Ho ten</label><br>
-        <input type="text" name="ho_ten" style="width: 100%; padding: 6px;" required><br><br>
+        <div class="form-grid">
+            <label class="field">
+                <span>Ho ten</span>
+                <input type="text" name="ho_ten" required>
+            </label>
 
-        <label>So dien thoai (dong thoi la tai khoan)</label><br>
-        <input type="text" name="sdt" style="width: 100%; padding: 6px;" required><br><br>
+            <label class="field">
+                <span>So dien thoai</span>
+                <input type="text" name="sdt" required>
+            </label>
 
-        <label>Mat khau</label><br>
-        <input type="password" name="mat_khau" style="width: 100%; padding: 6px;" required><br><br>
+            <label class="field">
+                <span>Mat khau</span>
+                <input type="password" name="mat_khau" required>
+            </label>
 
-        <label>Xac nhan mat khau</label><br>
-        <input type="password" name="xac_nhan_mat_khau" style="width: 100%; padding: 6px;" required><br><br>
+            <label class="field">
+                <span>Xac nhan mat khau</span>
+                <input type="password" name="xac_nhan_mat_khau" required>
+            </label>
+        </div>
 
-        <button type="submit" style="width: 100%; padding: 8px;">Dang ky</button>
+        <div class="form-actions">
+            <button class="btn-block" type="submit">Dang ky</button>
+        </div>
     </form>
 
-    <p style="text-align: center; margin-top: 14px;">
-        Da co tai khoan?
+    <div class="auth-links">
         <a href="${pageContext.request.contextPath}/khach-hang/dang-nhap.jsp">Dang nhap</a>
-    </p>
+        <a href="${pageContext.request.contextPath}/auth/login.jsp">Dang nhap nhan vien/admin</a>
+    </div>
 </div>
 </body>
 </html>

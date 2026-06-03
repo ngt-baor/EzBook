@@ -6,53 +6,59 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css">
 </head>
 <body>
-<div style="width: 420px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; font-family: Arial, sans-serif;">
-  <h2 style="text-align: center">DANG NHAP NHAN VIEN / ADMIN</h2>
+<div class="auth-shell">
+  <h1 class="auth-title">EZBook Admin</h1>
+  <p class="auth-subtitle">Dang nhap nhan vien / admin</p>
 
   <c:if test="${param.msg == 'logged-out'}">
-    <p style="color: green; text-align: center;">Ban da dang xuat.</p>
+    <p class="alert success">Ban da dang xuat.</p>
   </c:if>
   <c:if test="${param.msg == 'reset-success'}">
-    <p style="color: green; text-align: center;">Dat lai mat khau thanh cong, vui long dang nhap lai.</p>
+    <p class="alert success">Dat lai mat khau thanh cong, vui long dang nhap lai.</p>
   </c:if>
 
   <c:if test="${param.error == 'invalid'}">
-    <p style="color: red; text-align: center;">Tai khoan hoac mat khau khong chinh xac.</p>
+    <p class="alert error">Tai khoan hoac mat khau khong chinh xac.</p>
   </c:if>
   <c:if test="${param.error == 'blocked'}">
-    <p style="color: red; text-align: center;">Tai khoan dang bi khoa.</p>
+    <p class="alert error">Tai khoan dang bi khoa.</p>
   </c:if>
   <c:if test="${param.error == 'forbidden'}">
-    <p style="color: red; text-align: center;">Ban khong co quyen truy cap chuc nang nay.</p>
+    <p class="alert error">Ban khong co quyen truy cap chuc nang nay.</p>
   </c:if>
   <c:if test="${param.error == 'role-not-allowed'}">
-    <p style="color: red; text-align: center;">Tai khoan nay khong thuoc nhom nhan vien/admin.</p>
+    <p class="alert error">Tai khoan nay khong thuoc nhom nhan vien/admin.</p>
   </c:if>
   <c:if test="${param.error == 'missing-data'}">
-    <p style="color: red; text-align: center;">Vui long nhap day du thong tin dang nhap.</p>
+    <p class="alert error">Vui long nhap day du thong tin dang nhap.</p>
   </c:if>
   <c:if test="${param.error == 'login-required'}">
-    <p style="color: red; text-align: center;">Ban can dang nhap truoc khi truy cap chuc nang nay.</p>
+    <p class="alert error">Ban can dang nhap truoc khi truy cap chuc nang nay.</p>
   </c:if>
 
   <form action="${pageContext.request.contextPath}/login" method="post">
-    <label>Tai khoan (username / SDT / ma NV)</label><br>
-    <input type="text" name="username" style="width: 100%; padding: 6px;" required><br><br>
+    <div class="form-grid">
+      <label class="field">
+        <span>Tai khoan</span>
+        <input type="text" name="username" placeholder="username / SDT / ma NV" required>
+      </label>
 
-    <label>Mat khau</label><br>
-    <input type="password" name="password" style="width: 100%; padding: 6px;" required><br><br>
+      <label class="field">
+        <span>Mat khau</span>
+        <input type="password" name="password" required>
+      </label>
+    </div>
 
-    <button type="submit" style="width: 100%; padding: 8px;">Dang nhap</button>
+    <div class="form-actions">
+      <button class="btn-block" type="submit">Dang nhap</button>
+    </div>
   </form>
 
-  <p style="text-align:center; margin-top: 12px;">
+  <div class="auth-links">
     <a href="${pageContext.request.contextPath}/auth/forgot-password.jsp">Quen mat khau</a>
-  </p>
-  <p style="text-align:center; margin-top: 8px;">
     <a href="${pageContext.request.contextPath}/khach-hang/dang-nhap.jsp">Dang nhap khach hang</a>
-    |
     <a href="${pageContext.request.contextPath}/khach-hang/dang-ky.jsp">Dang ky khach hang</a>
-  </p>
+  </div>
 </div>
 </body>
 </html>

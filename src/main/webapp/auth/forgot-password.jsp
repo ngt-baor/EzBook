@@ -6,37 +6,49 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css">
 </head>
 <body>
-<div style="width: 420px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px;">
-  <h2 style="text-align: center;">QUEN MAT KHAU</h2>
+<div class="auth-shell">
+  <h1 class="auth-title">Quen Mat Khau</h1>
+  <p class="auth-subtitle">Dat lai mat khau khong dung OTP</p>
+
   <c:if test="${param.error == 'missing-username'}">
-    <p style="color: red; text-align: center;">Vui long nhap tai khoan.</p>
+    <p class="alert error">Vui long nhap tai khoan.</p>
   </c:if>
   <c:if test="${param.error == 'username-not-found'}">
-    <p style="color: red; text-align: center;">Tai khoan khong ton tai.</p>
+    <p class="alert error">Tai khoan khong ton tai.</p>
   </c:if>
   <c:if test="${param.error == 'missing-data'}">
-    <p style="color: red; text-align: center;">Vui long nhap day du thong tin.</p>
+    <p class="alert error">Vui long nhap day du thong tin.</p>
   </c:if>
   <c:if test="${param.error == 'password-not-match'}">
-    <p style="color: red; text-align: center;">Mat khau xac nhan khong khop.</p>
+    <p class="alert error">Mat khau xac nhan khong khop.</p>
   </c:if>
   <c:if test="${param.error == 'system'}">
-    <p style="color: red; text-align: center;">He thong tam loi, vui long thu lai.</p>
+    <p class="alert error">He thong tam loi, vui long thu lai.</p>
   </c:if>
+
   <form action="${pageContext.request.contextPath}/account/quen-mat-khau" method="post">
-    <label>Tai khoan (username):</label><br>
-    <input type="text" name="username" style="width: 100%; padding: 6px;" required><br><br>
-    <label>Mat khau moi:</label><br>
-    <input type="password" name="mat_khau_moi" style="width: 100%; padding: 6px;" required><br><br>
-    <label>Xac nhan mat khau moi:</label><br>
-    <input type="password" name="mat_khau_moi_xac_nhan" style="width: 100%; padding: 6px;" required><br><br>
-    <button type="submit" style="width: 100%; padding: 8px; background-color: #28a745; color: white; border: none; cursor: pointer;">
-      Dat Lai Mat Khau
-    </button>
+    <div class="form-grid">
+      <label class="field">
+        <span>Tai khoan</span>
+        <input type="text" name="username" required>
+      </label>
+      <label class="field">
+        <span>Mat khau moi</span>
+        <input type="password" name="mat_khau_moi" required>
+      </label>
+      <label class="field">
+        <span>Xac nhan mat khau moi</span>
+        <input type="password" name="mat_khau_moi_xac_nhan" required>
+      </label>
+    </div>
+    <div class="form-actions">
+      <button class="btn-block" type="submit">Dat lai mat khau</button>
+    </div>
   </form>
-  <p style="text-align: center; margin-top: 14px;">
+
+  <div class="auth-links">
     <a href="${pageContext.request.contextPath}/auth/login.jsp">Quay lai dang nhap</a>
-  </p>
+  </div>
 </div>
 </body>
 </html>

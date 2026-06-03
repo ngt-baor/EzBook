@@ -6,53 +6,58 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css">
 </head>
 <body>
-<div style="width: 420px; margin: 40px auto; border: 1px solid #ccc; border-radius: 6px; padding: 20px; font-family: Arial, sans-serif;">
-    <h2 style="text-align: center;">Dang Nhap Khach Hang</h2>
+<div class="auth-shell">
+    <h1 class="auth-title">Khach Hang</h1>
+    <p class="auth-subtitle">Dang nhap de dat lich online</p>
 
     <c:if test="${param.msg == 'register-success'}">
-        <p style="color: green;">Dang ky thanh cong. Vui long dang nhap.</p>
+        <p class="alert success">Dang ky thanh cong. Vui long dang nhap.</p>
     </c:if>
     <c:if test="${param.msg == 'logged-out'}">
-        <p style="color: green;">Ban da dang xuat.</p>
+        <p class="alert success">Ban da dang xuat.</p>
     </c:if>
     <c:if test="${param.error == 'login-required'}">
-        <p style="color: red;">Ban can dang nhap de dat lich online.</p>
+        <p class="alert error">Ban can dang nhap de dat lich online.</p>
     </c:if>
     <c:if test="${param.error == 'invalid'}">
-        <p style="color: red;">Tai khoan hoac mat khau khong dung.</p>
+        <p class="alert error">Tai khoan hoac mat khau khong dung.</p>
     </c:if>
     <c:if test="${param.error == 'blocked'}">
-        <p style="color: red;">Tai khoan dang bi khoa.</p>
+        <p class="alert error">Tai khoan dang bi khoa.</p>
     </c:if>
     <c:if test="${param.error == 'role-not-allowed'}">
-        <p style="color: red;">Tai khoan nay khong thuoc nhom khach hang.</p>
+        <p class="alert error">Tai khoan nay khong thuoc nhom khach hang.</p>
     </c:if>
     <c:if test="${param.error == 'forbidden'}">
-        <p style="color: red;">Ban khong co quyen truy cap trang nay.</p>
+        <p class="alert error">Ban khong co quyen truy cap trang nay.</p>
     </c:if>
     <c:if test="${param.error == 'missing-data'}">
-        <p style="color: red;">Vui long nhap day du thong tin.</p>
+        <p class="alert error">Vui long nhap day du thong tin.</p>
     </c:if>
 
     <form action="${pageContext.request.contextPath}/khach-hang/dang-nhap" method="post">
-        <label>Tai khoan (So dien thoai)</label><br>
-        <input type="text" name="username" style="width: 100%; padding: 6px;" required><br><br>
+        <div class="form-grid">
+            <label class="field">
+                <span>Tai khoan</span>
+                <input type="text" name="username" placeholder="So dien thoai" required>
+            </label>
 
-        <label>Mat khau</label><br>
-        <input type="password" name="password" style="width: 100%; padding: 6px;" required><br><br>
+            <label class="field">
+                <span>Mat khau</span>
+                <input type="password" name="password" required>
+            </label>
+        </div>
 
-        <button type="submit" style="width: 100%; padding: 8px;">Dang nhap</button>
+        <div class="form-actions">
+            <button class="btn-block" type="submit">Dang nhap</button>
+        </div>
     </form>
 
-    <p style="text-align: center; margin-top: 14px;">
-        Chua co tai khoan?
+    <div class="auth-links">
         <a href="${pageContext.request.contextPath}/khach-hang/dang-ky.jsp">Dang ky ngay</a>
-    </p>
-    <p style="text-align: center; margin-top: 8px;">
         <a href="${pageContext.request.contextPath}/auth/forgot-password.jsp">Quen mat khau</a>
-        |
         <a href="${pageContext.request.contextPath}/auth/login.jsp">Dang nhap nhan vien/admin</a>
-    </p>
+    </div>
 </div>
 </body>
 </html>
