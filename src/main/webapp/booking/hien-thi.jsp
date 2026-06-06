@@ -114,6 +114,10 @@
                             <span>Ghi chu</span>
                             <textarea name="ghi_chu" rows="4"></textarea>
                         </label>
+                        <div class="field">
+                            <span>Phuong thuc thanh toan</span>
+                            <p class="panel-note">Tien mat</p>
+                        </div>
                     </div>
                     <div class="form-actions">
                         <button type="submit">Dat lich</button>
@@ -180,6 +184,7 @@
                     <th>Nhan vien</th>
                     <th>Dich vu</th>
                     <th>Thoi gian hen</th>
+                    <th>Thanh toan</th>
                     <th>Trang thai</th>
                     <th>Workflow</th>
                     <th>Ghi chu</th>
@@ -194,6 +199,7 @@
                         <td>${b.nhanVienTen}</td>
                         <td>${b.dichVuTen}</td>
                         <td>${b.thoiGianHenText}</td>
+                        <td>${b.phuongThucThanhToan}</td>
                         <td>${b.trangThaiBooking}</td>
                         <td>
                             <div class="table-actions">

@@ -79,8 +79,9 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
         String ngayHen = trim(req.getParameter("ngay_hen"));
         String khungGio = trim(req.getParameter("khung_gio"));
         String ghiChu = trim(req.getParameter("ghi_chu"));
+        String phuongThucThanhToan = normalizePaymentMethod(trim(req.getParameter("phuong_thuc_thanh_toan")));
 
-        if (sdt == null || dichVuId == null || ngayHen == null || khungGio == null) {
+        if (sdt == null || dichVuId == null || ngayHen == null || khungGio == null || phuongThucThanhToan == null) {
             redirectWithMessage(resp, req.getContextPath() + "/khach-hang/booking-online", "error", "missing-data", sdt);
             return;
         }
@@ -117,7 +118,7 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
                 ghiChu == null ? "" : ghiChu
         );
 
-        boolean ok = bookingRepository.them(booking, thoiGianHen);
+        boolean ok = bookingRepository.them(booking, thoiGianHen, phuongThucThanhToan);
         if (ok) {
             redirectWithMessage(resp, req.getContextPath() + "/khach-hang/booking-online", "msg", "created-success", sdt);
         } else {
@@ -157,5 +158,18 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
 
     private boolean isBlank(String value) {
         return value == null || value.trim().isEmpty();
+    }
+
+    private String normalizePaymentMethod(String value) {
+        if (value == null) {
+            return null;
+        }
+        if ("Tien mat".equalsIgnoreCase(value)) {
+            return "Tien mat";
+        }
+        if ("Chuyen khoan".equalsIgnoreCase(value)) {
+            return "Chuyen khoan";
+        }
+        return null;
     }
 }

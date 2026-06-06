@@ -99,6 +99,13 @@
                             </select>
                         </label>
                         <label class="field">
+                            <span>Phuong thuc thanh toan</span>
+                            <select name="phuong_thuc_thanh_toan" required>
+                                <option value="Tien mat">Tien mat</option>
+                                <option value="Chuyen khoan">Chuyen khoan</option>
+                            </select>
+                        </label>
+                        <label class="field">
                             <span>Ghi chu</span>
                             <textarea name="ghi_chu" rows="4"></textarea>
                         </label>
@@ -124,6 +131,7 @@
                             <th>Dich vu</th>
                             <th>Nhan vien</th>
                             <th>Thoi gian</th>
+                            <th>Thanh toan</th>
                             <th>Trang thai</th>
                             <th>Hanh dong</th>
                         </tr>
@@ -135,6 +143,7 @@
                                 <td>${b.dichVuTen}</td>
                                 <td>${b.nhanVienTen}</td>
                                 <td>${b.thoiGianHenText}</td>
+                                <td>${b.phuongThucThanhToan}</td>
                                 <td>${b.trangThaiBooking}</td>
                                 <td>
                                     <div class="table-actions">

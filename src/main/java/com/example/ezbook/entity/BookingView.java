@@ -15,10 +15,19 @@ public class BookingView {
     private final Timestamp thoiGianHen;
     private final String trangThaiBooking;
     private final String ghiChuKhachHang;
+    private final String phuongThucThanhToan;
 
     public BookingView(String id, String khachHangId, String khachHangTen, String khachHangSdt,
                        String nhanVienId, String nhanVienTen, String dichVuId, String dichVuTen,
                        Timestamp thoiGianHen, String trangThaiBooking, String ghiChuKhachHang) {
+        this(id, khachHangId, khachHangTen, khachHangSdt, nhanVienId, nhanVienTen, dichVuId, dichVuTen,
+                thoiGianHen, trangThaiBooking, ghiChuKhachHang, "Tien mat");
+    }
+
+    public BookingView(String id, String khachHangId, String khachHangTen, String khachHangSdt,
+                       String nhanVienId, String nhanVienTen, String dichVuId, String dichVuTen,
+                       Timestamp thoiGianHen, String trangThaiBooking, String ghiChuKhachHang,
+                       String phuongThucThanhToan) {
         this.id = id;
         this.khachHangId = khachHangId;
         this.khachHangTen = khachHangTen;
@@ -30,6 +39,7 @@ public class BookingView {
         this.thoiGianHen = thoiGianHen;
         this.trangThaiBooking = trangThaiBooking;
         this.ghiChuKhachHang = ghiChuKhachHang;
+        this.phuongThucThanhToan = phuongThucThanhToan;
     }
 
     public String getId() {
@@ -79,5 +89,9 @@ public class BookingView {
 
     public String getGhiChuKhachHang() {
         return ghiChuKhachHang;
+    }
+
+    public String getPhuongThucThanhToan() {
+        return phuongThucThanhToan;
     }
 }

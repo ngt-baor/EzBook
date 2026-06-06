@@ -134,7 +134,7 @@ public class BookingServlet extends HttpServlet {
                 ghiChu == null ? "" : ghiChu
         );
 
-        boolean ok = bookingRepository.them(booking, thoiGianHen);
+        boolean ok = bookingRepository.them(booking, thoiGianHen, "Tien mat");
         if (ok) {
             redirectWithMessage(resp, req.getContextPath() + "/booking/hien-thi", "msg", "created-success");
         } else {

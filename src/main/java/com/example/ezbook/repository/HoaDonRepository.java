@@ -146,7 +146,7 @@ public class HoaDonRepository {
             return true;
         }
 
-        String sqlGia = "SELECT dv.gia_tien FROM Booking b " +
+        String sqlGia = "SELECT dv.gia_tien, b.ghi_chu_khach_hang FROM Booking b " +
                 "JOIN DichVu dv ON b.dich_vu_id = dv.id WHERE b.id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sqlGia)) {
             ps.setString(1, bookingId);
@@ -155,13 +155,14 @@ public class HoaDonRepository {
                     return false;
                 }
                 double tongTienGoc = rs.getDouble("gia_tien");
+                String paymentMethod = extractPaymentMethod(rs.getString("ghi_chu_khach_hang"));
                 HoaDon autoBill = new HoaDon(
                         generateHoaDonId(),
                         bookingId,
                         tongTienGoc,
                         0.0,
                         tongTienGoc,
-                        "",
+                        paymentMethod,
                         null,
                         "Chua thanh toan"
                 );
@@ -221,5 +222,26 @@ public class HoaDonRepository {
 
     private boolean isBlank(String value) {
         return value == null || value.trim().isEmpty();
+    }
+
+    private String extractPaymentMethod(String note) {
+        if (note == null) {
+            return "Tien mat";
+        }
+        String prefix = "[PTTT:";
+        String suffix = "]";
+        String trimmed = note.trim();
+        if (!trimmed.startsWith(prefix)) {
+            return "Tien mat";
+        }
+        int end = trimmed.indexOf(suffix, prefix.length());
+        if (end < 0) {
+            return "Tien mat";
+        }
+        String value = trimmed.substring(prefix.length(), end).trim();
+        if ("Chuyen khoan".equalsIgnoreCase(value)) {
+            return "Chuyen khoan";
+        }
+        return "Tien mat";
     }
 }

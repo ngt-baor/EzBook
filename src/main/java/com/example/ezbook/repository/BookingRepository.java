@@ -12,6 +12,8 @@ import java.util.List;
 
 public class BookingRepository {
     private final Connection connection;
+    private static final String PAYMENT_PREFIX = "[PTTT:";
+    private static final String PAYMENT_SUFFIX = "]";
 
     public BookingRepository() {
         connection = DBConnect.getConnection();
@@ -60,6 +62,10 @@ public class BookingRepository {
     }
 
     public boolean them(Booking bk, Timestamp thoiGianHen) {
+        return them(bk, thoiGianHen, "Tien mat");
+    }
+
+    public boolean them(Booking bk, Timestamp thoiGianHen, String phuongThucThanhToan) {
         String sql = "INSERT INTO Booking (id, khach_hang_id, nhan_vien_id, dich_vu_id, khuyen_mai_id, thoi_gian_hen, trang_thai_booking, ghi_chu_khach_hang) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -74,7 +80,7 @@ public class BookingRepository {
             }
             ps.setTimestamp(6, thoiGianHen);
             ps.setString(7, bk.getTrang_thai_booking());
-            ps.setString(8, bk.getGhi_chu_khach_hang());
+            ps.setString(8, buildStoredNote(phuongThucThanhToan, bk.getGhi_chu_khach_hang()));
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -273,6 +279,7 @@ public class BookingRepository {
             }
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
+                String rawNote = rs.getString("ghi_chu_khach_hang");
                 result.add(new BookingView(
                         rs.getString("id"),
                         rs.getString("khach_hang_id"),
@@ -284,7 +291,8 @@ public class BookingRepository {
                         rs.getString("ten_dich_vu"),
                         rs.getTimestamp("thoi_gian_hen"),
                         normalizeStatus(rs.getString("trang_thai_booking")),
-                        rs.getString("ghi_chu_khach_hang")
+                        stripPaymentMarker(rawNote),
+                        extractPaymentMethod(rawNote)
                 ));
             }
         } catch (SQLException e) {
@@ -310,6 +318,7 @@ public class BookingRepository {
             ps.setString(1, sdt);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
+                String rawNote = rs.getString("ghi_chu_khach_hang");
                 result.add(new BookingView(
                         rs.getString("id"),
                         rs.getString("khach_hang_id"),
@@ -321,7 +330,8 @@ public class BookingRepository {
                         rs.getString("ten_dich_vu"),
                         rs.getTimestamp("thoi_gian_hen"),
                         normalizeStatus(rs.getString("trang_thai_booking")),
-                        rs.getString("ghi_chu_khach_hang")
+                        stripPaymentMarker(rawNote),
+                        extractPaymentMethod(rawNote)
                 ));
             }
         } catch (SQLException e) {
@@ -348,5 +358,51 @@ public class BookingRepository {
 
     private boolean isBlank(String value) {
         return value == null || value.trim().isEmpty();
+    }
+
+    private String buildStoredNote(String paymentMethod, String note) {
+        String method = normalizePaymentMethod(paymentMethod);
+        String cleanNote = note == null ? "" : stripPaymentMarker(note).trim();
+        if (cleanNote.isEmpty()) {
+            return PAYMENT_PREFIX + method + PAYMENT_SUFFIX;
+        }
+        return PAYMENT_PREFIX + method + PAYMENT_SUFFIX + " " + cleanNote;
+    }
+
+    public String extractPaymentMethod(String note) {
+        if (note == null) {
+            return "Tien mat";
+        }
+        String trimmed = note.trim();
+        if (!trimmed.startsWith(PAYMENT_PREFIX)) {
+            return "Tien mat";
+        }
+        int end = trimmed.indexOf(PAYMENT_SUFFIX, PAYMENT_PREFIX.length());
+        if (end < 0) {
+            return "Tien mat";
+        }
+        return normalizePaymentMethod(trimmed.substring(PAYMENT_PREFIX.length(), end));
+    }
+
+    private String stripPaymentMarker(String note) {
+        if (note == null) {
+            return "";
+        }
+        String trimmed = note.trim();
+        if (!trimmed.startsWith(PAYMENT_PREFIX)) {
+            return note;
+        }
+        int end = trimmed.indexOf(PAYMENT_SUFFIX, PAYMENT_PREFIX.length());
+        if (end < 0) {
+            return note;
+        }
+        return trimmed.substring(end + PAYMENT_SUFFIX.length()).trim();
+    }
+
+    private String normalizePaymentMethod(String value) {
+        if ("Chuyen khoan".equalsIgnoreCase(value == null ? "" : value.trim())) {
+            return "Chuyen khoan";
+        }
+        return "Tien mat";
     }
 }
