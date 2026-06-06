@@ -45,6 +45,56 @@
 
     <article class="panel">
         <div class="panel-head">
+            <h2>Tim Kiem Va Loc Hoa Don</h2>
+            <span class="meta-chip">Invoice filter</span>
+        </div>
+        <div class="panel-body">
+            <form action="${pageContext.request.contextPath}/hoa-don/hien-thi" method="get">
+                <div class="form-grid four-col">
+                    <label class="field">
+                        <span>Tu khoa</span>
+                        <input type="text" name="tuKhoa" value="${param.tuKhoa}" placeholder="Ma HD hoac booking">
+                    </label>
+                    <label class="field">
+                        <span>Trang thai</span>
+                        <select name="trangThai">
+                            <option value="">Tat ca trang thai</option>
+                            <option value="Chua thanh toan" ${param.trangThai == 'Chua thanh toan' ? 'selected' : ''}>Chua thanh toan</option>
+                            <option value="Da thanh toan" ${param.trangThai == 'Da thanh toan' ? 'selected' : ''}>Da thanh toan</option>
+                            <option value="Huy hoa don" ${param.trangThai == 'Huy hoa don' ? 'selected' : ''}>Huy hoa don</option>
+                        </select>
+                    </label>
+                    <label class="field">
+                        <span>Phuong thuc</span>
+                        <select name="phuongThuc">
+                            <option value="">Tat ca phuong thuc</option>
+                            <option value="Tien mat" ${param.phuongThuc == 'Tien mat' ? 'selected' : ''}>Tien mat</option>
+                            <option value="Chuyen khoan" ${param.phuongThuc == 'Chuyen khoan' ? 'selected' : ''}>Chuyen khoan</option>
+                        </select>
+                    </label>
+                    <label class="field">
+                        <span>Tu ngay TT</span>
+                        <input type="date" name="ngayTu" value="${param.ngayTu}">
+                    </label>
+                    <label class="field">
+                        <span>Den ngay TT</span>
+                        <input type="date" name="ngayDen" value="${param.ngayDen}">
+                    </label>
+                    <div class="field">
+                        <span>Ket qua</span>
+                        <p class="panel-note">Dang hien thi ${listHoaDon.size()} hoa don theo dieu kien loc.</p>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit">Loc hoa don</button>
+                    <a class="btn btn-muted" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Xoa bo loc</a>
+                </div>
+            </form>
+        </div>
+    </article>
+
+    <article class="panel">
+        <div class="panel-head">
             <h2>${editingHoaDon != null ? 'Sua Hoa Don' : 'Them Hoa Don'}</h2>
             <span class="meta-chip">Billing form</span>
         </div>

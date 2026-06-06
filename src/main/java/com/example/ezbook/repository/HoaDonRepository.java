@@ -18,22 +18,55 @@ public class HoaDonRepository {
     }
 
     public List<HoaDon> getAll() {
-        String sql = "SELECT * FROM HoaDon";
+        return search(null, null, null, null, null);
+    }
+
+    public List<HoaDon> search(String keyword, String paymentStatus, String paymentMethod, Date fromDate, Date toDate) {
+        StringBuilder sql = new StringBuilder("SELECT * FROM HoaDon WHERE 1 = 1");
+        List<Object> params = new ArrayList<>();
+
+        if (!isBlank(keyword)) {
+            sql.append(" AND (id LIKE ? OR booking_id LIKE ?)");
+            String likeKeyword = "%" + keyword.trim() + "%";
+            params.add(likeKeyword);
+            params.add(likeKeyword);
+        }
+
+        if (!isBlank(paymentStatus)) {
+            sql.append(" AND trang_thai_thanh_toan = ?");
+            params.add(paymentStatus.trim());
+        }
+
+        if (!isBlank(paymentMethod)) {
+            sql.append(" AND phuong_thuc_thanh_toan = ?");
+            params.add(paymentMethod.trim());
+        }
+
+        if (fromDate != null) {
+            sql.append(" AND CAST(thoi_gian_thanh_toan AS DATE) >= ?");
+            params.add(fromDate);
+        }
+
+        if (toDate != null) {
+            sql.append(" AND CAST(thoi_gian_thanh_toan AS DATE) <= ?");
+            params.add(toDate);
+        }
+
+        sql.append(" ORDER BY CASE WHEN thoi_gian_thanh_toan IS NULL THEN 1 ELSE 0 END, thoi_gian_thanh_toan DESC, id DESC");
         List<HoaDon> danhSach = new ArrayList<>();
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                danhSach.add(new HoaDon(
-                        rs.getString("id"),
-                        rs.getString("booking_id"),
-                        rs.getDouble("tong_tien_goc"),
-                        rs.getDouble("tien_giam_gia"),
-                        rs.getDouble("thanh_tien"),
-                        rs.getString("phuong_thuc_thanh_toan"),
-                        rs.getString("thoi_gian_thanh_toan"),
-                        rs.getString("trang_thai_thanh_toan")
-                ));
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                Object value = params.get(i);
+                if (value instanceof Date) {
+                    ps.setDate(i + 1, (Date) value);
+                } else {
+                    ps.setString(i + 1, String.valueOf(value));
+                }
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    danhSach.add(mapHoaDon(rs));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,16 +99,7 @@ public class HoaDonRepository {
             ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return new HoaDon(
-                        rs.getString("id"),
-                        rs.getString("booking_id"),
-                        rs.getDouble("tong_tien_goc"),
-                        rs.getDouble("tien_giam_gia"),
-                        rs.getDouble("thanh_tien"),
-                        rs.getString("phuong_thuc_thanh_toan"),
-                        rs.getString("thoi_gian_thanh_toan"),
-                        rs.getString("trang_thai_thanh_toan")
-                );
+                return mapHoaDon(rs);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -222,6 +246,19 @@ public class HoaDonRepository {
 
     private boolean isBlank(String value) {
         return value == null || value.trim().isEmpty();
+    }
+
+    private HoaDon mapHoaDon(ResultSet rs) throws SQLException {
+        return new HoaDon(
+                rs.getString("id"),
+                rs.getString("booking_id"),
+                rs.getDouble("tong_tien_goc"),
+                rs.getDouble("tien_giam_gia"),
+                rs.getDouble("thanh_tien"),
+                rs.getString("phuong_thuc_thanh_toan"),
+                rs.getString("thoi_gian_thanh_toan"),
+                rs.getString("trang_thai_thanh_toan")
+        );
     }
 
     private String extractPaymentMethod(String note) {

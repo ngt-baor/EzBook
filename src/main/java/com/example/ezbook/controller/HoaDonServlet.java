@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -29,6 +30,12 @@ public class HoaDonServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String keyword = trim(req.getParameter("tuKhoa"));
+        String paymentStatus = normalizePaymentStatus(trim(req.getParameter("trangThai")));
+        String paymentMethod = normalizePaymentMethod(trim(req.getParameter("phuongThuc")));
+        Date fromDate = parseSqlDate(trim(req.getParameter("ngayTu")));
+        Date toDate = parseSqlDate(trim(req.getParameter("ngayDen")));
+
         String editId = trim(req.getParameter("editId"));
         if (editId != null) {
             HoaDon editing = hoaDonRepository.findById(editId);
@@ -36,7 +43,7 @@ public class HoaDonServlet extends HttpServlet {
             req.setAttribute("editingHoaDonTimeInput", toDateTimeLocalInput(editing == null ? null : editing.getThoi_gian_thanh_toan()));
         }
 
-        req.setAttribute("listHoaDon", hoaDonRepository.getAll());
+        req.setAttribute("listHoaDon", hoaDonRepository.search(keyword, paymentStatus, paymentMethod, fromDate, toDate));
         req.setAttribute("listBooking", bookingRepository.getAll());
         req.getRequestDispatcher("/hoa-don/hien-thi.jsp").forward(req, resp);
     }
@@ -171,6 +178,34 @@ public class HoaDonServlet extends HttpServlet {
             return "Chuyen khoan";
         }
         return null;
+    }
+
+    private String normalizePaymentStatus(String raw) {
+        if (raw == null) {
+            return null;
+        }
+        String value = raw.trim();
+        if ("Chua thanh toan".equalsIgnoreCase(value)) {
+            return "Chua thanh toan";
+        }
+        if ("Da thanh toan".equalsIgnoreCase(value)) {
+            return "Da thanh toan";
+        }
+        if ("Huy hoa don".equalsIgnoreCase(value)) {
+            return "Huy hoa don";
+        }
+        return null;
+    }
+
+    private Date parseSqlDate(String raw) {
+        if (raw == null) {
+            return null;
+        }
+        try {
+            return Date.valueOf(raw);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     private void redirectWithStatus(HttpServletResponse resp, String contextPath, boolean ok, String msg, String error) throws IOException {
