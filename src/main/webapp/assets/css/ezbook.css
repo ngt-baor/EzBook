@@ -56,6 +56,10 @@ body::before {
     mix-blend-mode: multiply;
 }
 
+[hidden] {
+    display: none !important;
+}
+
 a {
     color: var(--teal-dark);
     font-weight: 800;
@@ -181,6 +185,18 @@ a:hover {
     text-decoration: none;
     transform: translate(2px, 2px);
     box-shadow: 2px 2px 0 rgba(31, 26, 23, 0.18);
+}
+
+.toolbar-link[href$="/logout"],
+.toolbar-link[href$="/dang-xuat"] {
+    background: var(--brick-soft);
+    color: var(--brick);
+}
+
+.toolbar-link[href$="/logout"]:hover,
+.toolbar-link[href$="/dang-xuat"]:hover {
+    background: var(--brick);
+    color: #fff8e6;
 }
 
 .workspace-grid {
@@ -504,23 +520,66 @@ form[action*="huy"] button:hover {
     margin: 0;
 }
 
-.payment-confirm-box {
-    display: inline-grid;
-    gap: 8px;
+.table-actions .table-link,
+.table-actions button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 9px 14px;
+    border: 2px solid var(--line);
+    border-radius: var(--radius-soft);
+    line-height: 1.55;
+    box-shadow: var(--shadow-small);
 }
 
-.payment-confirm-actions {
+.invoice-action-btn {
+    width: 78px !important;
+    min-width: 78px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    padding: 0 !important;
+    border: 2px solid var(--line) !important;
+    border-radius: var(--radius-soft) !important;
+    line-height: 1 !important;
+}
+
+.payment-confirm-box {
     display: inline-flex;
-    flex-wrap: wrap;
     gap: 8px;
     align-items: center;
 }
 
+.payment-confirm-actions {
+    display: none;
+    flex-wrap: nowrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.payment-confirm-box.is-confirming [data-show-payment-confirm] {
+    display: none !important;
+}
+
+.payment-confirm-box.is-confirming .payment-confirm-actions {
+    display: inline-flex !important;
+}
+
 .payment-confirm-actions form {
+    display: inline-flex;
     margin: 0;
 }
 
+.payment-status-chip {
+    min-height: 40px;
+    padding: 9px 14px;
+    border-radius: var(--radius-soft);
+}
+
 .btn-confirm-paid {
+    min-height: 40px;
+    padding: 9px 14px;
+    border-radius: var(--radius-soft);
     background: #2f7d42;
     color: #fff8e6;
 }
@@ -531,6 +590,9 @@ form[action*="huy"] button:hover {
 }
 
 .btn-deny-paid {
+    min-height: 40px;
+    padding: 9px 14px;
+    border-radius: var(--radius-soft);
     background: var(--brick-soft);
     color: var(--brick);
 }
@@ -540,15 +602,38 @@ form[action*="huy"] button:hover {
     color: #fff8e6;
 }
 
+.btn-workflow-cancel {
+    background: var(--brick-soft);
+    color: var(--brick);
+}
+
+.btn-workflow-cancel:hover {
+    background: var(--brick);
+    color: #fff8e6;
+}
+
 .table-link {
     display: inline-flex;
     align-items: center;
-    min-height: 30px;
-    padding: 4px 8px;
-    border: 1px solid var(--line);
+    justify-content: center;
+    min-height: 40px;
+    padding: 9px 14px;
+    border: 2px solid var(--line);
+    border-radius: var(--radius-soft);
     background: var(--paper-strong);
     color: var(--teal-dark);
     font-weight: 900;
+    text-transform: uppercase;
+    box-shadow: var(--shadow-small);
+    transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+
+.table-link:hover {
+    background: var(--mustard);
+    color: var(--ink);
+    text-decoration: none;
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 rgba(31, 26, 23, 0.18);
 }
 
 .modal-overlay {
@@ -690,6 +775,10 @@ form[action*="huy"] button:hover {
 .chart-list {
     display: grid;
     gap: 10px;
+}
+
+.revenue-chart-panel {
+    margin-top: 24px;
 }
 
 .chart-row {

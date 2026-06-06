@@ -14,9 +14,11 @@
             <p class="page-subtitle">Trang dieu huong cho khach hang da dang nhap, tap trung vao booking online, theo doi lich da dat va cap nhat ho so ca nhan.</p>
         </div>
         <nav class="toolbar">
+            
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-khach.jsp">Trang khach hang</a>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/khach-hang/booking-online">Dat lich</a>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Ho so</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/khach-hang/dang-xuat">Dang xuat</a>
+            <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/khach-hang/dang-xuat">Dang xuat</a>
         </nav>
     </header>
 

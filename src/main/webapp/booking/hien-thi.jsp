@@ -14,13 +14,17 @@
             <p class="page-subtitle">Dieu phoi lich hen theo khung gio, kiem tra trung lich nhan vien, theo doi workflow Pending -> Confirmed -> Completed -> Cancelled va xem doanh thu thang tren cung mot man hinh.</p>
         </div>
         <nav class="toolbar">
+            
             <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Trang Chu</a>
             <c:if test="${sessionScope.role == 'ADMIN'}">
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/nhan-vien/hien-thi">Nhan vien</a>
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Tai khoan</a>
                 <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Dich vu</a>
             </c:if>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/booking/hien-thi">Booking</a>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hoa don</a>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Ho so</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/logout">Dang xuat</a>
+            <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/logout">Dang xuat</a>
         </nav>
     </header>
 
@@ -169,7 +173,7 @@
         </article>
     </section>
 
-    <article class="panel">
+    <article class="panel booking-list-panel">
         <div class="panel-head">
             <h2>Danh Sach Booking</h2>
             <span class="meta-chip">${listBooking.size()} lich</span>
@@ -202,30 +206,30 @@
                         <td>${b.phuongThucThanhToan}</td>
                         <td>${b.trangThaiBooking}</td>
                         <td>
-                            <div class="table-actions">
+                            <div class="table-actions" style="display:flex; flex-wrap:nowrap; align-items:center; gap:8px; white-space:nowrap;">
                                 <c:choose>
                                     <c:when test="${b.trangThaiBooking == 'Pending'}">
-                                        <form action="${pageContext.request.contextPath}/booking/cap-nhat-trang-thai" method="post">
+                                        <form action="${pageContext.request.contextPath}/booking/cap-nhat-trang-thai" method="post" style="display:inline-flex; margin:0;">
                                             <input type="hidden" name="id" value="${b.id}">
                                             <input type="hidden" name="nextStatus" value="Confirmed">
                                             <button type="submit">Confirm</button>
                                         </form>
-                                        <form action="${pageContext.request.contextPath}/booking/cap-nhat-trang-thai" method="post">
+                                        <form action="${pageContext.request.contextPath}/booking/cap-nhat-trang-thai" method="post" style="display:inline-flex; margin:0;">
                                             <input type="hidden" name="id" value="${b.id}">
                                             <input type="hidden" name="nextStatus" value="Cancelled">
-                                            <button type="submit">Cancel</button>
+                                            <button class="btn-workflow-cancel" type="submit" style="background:#f7d2bf; color:#a23923;">Cancel</button>
                                         </form>
                                     </c:when>
                                     <c:when test="${b.trangThaiBooking == 'Confirmed'}">
-                                        <form action="${pageContext.request.contextPath}/booking/cap-nhat-trang-thai" method="post">
+                                        <form action="${pageContext.request.contextPath}/booking/cap-nhat-trang-thai" method="post" style="display:inline-flex; margin:0;">
                                             <input type="hidden" name="id" value="${b.id}">
                                             <input type="hidden" name="nextStatus" value="Completed">
                                             <button type="submit">Complete</button>
                                         </form>
-                                        <form action="${pageContext.request.contextPath}/booking/cap-nhat-trang-thai" method="post">
+                                        <form action="${pageContext.request.contextPath}/booking/cap-nhat-trang-thai" method="post" style="display:inline-flex; margin:0;">
                                             <input type="hidden" name="id" value="${b.id}">
                                             <input type="hidden" name="nextStatus" value="Cancelled">
-                                            <button type="submit">Cancel</button>
+                                            <button class="btn-workflow-cancel" type="submit" style="background:#f7d2bf; color:#a23923;">Cancel</button>
                                         </form>
                                     </c:when>
                                     <c:otherwise>
@@ -242,7 +246,7 @@
         </div>
     </article>
 
-    <article class="panel">
+    <article class="panel revenue-chart-panel" style="margin-top:32px;">
         <div class="panel-head">
             <h2>Bieu Do Doanh Thu Thang (${year})</h2>
             <span class="meta-chip">Paid revenue</span>

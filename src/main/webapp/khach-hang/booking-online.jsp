@@ -14,9 +14,11 @@
             <p class="page-subtitle">Khach hang co the dat lich theo khung gio, xem lich da dat va huy lich neu trang thai con Pending hoac Confirmed.</p>
         </div>
         <nav class="toolbar">
+            
             <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-khach.jsp">Trang khach hang</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/khach-hang/booking-online">Dat lich</a>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Ho so</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/khach-hang/dang-xuat">Dang xuat</a>
+            <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/khach-hang/dang-xuat">Dang xuat</a>
         </nav>
     </header>
 

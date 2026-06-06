@@ -14,6 +14,8 @@
             <p class="page-subtitle">Man hinh dieu huong chinh cho Admin va Nhan vien, tap trung vao booking, hoa don, dich vu va quan ly tai khoan trong mot bo cuc desktop ro rang.</p>
         </div>
         <nav class="toolbar">
+            
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Trang Chu</a>
             <c:if test="${sessionScope.role == 'ADMIN'}">
                 <a class="toolbar-link" href="${pageContext.request.contextPath}/nhan-vien/hien-thi">Nhan vien</a>
                 <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Tai khoan</a>
@@ -22,7 +24,7 @@
             <a class="toolbar-link" href="${pageContext.request.contextPath}/booking/hien-thi">Booking</a>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hoa don</a>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Ho so</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/logout">Dang xuat</a>
+            <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/logout">Dang xuat</a>
         </nav>
     </header>
 

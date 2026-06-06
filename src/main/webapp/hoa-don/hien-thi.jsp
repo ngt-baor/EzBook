@@ -14,10 +14,17 @@
             <p class="page-subtitle">Khong gian thao tac hoa don cho Admin va Staff, uu tien nhap lieu ro rang va scan nhanh trang thai thanh toan.</p>
         </div>
         <nav class="toolbar">
+            
             <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Trang Chu</a>
+            <c:if test="${sessionScope.role == 'ADMIN'}">
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/nhan-vien/hien-thi">Nhan vien</a>
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Tai khoan</a>
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Dich vu</a>
+            </c:if>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/booking/hien-thi">Booking</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hoa don</a>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Ho so</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/logout">Dang xuat</a>
+            <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/logout">Dang xuat</a>
         </nav>
     </header>
 
@@ -190,27 +197,42 @@
                             <c:choose>
                                 <c:when test="${hd.trang_thai_thanh_toan == 'Chua thanh toan'}">
                                     <div class="payment-confirm-box" data-payment-confirm>
-                                        <button class="btn btn-compact" type="button" data-show-payment-confirm>Xac nhan da thanh toan</button>
-                                        <div class="payment-confirm-actions" data-payment-actions hidden>
-                                            <form action="${pageContext.request.contextPath}/hoa-don/xac-nhan-thanh-toan" method="post">
+                                        <button class="btn btn-compact" type="button" data-show-payment-confirm
+                                                style="height:42px; min-height:42px; padding:0 14px; display:inline-flex; align-items:center; justify-content:center; border:2px solid #2b2520; border-radius:6px; box-shadow:4px 4px 0 rgba(31,26,23,0.16); line-height:1.15; white-space:nowrap;"
+                                                onclick="var box=this.closest('[data-payment-confirm]'); this.style.display='none'; box.querySelector('[data-payment-actions]').style.display='inline-flex';">
+                                            Xac nhan da thanh toan
+                                        </button>
+                                        <div class="payment-confirm-actions" data-payment-actions style="display:none; flex-direction:row; gap:8px; align-items:center; white-space:nowrap;">
+                                            <form action="${pageContext.request.contextPath}/hoa-don/xac-nhan-thanh-toan" method="post" style="display:inline-flex; margin:0;">
                                                 <input type="hidden" name="id" value="${hd.id}">
-                                                <button class="btn-confirm-paid" type="submit">Confirm</button>
+                                                <button class="btn-confirm-paid" type="submit" style="height:42px; min-height:42px; padding:0 14px; display:inline-flex; align-items:center; justify-content:center; border:2px solid #2b2520; border-radius:6px; box-shadow:4px 4px 0 rgba(31,26,23,0.16); line-height:1; background:#2f7d42; color:#fff8e6;">Confirm</button>
                                             </form>
-                                            <button class="btn-deny-paid" type="button" data-hide-payment-confirm>Deny</button>
+                                            <button class="btn-deny-paid" type="button" data-hide-payment-confirm
+                                                    style="height:42px; min-height:42px; padding:0 14px; display:inline-flex; align-items:center; justify-content:center; border:2px solid #2b2520; border-radius:6px; box-shadow:4px 4px 0 rgba(31,26,23,0.16); line-height:1; background:#f7d2bf; color:#a23923;"
+                                                    onclick="var box=this.closest('[data-payment-confirm]'); box.querySelector('[data-payment-actions]').style.display='none'; box.querySelector('[data-show-payment-confirm]').style.display='inline-flex';">
+                                                Deny
+                                            </button>
                                         </div>
                                     </div>
                                 </c:when>
                                 <c:otherwise>
-                                    <span class="status-chip">${hd.trang_thai_thanh_toan}</span>
+                                    <span class="status-chip payment-status-chip"
+                                          style="height:42px; min-height:42px; padding:0 14px; display:inline-flex; align-items:center; justify-content:center; border:2px solid #2b2520; border-radius:6px; box-shadow:4px 4px 0 rgba(31,26,23,0.16); line-height:1; white-space:nowrap;">
+                                        ${hd.trang_thai_thanh_toan}
+                                    </span>
                                 </c:otherwise>
                             </c:choose>
                         </td>
                         <td>
-                            <div class="table-actions">
-                                <a class="table-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi?editId=${hd.id}">Sua</a>
-                                <form action="${pageContext.request.contextPath}/hoa-don/xoa" method="post">
+                            <div class="table-actions" style="display:flex; flex-wrap:nowrap; align-items:center; gap:8px; white-space:nowrap;">
+                                <a class="btn btn-muted btn-compact table-link invoice-action-btn"
+                                   style="width:64px; height:42px; min-width:64px; min-height:42px; padding:0; display:inline-flex; align-items:center; justify-content:center; border:2px solid #2b2520; border-radius:6px; box-shadow:4px 4px 0 rgba(31,26,23,0.16); line-height:1; text-decoration:none;"
+                                   href="${pageContext.request.contextPath}/hoa-don/hien-thi?editId=${hd.id}">Sua</a>
+                                <form action="${pageContext.request.contextPath}/hoa-don/xoa" method="post" style="display:inline-flex; margin:0;">
                                     <input type="hidden" name="id" value="${hd.id}">
-                                    <button type="submit" onclick="return confirm('Xoa hoa don nay?')">Xoa</button>
+                                    <button class="invoice-action-btn"
+                                            style="width:64px; height:42px; min-width:64px; min-height:42px; padding:0; display:inline-flex; align-items:center; justify-content:center; border:2px solid #2b2520; border-radius:6px; box-shadow:4px 4px 0 rgba(31,26,23,0.16); line-height:1;"
+                                            type="submit" onclick="return confirm('Xoa hoa don nay?')">Xoa</button>
                                 </form>
                             </div>
                         </td>
@@ -221,22 +243,5 @@
         </div>
     </article>
 </div>
-<script>
-    document.querySelectorAll('[data-payment-confirm]').forEach(function (box) {
-        var showButton = box.querySelector('[data-show-payment-confirm]');
-        var actions = box.querySelector('[data-payment-actions]');
-        var denyButton = box.querySelector('[data-hide-payment-confirm]');
-
-        showButton.addEventListener('click', function () {
-            showButton.hidden = true;
-            actions.hidden = false;
-        });
-
-        denyButton.addEventListener('click', function () {
-            actions.hidden = true;
-            showButton.hidden = false;
-        });
-    });
-</script>
 </body>
 </html>

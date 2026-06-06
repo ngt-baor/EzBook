@@ -17,15 +17,28 @@
             <c:choose>
                 <c:when test="${sessionScope.role == 'USER'}">
                     <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-khach.jsp">Trang khach hang</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/khach-hang/booking-online">Dat lich</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Ho so</a>
+                    <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/khach-hang/dang-xuat">Dang xuat</a>
                 </c:when>
                 <c:when test="${sessionScope.role == 'ADMIN'}">
-                    <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Trang quan tri</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Trang Chu</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/nhan-vien/hien-thi">Nhan vien</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Tai khoan</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Dich vu</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/booking/hien-thi">Booking</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hoa don</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Ho so</a>
+                    <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/logout">Dang xuat</a>
                 </c:when>
                 <c:otherwise>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Trang Chu</a>
                     <a class="toolbar-link" href="${pageContext.request.contextPath}/booking/hien-thi">Booking</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hoa don</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Ho so</a>
+                    <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/logout">Dang xuat</a>
                 </c:otherwise>
             </c:choose>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/logout">Dang xuat</a>
         </nav>
     </header>
 

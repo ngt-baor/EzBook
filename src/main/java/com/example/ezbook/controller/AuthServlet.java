@@ -73,11 +73,7 @@ public class AuthServlet extends HttpServlet {
     }
 
     private void redirectByRole(HttpServletRequest req, HttpServletResponse resp, String role) throws IOException {
-        if ("ADMIN".equals(role)) {
-            resp.sendRedirect(req.getContextPath() + "/nhan-vien/hien-thi");
-            return;
-        }
-        resp.sendRedirect(req.getContextPath() + "/booking/hien-thi");
+        resp.sendRedirect(req.getContextPath() + "/pages/giao-dien-nhan-vien.jsp");
     }
 
     private String trim(String value) {

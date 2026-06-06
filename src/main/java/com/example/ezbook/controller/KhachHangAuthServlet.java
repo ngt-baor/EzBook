@@ -105,7 +105,7 @@ public class KhachHangAuthServlet extends HttpServlet {
         session.setAttribute("customerName", authUser.getDisplayName());
         session.setAttribute("customerPhone", authUser.getUsername());
 
-        resp.sendRedirect(req.getContextPath() + "/khach-hang/booking-online");
+        resp.sendRedirect(req.getContextPath() + "/pages/giao-dien-khach.jsp");
     }
 
     private String trim(String value) {
