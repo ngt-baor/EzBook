@@ -31,7 +31,7 @@
             <strong>${listDichVu.size()}</strong>
         </article>
         <article class="stat-card">
-            <span>Che do</span>
+            <span>Quyen truy cap</span>
             <strong>Admin only</strong>
         </article>
     </section>

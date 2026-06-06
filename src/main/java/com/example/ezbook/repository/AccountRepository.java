@@ -145,6 +145,52 @@ public class AccountRepository {
         }
     }
 
+    public boolean deleteAccount(String username) {
+        String unlinkKhachHang = "UPDATE KhachHang SET username = NULL WHERE username = ?";
+        String unlinkNhanVien = "UPDATE NhanVien SET username = NULL WHERE username = ?";
+        String deleteTaiKhoan = "DELETE FROM TaiKhoan WHERE username = ?";
+
+        try {
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement ps = connection.prepareStatement(unlinkKhachHang)) {
+                ps.setString(1, username);
+                ps.executeUpdate();
+            }
+
+            try (PreparedStatement ps = connection.prepareStatement(unlinkNhanVien)) {
+                ps.setString(1, username);
+                ps.executeUpdate();
+            }
+
+            int deleted;
+            try (PreparedStatement ps = connection.prepareStatement(deleteTaiKhoan)) {
+                ps.setString(1, username);
+                deleted = ps.executeUpdate();
+            }
+
+            if (deleted <= 0) {
+                connection.rollback();
+                return false;
+            }
+
+            connection.commit();
+            return true;
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ignored) {
+            }
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException ignored) {
+            }
+        }
+    }
+
     public AccountInfo findAccountInfo(String username) {
         String sql = "SELECT tk.username, tk.vai_tro, tk.trang_thai, " +
                 "COALESCE(kh.ho_ten, nv.ho_ten) AS full_name, " +
@@ -164,6 +210,35 @@ public class AccountRepository {
                             rs.getBoolean("trang_thai"),
                             rs.getString("full_name"),
                             rs.getString("phone")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public AccountInfo findAccountDetail(String username) {
+        String sql = "SELECT tk.username, tk.mat_khau, tk.vai_tro, tk.trang_thai, " +
+                "COALESCE(kh.ho_ten, nv.ho_ten) AS full_name, " +
+                "COALESCE(kh.sdt, nv.sdt) AS phone " +
+                "FROM TaiKhoan tk " +
+                "LEFT JOIN KhachHang kh ON kh.username = tk.username " +
+                "LEFT JOIN NhanVien nv ON nv.username = tk.username " +
+                "WHERE tk.username = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new AccountInfo(
+                            rs.getString("username"),
+                            normalizeRole(rs.getString("vai_tro")),
+                            rs.getBoolean("trang_thai"),
+                            rs.getString("full_name"),
+                            rs.getString("phone"),
+                            rs.getString("mat_khau")
                     );
                 }
             }

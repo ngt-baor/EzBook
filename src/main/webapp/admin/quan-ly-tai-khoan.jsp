@@ -53,8 +53,55 @@
     <c:if test="${param.msg == 'status-updated'}">
         <p class="alert success">Cap nhat trang thai tai khoan thanh cong.</p>
     </c:if>
+    <c:if test="${param.msg == 'account-deleted'}">
+        <p class="alert success">Xoa tai khoan thanh cong.</p>
+    </c:if>
     <c:if test="${param.error != null}">
         <p class="alert error">Co loi: ${param.error}</p>
+    </c:if>
+
+    <c:if test="${detailAccount != null}">
+        <div class="modal-overlay">
+            <article class="modal-card">
+                <div class="panel-head">
+                    <h2>Thong Tin Tai Khoan</h2>
+                    <span class="meta-chip">${detailAccount.username}</span>
+                </div>
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <tbody>
+                        <tr>
+                            <th>Username</th>
+                            <td>${detailAccount.username}</td>
+                        </tr>
+                        <tr>
+                            <th>Password</th>
+                            <td>${detailAccount.password}</td>
+                        </tr>
+                        <tr>
+                            <th>Ho ten</th>
+                            <td>${detailAccount.fullName}</td>
+                        </tr>
+                        <tr>
+                            <th>So dien thoai</th>
+                            <td>${detailAccount.phone}</td>
+                        </tr>
+                        <tr>
+                            <th>Vai tro</th>
+                            <td>${detailAccount.role}</td>
+                        </tr>
+                        <tr>
+                            <th>Trang thai</th>
+                            <td>${detailAccount.active ? 'Hoat dong' : 'Bi khoa'}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-body">
+                    <a class="btn btn-muted" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Dong</a>
+                </div>
+            </article>
+        </div>
     </c:if>
 
     <section class="content-stack">
@@ -85,11 +132,18 @@
                                 <td>${acc.role}</td>
                                 <td>${acc.active ? 'Hoat dong' : 'Bi khoa'}</td>
                                 <td>
-                                    <form action="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan/trang-thai" method="post">
-                                        <input type="hidden" name="username" value="${acc.username}">
-                                        <input type="hidden" name="currentStatus" value="${acc.active}">
-                                        <button type="submit">${acc.active ? 'Khoa' : 'Mo khoa'}</button>
-                                    </form>
+                                    <div class="table-actions">
+                                        <a class="btn btn-muted btn-compact" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan/detail?username=${acc.username}">Info</a>
+                                        <form action="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan/trang-thai" method="post">
+                                            <input type="hidden" name="username" value="${acc.username}">
+                                            <input type="hidden" name="currentStatus" value="${acc.active}">
+                                            <button type="submit">${acc.active ? 'Khoa' : 'Mo khoa'}</button>
+                                        </form>
+                                        <form action="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan/xoa" method="post">
+                                            <input type="hidden" name="username" value="${acc.username}">
+                                            <button type="submit" onclick="return confirm('Xoa tai khoan ${acc.username}? Ho so nhan vien/khach hang se duoc giu lai nhung khong con dang nhap bang tai khoan nay.')">Xoa</button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         </c:if>
@@ -126,11 +180,18 @@
                                 <td>${acc.role}</td>
                                 <td>${acc.active ? 'Hoat dong' : 'Bi khoa'}</td>
                                 <td>
-                                    <form action="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan/trang-thai" method="post">
-                                        <input type="hidden" name="username" value="${acc.username}">
-                                        <input type="hidden" name="currentStatus" value="${acc.active}">
-                                        <button type="submit">${acc.active ? 'Khoa' : 'Mo khoa'}</button>
-                                    </form>
+                                    <div class="table-actions">
+                                        <a class="btn btn-muted btn-compact" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan/detail?username=${acc.username}">Info</a>
+                                        <form action="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan/trang-thai" method="post">
+                                            <input type="hidden" name="username" value="${acc.username}">
+                                            <input type="hidden" name="currentStatus" value="${acc.active}">
+                                            <button type="submit">${acc.active ? 'Khoa' : 'Mo khoa'}</button>
+                                        </form>
+                                        <form action="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan/xoa" method="post">
+                                            <input type="hidden" name="username" value="${acc.username}">
+                                            <button type="submit" onclick="return confirm('Xoa tai khoan ${acc.username}? Ho so khach hang se duoc giu lai nhung khong con dang nhap bang tai khoan nay.')">Xoa</button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         </c:if>

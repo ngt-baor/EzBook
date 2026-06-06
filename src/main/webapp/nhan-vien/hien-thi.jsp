@@ -40,8 +40,8 @@
             <strong>Admin</strong>
         </article>
         <article class="stat-card">
-            <span>Che do</span>
-            <strong>Desktop 16:9</strong>
+            <span>Quyen truy cap</span>
+            <strong>Admin only</strong>
         </article>
     </section>
 

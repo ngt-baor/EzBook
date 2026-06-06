@@ -406,6 +406,11 @@ button:hover,
     width: 100%;
 }
 
+.btn-compact {
+    min-height: 40px;
+    padding: 9px 14px;
+}
+
 .btn-danger,
 form[action*="xoa"] button,
 form[action*="huy"] button {
@@ -508,6 +513,31 @@ form[action*="huy"] button:hover {
     background: var(--paper-strong);
     color: var(--teal-dark);
     font-weight: 900;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: rgba(31, 26, 23, 0.62);
+}
+
+.modal-card {
+    width: min(620px, calc(100vw - 32px));
+    max-height: calc(100vh - 48px);
+    overflow: auto;
+    border: 2px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper-strong);
+    box-shadow: 10px 10px 0 rgba(31, 26, 23, 0.30);
+}
+
+.modal-card .data-table th {
+    position: static;
+    width: 170px;
 }
 
 .stat-grid {

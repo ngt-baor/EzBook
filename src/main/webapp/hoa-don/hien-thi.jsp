@@ -11,7 +11,7 @@
         <div class="page-heading">
             <p class="eyebrow">Billing Workspace</p>
             <h1 class="page-title">Quan Ly Hoa Don</h1>
-            <p class="page-subtitle">Khong gian thao tac hoa don cho Admin va Staff, uu tien nhap lieu theo hang ngang de hop man hinh PC 16:9 va scan nhanh trang thai thanh toan.</p>
+            <p class="page-subtitle">Khong gian thao tac hoa don cho Admin va Staff, uu tien nhap lieu ro rang va scan nhanh trang thai thanh toan.</p>
         </div>
         <nav class="toolbar">
             <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Trang Chu</a>

@@ -24,7 +24,9 @@ import java.util.UUID;
         "/account/upload-avatar",
         "/account/ho-so",
         "/admin/quan-ly-tai-khoan",
-        "/admin/quan-ly-tai-khoan/trang-thai"
+        "/admin/quan-ly-tai-khoan/detail",
+        "/admin/quan-ly-tai-khoan/trang-thai",
+        "/admin/quan-ly-tai-khoan/xoa"
 })
 @MultipartConfig(
         fileSizeThreshold = 1024 * 1024 * 2,
@@ -43,6 +45,10 @@ public class AccountServlet extends HttpServlet {
         }
         if (uri.contains("/admin/quan-ly-tai-khoan/trang-thai")) {
             xuLyKhoaMoTaiKhoan(req, resp);
+            return;
+        }
+        if (uri.contains("/admin/quan-ly-tai-khoan/detail")) {
+            hienThiChiTietTaiKhoan(req, resp);
             return;
         }
         if (uri.contains("/admin/quan-ly-tai-khoan")) {
@@ -78,6 +84,10 @@ public class AccountServlet extends HttpServlet {
         }
         if (uri.contains("/admin/quan-ly-tai-khoan/trang-thai")) {
             xuLyKhoaMoTaiKhoan(req, resp);
+            return;
+        }
+        if (uri.contains("/admin/quan-ly-tai-khoan/xoa")) {
+            xuLyXoaTaiKhoan(req, resp);
             return;
         }
 
@@ -251,6 +261,25 @@ public class AccountServlet extends HttpServlet {
         req.getRequestDispatcher("/admin/quan-ly-tai-khoan.jsp").forward(req, resp);
     }
 
+    private void hienThiChiTietTaiKhoan(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String username = trim(req.getParameter("username"));
+        if (username == null) {
+            resp.sendRedirect(req.getContextPath() + "/admin/quan-ly-tai-khoan?error=missing-user");
+            return;
+        }
+
+        AccountInfo detailAccount = accountRepo.findAccountDetail(username);
+        if (detailAccount == null) {
+            resp.sendRedirect(req.getContextPath() + "/admin/quan-ly-tai-khoan?error=account-not-found");
+            return;
+        }
+
+        List<AccountInfo> accounts = accountRepo.getAllAccountInfos();
+        req.setAttribute("accounts", accounts);
+        req.setAttribute("detailAccount", detailAccount);
+        req.getRequestDispatcher("/admin/quan-ly-tai-khoan.jsp").forward(req, resp);
+    }
+
     private void xuLyKhoaMoTaiKhoan(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession(false);
         String currentRole = session == null ? null : (String) session.getAttribute("role");
@@ -279,6 +308,35 @@ public class AccountServlet extends HttpServlet {
             return;
         }
         resp.sendRedirect(req.getContextPath() + "/admin/quan-ly-tai-khoan?error=status-update-failed");
+    }
+
+    private void xuLyXoaTaiKhoan(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        HttpSession session = req.getSession(false);
+        String currentRole = session == null ? null : (String) session.getAttribute("role");
+        if (!"ADMIN".equals(currentRole)) {
+            resp.sendRedirect(req.getContextPath() + "/auth/login.jsp?error=forbidden");
+            return;
+        }
+
+        String targetUsername = trim(req.getParameter("username"));
+        String currentUsername = (String) session.getAttribute("username");
+
+        if (targetUsername == null) {
+            resp.sendRedirect(req.getContextPath() + "/admin/quan-ly-tai-khoan?error=missing-user");
+            return;
+        }
+
+        if (targetUsername.equals(currentUsername)) {
+            resp.sendRedirect(req.getContextPath() + "/admin/quan-ly-tai-khoan?error=cannot-delete-self");
+            return;
+        }
+
+        boolean ok = accountRepo.deleteAccount(targetUsername);
+        if (ok) {
+            resp.sendRedirect(req.getContextPath() + "/admin/quan-ly-tai-khoan?msg=account-deleted");
+            return;
+        }
+        resp.sendRedirect(req.getContextPath() + "/admin/quan-ly-tai-khoan?error=delete-account-failed");
     }
 
     private String getFileName(Part part) {
