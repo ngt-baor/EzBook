@@ -181,7 +181,7 @@ public class BookingServlet extends HttpServlet {
 
     private Date parseSqlDate(String value) {
         try {
-            if (value == null || value.isBlank()) return null;
+            if (value == null || value.trim().isEmpty()) return null;
             return Date.valueOf(value.trim());
         } catch (Exception e) {
             return null;
@@ -190,7 +190,7 @@ public class BookingServlet extends HttpServlet {
 
     private int parseYear(String yearRaw) {
         try {
-            if (yearRaw == null || yearRaw.isBlank()) return Year.now().getValue();
+            if (yearRaw == null || yearRaw.trim().isEmpty()) return Year.now().getValue();
             return Integer.parseInt(yearRaw.trim());
         } catch (NumberFormatException e) {
             return Year.now().getValue();

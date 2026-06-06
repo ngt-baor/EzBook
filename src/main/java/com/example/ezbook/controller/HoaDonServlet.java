@@ -141,7 +141,7 @@ public class HoaDonServlet extends HttpServlet {
     }
 
     private String toDateTimeLocalInput(String value) {
-        if (value == null || value.isBlank()) {
+        if (value == null || value.trim().isEmpty()) {
             return "";
         }
         String normalized = value.trim().replace(" ", "T");

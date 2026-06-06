@@ -31,7 +31,7 @@ public class SecurityFilter implements Filter {
         String role = session == null ? null : (String) session.getAttribute("role");
 
         if (requiresCustomer(path)) {
-            if (role == null || role.isBlank()) {
+            if (isBlank(role)) {
                 resp.sendRedirect(req.getContextPath() + "/khach-hang/dang-nhap.jsp?error=login-required");
                 return;
             }
@@ -44,7 +44,7 @@ public class SecurityFilter implements Filter {
         }
 
         if (requiresAdmin(path)) {
-            if (role == null || role.isBlank()) {
+            if (isBlank(role)) {
                 resp.sendRedirect(req.getContextPath() + "/auth/login.jsp?error=login-required");
                 return;
             }
@@ -57,7 +57,7 @@ public class SecurityFilter implements Filter {
         }
 
         if (requiresStaffOrAdmin(path)) {
-            if (role == null || role.isBlank()) {
+            if (isBlank(role)) {
                 resp.sendRedirect(req.getContextPath() + "/auth/login.jsp?error=login-required");
                 return;
             }
@@ -70,7 +70,7 @@ public class SecurityFilter implements Filter {
         }
 
         if (path.startsWith("/account/")) {
-            if (role == null || role.isBlank()) {
+            if (isBlank(role)) {
                 resp.sendRedirect(req.getContextPath() + "/auth/login.jsp?error=login-required");
                 return;
             }
@@ -110,5 +110,9 @@ public class SecurityFilter implements Filter {
     private boolean requiresCustomer(String path) {
         return path.startsWith("/khach-hang/booking-online")
                 || path.equals("/pages/giao-dien-khach.jsp");
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.trim().isEmpty();
     }
 }

@@ -139,7 +139,7 @@ public class HoaDonRepository {
     }
 
     public boolean taoHoaDonChoBookingHoanThanh(String bookingId) {
-        if (bookingId == null || bookingId.isBlank()) {
+        if (isBlank(bookingId)) {
             return false;
         }
         if (existsByBookingId(bookingId)) {
@@ -174,7 +174,7 @@ public class HoaDonRepository {
     }
 
     private void bindPaymentTime(PreparedStatement ps, int index, String timeValue) throws SQLException {
-        if (timeValue == null || timeValue.isBlank()) {
+        if (isBlank(timeValue)) {
             ps.setNull(index, Types.TIMESTAMP);
             return;
         }
@@ -217,5 +217,9 @@ public class HoaDonRepository {
             id = "HD" + System.currentTimeMillis() + (int) (Math.random() * 1000);
         }
         return id;
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.trim().isEmpty();
     }
 }

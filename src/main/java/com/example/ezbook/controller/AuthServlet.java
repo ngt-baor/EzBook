@@ -29,7 +29,7 @@ public class AuthServlet extends HttpServlet {
 
         HttpSession session = req.getSession(false);
         String role = session == null ? null : (String) session.getAttribute("role");
-        if (role != null && !role.isBlank()) {
+        if (role != null && !role.trim().isEmpty()) {
             redirectByRole(req, resp, role);
             return;
         }

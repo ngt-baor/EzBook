@@ -235,7 +235,7 @@ public class AccountServlet extends HttpServlet {
     private void hienThiHoSo(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
         String username = session == null ? null : (String) session.getAttribute("username");
-        if (username == null || username.isBlank()) {
+        if (username == null || username.trim().isEmpty()) {
             resp.sendRedirect(req.getContextPath() + "/auth/login.jsp?error=login-required");
             return;
         }

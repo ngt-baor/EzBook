@@ -45,14 +45,14 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
         HttpSession session = req.getSession(false);
         String customerUsername = session == null ? null : (String) session.getAttribute("customerUsername");
         String sdt = session == null ? null : (String) session.getAttribute("customerPhone");
-        if (sdt == null || sdt.isBlank()) {
+        if (isBlank(sdt)) {
             sdt = customerUsername;
         }
 
         req.setAttribute("listDichVu", dichVuRepository.getAll());
         req.setAttribute("listNhanVien", nhanVienRepository.getAll());
         req.setAttribute("khungGio", KHUNG_GIO);
-        if (sdt != null && !sdt.isBlank()) {
+        if (!isBlank(sdt)) {
             req.setAttribute("bookingCuaToi", bookingRepository.getByKhachHangSdt(sdt));
             req.setAttribute("sdtTimKiem", sdt);
             req.setAttribute("customerName", session == null ? null : session.getAttribute("customerName"));
@@ -65,7 +65,7 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
         String uri = req.getRequestURI();
         HttpSession session = req.getSession(false);
         String sdt = session == null ? null : (String) session.getAttribute("customerPhone");
-        if (sdt == null || sdt.isBlank()) {
+        if (isBlank(sdt)) {
             sdt = session == null ? null : (String) session.getAttribute("customerUsername");
         }
 
@@ -127,7 +127,7 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
 
     private void huyBooking(HttpServletRequest req, HttpServletResponse resp, String sdt) throws IOException {
         String bookingId = trim(req.getParameter("id"));
-        if (sdt == null || sdt.isBlank() || bookingId == null) {
+        if (isBlank(sdt) || bookingId == null) {
             redirectWithMessage(resp, req.getContextPath() + "/khach-hang/booking-online", "error", "cancel-missing-data", sdt);
             return;
         }
@@ -143,7 +143,7 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
     private void redirectWithMessage(HttpServletResponse resp, String baseUrl, String key, String value, String sdt) throws IOException {
         String encodedValue = URLEncoder.encode(value, StandardCharsets.UTF_8);
         StringBuilder url = new StringBuilder(baseUrl).append("?").append(key).append("=").append(encodedValue);
-        if (sdt != null && !sdt.isBlank()) {
+        if (!isBlank(sdt)) {
             url.append("&sdt=").append(URLEncoder.encode(sdt, StandardCharsets.UTF_8));
         }
         resp.sendRedirect(url.toString());
@@ -153,5 +153,9 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
         if (value == null) return null;
         String v = value.trim();
         return v.isEmpty() ? null : v;
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.trim().isEmpty();
     }
 }

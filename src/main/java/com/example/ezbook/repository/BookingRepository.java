@@ -67,7 +67,7 @@ public class BookingRepository {
             ps.setString(2, bk.getKhach_hang_id());
             ps.setString(3, bk.getNhan_vien_id());
             ps.setString(4, bk.getDich_vu_id());
-            if (bk.getKhuyen_mai_id() == null || bk.getKhuyen_mai_id().isBlank()) {
+            if (isBlank(bk.getKhuyen_mai_id())) {
                 ps.setNull(5, Types.VARCHAR);
             } else {
                 ps.setString(5, bk.getKhuyen_mai_id());
@@ -221,13 +221,13 @@ public class BookingRepository {
         );
 
         List<Object> params = new ArrayList<>();
-        if (keyword != null && !keyword.isBlank()) {
+        if (!isBlank(keyword)) {
             sql.append("AND (kh.ho_ten LIKE ? OR kh.sdt LIKE ?) ");
             String key = "%" + keyword.trim() + "%";
             params.add(key);
             params.add(key);
         }
-        if (status != null && !status.isBlank()) {
+        if (!isBlank(status)) {
             String normalized = normalizeStatus(status.trim());
             if ("Pending".equals(normalized)) {
                 sql.append("AND b.trang_thai_booking IN (?, ?) ");
@@ -344,5 +344,9 @@ public class BookingRepository {
             e.printStackTrace();
             return false;
         }
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.trim().isEmpty();
     }
 }
