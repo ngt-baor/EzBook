@@ -136,6 +136,20 @@ public class HoaDonRepository {
         }
     }
 
+    public boolean xacNhanDaThanhToan(String id) {
+        String sql = "UPDATE HoaDon SET trang_thai_thanh_toan = ?, thoi_gian_thanh_toan = CURRENT_TIMESTAMP " +
+                "WHERE id = ? AND trang_thai_thanh_toan = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, "Da thanh toan");
+            ps.setString(2, id);
+            ps.setString(3, "Chua thanh toan");
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public List<MonthlyRevenue> thongKeDoanhThuTheoThang(int year) {
         String sql = "SELECT MONTH(thoi_gian_thanh_toan) AS thang, SUM(thanh_tien) AS doanh_thu " +
                 "FROM HoaDon " +

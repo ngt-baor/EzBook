@@ -504,6 +504,42 @@ form[action*="huy"] button:hover {
     margin: 0;
 }
 
+.payment-confirm-box {
+    display: inline-grid;
+    gap: 8px;
+}
+
+.payment-confirm-actions {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.payment-confirm-actions form {
+    margin: 0;
+}
+
+.btn-confirm-paid {
+    background: #2f7d42;
+    color: #fff8e6;
+}
+
+.btn-confirm-paid:hover {
+    background: #1f5f30;
+    color: #fff8e6;
+}
+
+.btn-deny-paid {
+    background: var(--brick-soft);
+    color: var(--brick);
+}
+
+.btn-deny-paid:hover {
+    background: var(--brick);
+    color: #fff8e6;
+}
+
 .table-link {
     display: inline-flex;
     align-items: center;

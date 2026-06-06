@@ -186,7 +186,25 @@
                         <td>${hd.thanh_tien}</td>
                         <td>${hd.phuong_thuc_thanh_toan}</td>
                         <td>${hd.thoi_gian_thanh_toan}</td>
-                        <td>${hd.trang_thai_thanh_toan}</td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${hd.trang_thai_thanh_toan == 'Chua thanh toan'}">
+                                    <div class="payment-confirm-box" data-payment-confirm>
+                                        <button class="btn btn-compact" type="button" data-show-payment-confirm>Xac nhan da thanh toan</button>
+                                        <div class="payment-confirm-actions" data-payment-actions hidden>
+                                            <form action="${pageContext.request.contextPath}/hoa-don/xac-nhan-thanh-toan" method="post">
+                                                <input type="hidden" name="id" value="${hd.id}">
+                                                <button class="btn-confirm-paid" type="submit">Confirm</button>
+                                            </form>
+                                            <button class="btn-deny-paid" type="button" data-hide-payment-confirm>Deny</button>
+                                        </div>
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="status-chip">${hd.trang_thai_thanh_toan}</span>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
                         <td>
                             <div class="table-actions">
                                 <a class="table-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi?editId=${hd.id}">Sua</a>
@@ -203,5 +221,22 @@
         </div>
     </article>
 </div>
+<script>
+    document.querySelectorAll('[data-payment-confirm]').forEach(function (box) {
+        var showButton = box.querySelector('[data-show-payment-confirm]');
+        var actions = box.querySelector('[data-payment-actions]');
+        var denyButton = box.querySelector('[data-hide-payment-confirm]');
+
+        showButton.addEventListener('click', function () {
+            showButton.hidden = true;
+            actions.hidden = false;
+        });
+
+        denyButton.addEventListener('click', function () {
+            actions.hidden = true;
+            showButton.hidden = false;
+        });
+    });
+</script>
 </body>
 </html>

@@ -20,7 +20,8 @@ import java.time.format.DateTimeFormatter;
         "/hoa-don/hien-thi",
         "/hoa-don/them",
         "/hoa-don/sua",
-        "/hoa-don/xoa"
+        "/hoa-don/xoa",
+        "/hoa-don/xac-nhan-thanh-toan"
 })
 public class HoaDonServlet extends HttpServlet {
     private final HoaDonRepository hoaDonRepository = new HoaDonRepository();
@@ -63,6 +64,10 @@ public class HoaDonServlet extends HttpServlet {
             xoaHoaDon(req, resp);
             return;
         }
+        if (uri.contains("/xac-nhan-thanh-toan")) {
+            xacNhanThanhToan(req, resp);
+            return;
+        }
         resp.sendRedirect(req.getContextPath() + "/hoa-don/hien-thi");
     }
 
@@ -94,6 +99,16 @@ public class HoaDonServlet extends HttpServlet {
         }
         boolean ok = hoaDonRepository.xoa(id);
         redirectWithStatus(resp, req.getContextPath(), ok, "deleted-success", "delete-failed");
+    }
+
+    private void xacNhanThanhToan(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String id = trim(req.getParameter("id"));
+        if (id == null) {
+            redirectWithError(resp, req.getContextPath(), "missing-id");
+            return;
+        }
+        boolean ok = hoaDonRepository.xacNhanDaThanhToan(id);
+        redirectWithStatus(resp, req.getContextPath(), ok, "payment-confirmed", "payment-confirm-failed");
     }
 
     private HoaDon parseFromRequest(HttpServletRequest req) {
