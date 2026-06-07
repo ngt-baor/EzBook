@@ -46,6 +46,12 @@
     <c:if test="${param.error == 'staff-time-conflict'}">
         <p class="alert error">Nhan vien da co lich o khung gio nay, vui long chon gio khac.</p>
     </c:if>
+    <c:if test="${param.error == 'staff-not-bookable'}">
+        <p class="alert error">Khong the dat lich cho tai khoan admin. Vui long chon nhan vien khac.</p>
+    </c:if>
+    <c:if test="${param.error == 'past-booking-not-allowed'}">
+        <p class="alert error">Khach hang chi duoc dat lich tu thoi diem hien tai tro di.</p>
+    </c:if>
     <c:if test="${param.error == 'customer-not-found'}">
         <p class="alert error">Khong tim thay ho so khach hang. Vui long dang nhap lai.</p>
     </c:if>
@@ -55,7 +61,7 @@
     <c:if test="${param.error == 'cancel-missing-data'}">
         <p class="alert error">Khong du thong tin de huy lich.</p>
     </c:if>
-    <c:if test="${param.error != null && param.error != 'staff-time-conflict' && param.error != 'customer-not-found' && param.error != 'cancel-not-allowed' && param.error != 'cancel-missing-data'}">
+    <c:if test="${param.error != null && param.error != 'staff-time-conflict' && param.error != 'staff-not-bookable' && param.error != 'past-booking-not-allowed' && param.error != 'customer-not-found' && param.error != 'cancel-not-allowed' && param.error != 'cancel-missing-data'}">
         <p class="alert error">Co loi: ${param.error}</p>
     </c:if>
 
@@ -89,7 +95,7 @@
                         </label>
                         <label class="field">
                             <span>Ngay hen</span>
-                            <input type="date" name="ngay_hen" required>
+                            <input type="date" name="ngay_hen" min="${todayDate}" required>
                         </label>
                         <label class="field">
                             <span>Khung gio</span>

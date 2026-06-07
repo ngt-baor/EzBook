@@ -56,13 +56,16 @@
     <c:if test="${param.error == 'staff-time-conflict'}">
         <p class="alert error">Nhan vien da co lich o khung gio nay.</p>
     </c:if>
+    <c:if test="${param.error == 'staff-not-bookable'}">
+        <p class="alert error">Khong the dat lich cho tai khoan admin. Vui long chon nhan vien khac.</p>
+    </c:if>
     <c:if test="${param.error == 'invalid-status-transition'}">
         <p class="alert error">Khong hop le workflow: Pending -> Confirmed -> Completed -> Cancelled.</p>
     </c:if>
     <c:if test="${param.error == 'invoice-auto-create-failed'}">
         <p class="alert error">Da chuyen Completed nhung tao hoa don tu dong that bai.</p>
     </c:if>
-    <c:if test="${param.error != null && param.error != 'staff-time-conflict' && param.error != 'invalid-status-transition' && param.error != 'invoice-auto-create-failed'}">
+    <c:if test="${param.error != null && param.error != 'staff-time-conflict' && param.error != 'staff-not-bookable' && param.error != 'invalid-status-transition' && param.error != 'invoice-auto-create-failed'}">
         <p class="alert error">Co loi: ${param.error}</p>
     </c:if>
 

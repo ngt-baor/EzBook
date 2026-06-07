@@ -68,7 +68,7 @@ public class BookingServlet extends HttpServlet {
 
         req.setAttribute("listBooking", bookingRepository.getAllForView(tuKhoa, trangThai, ngayTu, ngayDen));
         req.setAttribute("listKhachHang", khachHangRepository.getAll());
-        req.setAttribute("listNhanVien", nhanVienRepository.getAll());
+        req.setAttribute("listNhanVien", nhanVienRepository.getNhanVienCoTheDatLich());
         req.setAttribute("listDichVu", dichVuRepository.getAll());
         req.setAttribute("khungGio", KHUNG_GIO);
 
@@ -95,6 +95,11 @@ public class BookingServlet extends HttpServlet {
             thoiGianHen = Timestamp.valueOf(LocalDateTime.of(date, time));
         } catch (Exception e) {
             redirectWithMessage(resp, req.getContextPath() + "/booking/hien-thi", "error", "invalid-datetime");
+            return;
+        }
+
+        if (!nhanVienRepository.coTheNhanBooking(nhanVienId)) {
+            redirectWithMessage(resp, req.getContextPath() + "/booking/hien-thi", "error", "staff-not-bookable");
             return;
         }
 

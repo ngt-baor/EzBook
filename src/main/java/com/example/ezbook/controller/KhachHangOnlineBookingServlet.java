@@ -50,9 +50,10 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
         }
 
         req.setAttribute("listDichVu", dichVuRepository.getAll());
-        req.setAttribute("listNhanVien", nhanVienRepository.getAll());
+        req.setAttribute("listNhanVien", nhanVienRepository.getNhanVienCoTheDatLich());
         req.setAttribute("topDichVuHot", bookingRepository.thongKeTop3DichVuDuocDatNhieu());
         req.setAttribute("khungGio", KHUNG_GIO);
+        req.setAttribute("todayDate", LocalDate.now().toString());
         if (!isBlank(sdt)) {
             req.setAttribute("bookingCuaToi", bookingRepository.getByKhachHangSdt(sdt));
             req.setAttribute("sdtTimKiem", sdt);
@@ -89,9 +90,19 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
 
         Timestamp thoiGianHen;
         try {
-            thoiGianHen = Timestamp.valueOf(LocalDateTime.of(LocalDate.parse(ngayHen), LocalTime.parse(khungGio)));
+            LocalDateTime thoiGianHenValue = LocalDateTime.of(LocalDate.parse(ngayHen), LocalTime.parse(khungGio));
+            if (thoiGianHenValue.isBefore(LocalDateTime.now())) {
+                redirectWithMessage(resp, req.getContextPath() + "/khach-hang/booking-online", "error", "past-booking-not-allowed", sdt);
+                return;
+            }
+            thoiGianHen = Timestamp.valueOf(thoiGianHenValue);
         } catch (Exception e) {
             redirectWithMessage(resp, req.getContextPath() + "/khach-hang/booking-online", "error", "invalid-datetime", sdt);
+            return;
+        }
+
+        if (nhanVienId != null && !nhanVienRepository.coTheNhanBooking(nhanVienId)) {
+            redirectWithMessage(resp, req.getContextPath() + "/khach-hang/booking-online", "error", "staff-not-bookable", sdt);
             return;
         }
 

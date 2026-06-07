@@ -3,8 +3,10 @@ package com.example.ezbook.repository;
 import com.example.ezbook.entity.NhanVien;
 import com.example.ezbook.util.DBConnect;
 
+import java.text.Normalizer;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.List;
 
 public class NhanVienRepository {
@@ -34,6 +36,24 @@ public class NhanVienRepository {
             e.printStackTrace();
         }
         return danhSach;
+    }
+
+    public List<NhanVien> getNhanVienCoTheDatLich() {
+        List<NhanVien> danhSach = new ArrayList<>();
+        for (NhanVien nv : getAll()) {
+            if (nv.isTrang_thai() && !laNhanVienQuanTri(nv)) {
+                danhSach.add(nv);
+            }
+        }
+        return danhSach;
+    }
+
+    public boolean coTheNhanBooking(String id) {
+        if (id == null || id.trim().isEmpty()) {
+            return false;
+        }
+        NhanVien nv = findById(id.trim());
+        return nv != null && nv.isTrang_thai() && !laNhanVienQuanTri(nv);
     }
 
     public void them(NhanVien nv) {
@@ -97,5 +117,26 @@ public class NhanVienRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean laNhanVienQuanTri(NhanVien nv) {
+        if (nv == null) {
+            return false;
+        }
+        String vaiTro = chuanHoaText(nv.getVai_tro());
+        String hoTen = chuanHoaText(nv.getHo_ten());
+        return vaiTro.contains("admin")
+                || vaiTro.contains("quan tri")
+                || hoTen.contains("admin")
+                || hoTen.contains("quan tri he thong");
+    }
+
+    private String chuanHoaText(String value) {
+        if (value == null) {
+            return "";
+        }
+        return Normalizer.normalize(value, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "")
+                .toLowerCase(Locale.ROOT);
     }
 }
