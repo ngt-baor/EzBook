@@ -23,6 +23,7 @@
             </c:if>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/booking/hien-thi">Booking</a>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hoa don</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/thong-ke/hien-thi">Thong ke</a>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Ho so</a>
             <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/logout">Dang xuat</a>
         </nav>
@@ -66,7 +67,7 @@
 
         <a class="action-card" href="${pageContext.request.contextPath}/booking/hien-thi">
             <strong>Quan Ly Booking</strong>
-            <span>Dat lich theo khung gio, kiem tra trung lich, loc trang thai va xem doanh thu theo thang.</span>
+            <span>Dat lich theo khung gio, kiem tra trung lich, loc theo khach hang, ngay va trang thai.</span>
             <em>Operations</em>
         </a>
 
@@ -74,6 +75,12 @@
             <strong>Quan Ly Hoa Don</strong>
             <span>Theo doi thanh toan, cap nhat phuong thuc thanh toan va xu ly hoa don cho booking hoan thanh.</span>
             <em>Billing</em>
+        </a>
+
+        <a class="action-card" href="${pageContext.request.contextPath}/thong-ke/hien-thi">
+            <strong>Thong Ke</strong>
+            <span>Xem bieu do doanh thu theo thang, loc theo nam va tong hop so lieu tu hoa don da thanh toan.</span>
+            <em>Analytics</em>
         </a>
 
         <a class="action-card" href="${pageContext.request.contextPath}/account/ho-so">

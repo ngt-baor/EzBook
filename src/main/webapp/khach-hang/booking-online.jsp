@@ -119,6 +119,31 @@
             </div>
         </article>
 
+        <div class="content-stack">
+        <article class="panel">
+            <div class="panel-head">
+                <h2>Top Dich Vu Duoc Dat Nhieu Nhat</h2>
+                <span class="meta-chip">Hot services</span>
+            </div>
+            <div class="panel-body" style="padding-bottom:16px;">
+                <div style="display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:10px; margin-bottom:16px;">
+                    <c:forEach items="${topDichVuHot}" var="dv" varStatus="st">
+                        <article style="min-height:118px; padding:12px; border:2px solid #2b2520; border-radius:6px; background:#fff8e6; box-shadow:4px 4px 0 rgba(31,26,23,0.16);">
+                            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;">
+                                <span style="font-size:22px;">&#128293;</span>
+                                <span class="meta-chip">Top ${st.index + 1}</span>
+                            </div>
+                            <strong style="display:block; margin-bottom:6px;">${dv.tenDichVu}</strong>
+                            <span class="mini-note">${dv.soLuotDat} luot dat</span>
+                        </article>
+                    </c:forEach>
+                    <c:if test="${topDichVuHot.size() == 0}">
+                        <p class="panel-note" style="grid-column:1 / -1;">Chua co du lieu dich vu hot.</p>
+                    </c:if>
+                </div>
+            </div>
+        </article>
+
         <article class="panel">
             <div class="panel-head">
                 <h2>Lich Da Dat Cua Toi</h2>
@@ -169,6 +194,7 @@
                 </c:if>
             </div>
         </article>
+        </div>
     </section>
 </div>
 </body>

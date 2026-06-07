@@ -2,6 +2,7 @@ package com.example.ezbook.repository;
 
 import com.example.ezbook.entity.Booking;
 import com.example.ezbook.entity.BookingView;
+import com.example.ezbook.entity.TopDichVuThongKe;
 import com.example.ezbook.util.DBConnect;
 
 import java.sql.*;
@@ -332,6 +333,61 @@ public class BookingRepository {
                         normalizeStatus(rs.getString("trang_thai_booking")),
                         stripPaymentMarker(rawNote),
                         extractPaymentMethod(rawNote)
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public List<TopDichVuThongKe> thongKeTopDichVuDuocDatNhieu(int year) {
+        String sql = "SELECT TOP 10 dv.id, dv.ten_dich_vu, COUNT(b.id) AS so_luot_dat, " +
+                "SUM(dv.gia_tien) AS doanh_thu_du_kien " +
+                "FROM Booking b " +
+                "JOIN DichVu dv ON b.dich_vu_id = dv.id " +
+                "WHERE YEAR(b.thoi_gian_hen) = ? " +
+                "AND b.trang_thai_booking NOT IN ('Cancelled', N'Da huy') " +
+                "GROUP BY dv.id, dv.ten_dich_vu " +
+                "ORDER BY so_luot_dat DESC, doanh_thu_du_kien DESC, dv.ten_dich_vu ASC";
+
+        List<TopDichVuThongKe> result = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, year);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    result.add(new TopDichVuThongKe(
+                            rs.getString("id"),
+                            rs.getString("ten_dich_vu"),
+                            rs.getInt("so_luot_dat"),
+                            rs.getDouble("doanh_thu_du_kien")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public List<TopDichVuThongKe> thongKeTop3DichVuDuocDatNhieu() {
+        String sql = "SELECT TOP 3 dv.id, dv.ten_dich_vu, COUNT(b.id) AS so_luot_dat, " +
+                "SUM(dv.gia_tien) AS doanh_thu_du_kien " +
+                "FROM Booking b " +
+                "JOIN DichVu dv ON b.dich_vu_id = dv.id " +
+                "WHERE b.trang_thai_booking NOT IN ('Cancelled', N'Da huy') " +
+                "GROUP BY dv.id, dv.ten_dich_vu " +
+                "ORDER BY so_luot_dat DESC, doanh_thu_du_kien DESC, dv.ten_dich_vu ASC";
+
+        List<TopDichVuThongKe> result = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                result.add(new TopDichVuThongKe(
+                        rs.getString("id"),
+                        rs.getString("ten_dich_vu"),
+                        rs.getInt("so_luot_dat"),
+                        rs.getDouble("doanh_thu_du_kien")
                 ));
             }
         } catch (SQLException e) {

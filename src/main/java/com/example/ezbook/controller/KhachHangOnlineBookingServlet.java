@@ -51,6 +51,7 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
 
         req.setAttribute("listDichVu", dichVuRepository.getAll());
         req.setAttribute("listNhanVien", nhanVienRepository.getAll());
+        req.setAttribute("topDichVuHot", bookingRepository.thongKeTop3DichVuDuocDatNhieu());
         req.setAttribute("khungGio", KHUNG_GIO);
         if (!isBlank(sdt)) {
             req.setAttribute("bookingCuaToi", bookingRepository.getByKhachHangSdt(sdt));

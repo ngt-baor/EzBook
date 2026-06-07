@@ -11,7 +11,7 @@
         <div class="page-heading">
             <p class="eyebrow">Operations Workspace</p>
             <h1 class="page-title">Quan Ly Booking</h1>
-            <p class="page-subtitle">Dieu phoi lich hen theo khung gio, kiem tra trung lich nhan vien, theo doi workflow Pending -> Confirmed -> Completed -> Cancelled va xem doanh thu thang tren cung mot man hinh.</p>
+            <p class="page-subtitle">Dieu phoi lich hen theo khung gio, kiem tra trung lich nhan vien va theo doi workflow Pending -> Confirmed -> Completed -> Cancelled.</p>
         </div>
         <nav class="toolbar">
             
@@ -23,6 +23,7 @@
             </c:if>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/booking/hien-thi">Booking</a>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hoa don</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/thong-ke/hien-thi">Thong ke</a>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Ho so</a>
             <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/logout">Dang xuat</a>
         </nav>
@@ -38,8 +39,8 @@
             <strong>${khungGio.size()} slot</strong>
         </article>
         <article class="stat-card">
-            <span>Nam thong ke</span>
-            <strong>${year}</strong>
+            <span>Workflow</span>
+            <strong>4 buoc</strong>
         </article>
     </section>
 
@@ -160,10 +161,6 @@
                             <span>Den ngay</span>
                             <input type="date" name="ngayDen" value="${param.ngayDen}">
                         </label>
-                        <label class="field">
-                            <span>Nam thong ke doanh thu</span>
-                            <input type="number" name="year" value="${year}" min="2000" max="2100">
-                        </label>
                     </div>
                     <div class="form-actions">
                         <button type="submit">Ap dung bo loc</button>
@@ -246,28 +243,6 @@
         </div>
     </article>
 
-    <article class="panel revenue-chart-panel" style="margin-top:32px;">
-        <div class="panel-head">
-            <h2>Bieu Do Doanh Thu Thang (${year})</h2>
-            <span class="meta-chip">Paid revenue</span>
-        </div>
-        <div class="panel-body">
-            <c:if test="${!hasRevenueData}">
-                <p class="panel-note">Nam nay chua co doanh thu da thanh toan.</p>
-            </c:if>
-            <div class="chart-list">
-                <c:forEach items="${doanhThuThang}" var="dt">
-                    <div class="chart-row">
-                        <div>Thang ${dt.month}</div>
-                        <div class="chart-track">
-                            <div class="chart-bar" style="width:${dt.widthPercent}%"></div>
-                        </div>
-                        <div>${dt.revenue}</div>
-                    </div>
-                </c:forEach>
-            </div>
-        </div>
-    </article>
 </div>
 </body>
 </html>

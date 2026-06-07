@@ -104,6 +104,7 @@ public class SecurityFilter implements Filter {
     private boolean requiresStaffOrAdmin(String path) {
         return path.startsWith("/booking/")
                 || path.startsWith("/hoa-don/")
+                || path.startsWith("/thong-ke/")
                 || path.equals("/pages/giao-dien-nhan-vien.jsp");
     }
 

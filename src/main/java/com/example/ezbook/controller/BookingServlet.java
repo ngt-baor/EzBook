@@ -1,7 +1,6 @@
 package com.example.ezbook.controller;
 
 import com.example.ezbook.entity.Booking;
-import com.example.ezbook.entity.MonthlyRevenue;
 import com.example.ezbook.repository.BookingRepository;
 import com.example.ezbook.repository.DichVuRepository;
 import com.example.ezbook.repository.HoaDonRepository;
@@ -21,7 +20,6 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Year;
 import java.util.Arrays;
 import java.util.List;
 
@@ -67,29 +65,12 @@ public class BookingServlet extends HttpServlet {
         String trangThai = req.getParameter("trangThai");
         Date ngayTu = parseSqlDate(req.getParameter("ngayTu"));
         Date ngayDen = parseSqlDate(req.getParameter("ngayDen"));
-        int year = parseYear(req.getParameter("year"));
 
         req.setAttribute("listBooking", bookingRepository.getAllForView(tuKhoa, trangThai, ngayTu, ngayDen));
         req.setAttribute("listKhachHang", khachHangRepository.getAll());
         req.setAttribute("listNhanVien", nhanVienRepository.getAll());
         req.setAttribute("listDichVu", dichVuRepository.getAll());
         req.setAttribute("khungGio", KHUNG_GIO);
-        req.setAttribute("year", year);
-
-        List<MonthlyRevenue> doanhThuThang = hoaDonRepository.thongKeDoanhThuTheoThang(year);
-        double max = 0.0;
-        for (MonthlyRevenue item : doanhThuThang) {
-            if (item.getRevenue() > max) {
-                max = item.getRevenue();
-            }
-        }
-        double safeMax = max <= 0 ? 1.0 : max;
-        for (MonthlyRevenue item : doanhThuThang) {
-            item.setWidthPercent((item.getRevenue() / safeMax) * 100.0);
-        }
-        req.setAttribute("doanhThuThang", doanhThuThang);
-        req.setAttribute("hasRevenueData", max > 0);
-        req.setAttribute("maxDoanhThu", safeMax);
 
         req.getRequestDispatcher("/booking/hien-thi.jsp").forward(req, resp);
     }
@@ -185,15 +166,6 @@ public class BookingServlet extends HttpServlet {
             return Date.valueOf(value.trim());
         } catch (Exception e) {
             return null;
-        }
-    }
-
-    private int parseYear(String yearRaw) {
-        try {
-            if (yearRaw == null || yearRaw.trim().isEmpty()) return Year.now().getValue();
-            return Integer.parseInt(yearRaw.trim());
-        } catch (NumberFormatException e) {
-            return Year.now().getValue();
         }
     }
 
