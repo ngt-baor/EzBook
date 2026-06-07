@@ -1,6 +1,7 @@
 package com.example.ezbook.controller;
 
 import com.example.ezbook.entity.MonthlyRevenue;
+import com.example.ezbook.entity.BookingView;
 import com.example.ezbook.entity.TopDichVuThongKe;
 import com.example.ezbook.repository.BookingRepository;
 import com.example.ezbook.repository.HoaDonRepository;
@@ -9,6 +10,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.time.Year;
@@ -22,6 +24,10 @@ public class ThongKeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int year = parseYear(req.getParameter("year"));
+        HttpSession session = req.getSession(false);
+        String role = session == null ? null : (String) session.getAttribute("role");
+        String username = session == null ? null : (String) session.getAttribute("username");
+
         List<MonthlyRevenue> doanhThuThang = hoaDonRepository.thongKeDoanhThuTheoThang(year);
 
         double max = 0.0;
@@ -46,6 +52,13 @@ public class ThongKeServlet extends HttpServlet {
 
         List<TopDichVuThongKe> topDichVu = bookingRepository.thongKeTopDichVuDuocDatNhieu(year);
         req.setAttribute("topDichVu", topDichVu);
+
+        List<BookingView> lichHenHomNay = bookingRepository.getLichHenHomNay(role, username);
+        List<BookingView> lichHenSapDienRa = bookingRepository.getLichHenSapDienRa(role, username);
+        req.setAttribute("lichHenHomNay", lichHenHomNay);
+        req.setAttribute("lichHenSapDienRa", lichHenSapDienRa);
+        req.setAttribute("bookingScopeLabel", "STAFF".equals(role) ? "Lich cua nhan vien dang nhap" : "Lich toan he thong");
+
         req.getRequestDispatcher("/thong-ke/hien-thi.jsp").forward(req, resp);
     }
 

@@ -7,6 +7,8 @@ import com.example.ezbook.util.DBConnect;
 
 import java.sql.*;
 import java.text.Normalizer;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -341,6 +343,34 @@ public class BookingRepository {
         return result;
     }
 
+    public List<BookingView> getLichHenHomNay(String role, String username) {
+        LocalDate today = LocalDate.now();
+        StringBuilder sql = baseBookingViewSql();
+        sql.append("WHERE b.thoi_gian_hen >= ? AND b.thoi_gian_hen < ? ")
+                .append("AND b.trang_thai_booking NOT IN ('Cancelled', N'Da huy') ");
+
+        List<Object> params = new ArrayList<>();
+        params.add(Timestamp.valueOf(today.atStartOfDay()));
+        params.add(Timestamp.valueOf(today.plusDays(1).atStartOfDay()));
+        appendStaffScope(sql, params, role, username);
+        sql.append("ORDER BY b.thoi_gian_hen ASC");
+
+        return queryBookingViews(sql.toString(), params);
+    }
+
+    public List<BookingView> getLichHenSapDienRa(String role, String username) {
+        StringBuilder sql = baseBookingViewSql();
+        sql.append("WHERE b.thoi_gian_hen >= ? ")
+                .append("AND b.trang_thai_booking IN ('Pending', N'Cho xac nhan', 'Confirmed', N'Da xac nhan') ");
+
+        List<Object> params = new ArrayList<>();
+        params.add(Timestamp.valueOf(LocalDateTime.now()));
+        appendStaffScope(sql, params, role, username);
+        sql.append("ORDER BY b.thoi_gian_hen ASC");
+
+        return queryBookingViews(sql.toString(), params);
+    }
+
     public List<TopDichVuThongKe> thongKeTopDichVuDuocDatNhieu(int year) {
         String sql = "SELECT TOP 10 dv.id, dv.ten_dich_vu, COUNT(b.id) AS so_luot_dat, " +
                 "SUM(dv.gia_tien) AS doanh_thu_du_kien " +
@@ -460,5 +490,60 @@ public class BookingRepository {
             return "Chuyen khoan";
         }
         return "Tien mat";
+    }
+
+    private StringBuilder baseBookingViewSql() {
+        return new StringBuilder(
+                "SELECT b.id, b.khach_hang_id, kh.ho_ten AS khach_hang_ten, kh.sdt AS khach_hang_sdt, " +
+                        "b.nhan_vien_id, nv.ho_ten AS nhan_vien_ten, b.dich_vu_id, dv.ten_dich_vu, " +
+                        "b.thoi_gian_hen, b.trang_thai_booking, b.ghi_chu_khach_hang " +
+                        "FROM Booking b " +
+                        "JOIN KhachHang kh ON b.khach_hang_id = kh.id " +
+                        "LEFT JOIN NhanVien nv ON b.nhan_vien_id = nv.id " +
+                        "JOIN DichVu dv ON b.dich_vu_id = dv.id "
+        );
+    }
+
+    private void appendStaffScope(StringBuilder sql, List<Object> params, String role, String username) {
+        if ("STAFF".equalsIgnoreCase(role) && !isBlank(username)) {
+            sql.append("AND nv.username = ? ");
+            params.add(username.trim());
+        }
+    }
+
+    private List<BookingView> queryBookingViews(String sql, List<Object> params) {
+        List<BookingView> result = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            for (int i = 0; i < params.size(); i++) {
+                Object value = params.get(i);
+                if (value instanceof Timestamp) {
+                    ps.setTimestamp(i + 1, (Timestamp) value);
+                } else {
+                    ps.setString(i + 1, String.valueOf(value));
+                }
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String rawNote = rs.getString("ghi_chu_khach_hang");
+                    result.add(new BookingView(
+                            rs.getString("id"),
+                            rs.getString("khach_hang_id"),
+                            rs.getString("khach_hang_ten"),
+                            rs.getString("khach_hang_sdt"),
+                            rs.getString("nhan_vien_id"),
+                            rs.getString("nhan_vien_ten"),
+                            rs.getString("dich_vu_id"),
+                            rs.getString("ten_dich_vu"),
+                            rs.getTimestamp("thoi_gian_hen"),
+                            normalizeStatus(rs.getString("trang_thai_booking")),
+                            stripPaymentMarker(rawNote),
+                            extractPaymentMethod(rawNote)
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

@@ -41,6 +41,102 @@
             <span>Top dich vu</span>
             <strong>${topDichVu.size()}</strong>
         </article>
+        <article class="stat-card">
+            <span>Lich hen hom nay</span>
+            <strong>${lichHenHomNay.size()}</strong>
+        </article>
+        <article class="stat-card">
+            <span>Lich sap dien ra</span>
+            <strong>${lichHenSapDienRa.size()}</strong>
+        </article>
+    </section>
+
+    <section class="workspace-grid equal-col" style="margin-top:32px;">
+        <article class="panel">
+            <div class="panel-head">
+                <h2>Lich Hen Hom Nay</h2>
+                <span class="meta-chip">${lichHenHomNay.size()} lich</span>
+            </div>
+            <div class="panel-body" style="padding-bottom:0;">
+                <p class="panel-note">${bookingScopeLabel}. Khong tinh lich da huy.</p>
+            </div>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Khach hang</th>
+                        <th>SDT</th>
+                        <th>Nhan vien</th>
+                        <th>Dich vu</th>
+                        <th>Thoi gian</th>
+                        <th>Trang thai</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach items="${lichHenHomNay}" var="b">
+                        <tr>
+                            <td>${b.id}</td>
+                            <td>${b.khachHangTen}</td>
+                            <td>${b.khachHangSdt}</td>
+                            <td>${b.nhanVienTen}</td>
+                            <td>${b.dichVuTen}</td>
+                            <td>${b.thoiGianHenText}</td>
+                            <td>${b.trangThaiBooking}</td>
+                        </tr>
+                    </c:forEach>
+                    <c:if test="${lichHenHomNay.size() == 0}">
+                        <tr>
+                            <td colspan="7">Hom nay chua co lich hen.</td>
+                        </tr>
+                    </c:if>
+                    </tbody>
+                </table>
+            </div>
+        </article>
+
+        <article class="panel">
+            <div class="panel-head">
+                <h2>Lich Hen Sap Dien Ra</h2>
+                <span class="meta-chip">${lichHenSapDienRa.size()} lich</span>
+            </div>
+            <div class="panel-body" style="padding-bottom:0;">
+                <p class="panel-note">${bookingScopeLabel}. Chi tinh Pending va Confirmed tu hien tai tro di.</p>
+            </div>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Khach hang</th>
+                        <th>SDT</th>
+                        <th>Nhan vien</th>
+                        <th>Dich vu</th>
+                        <th>Thoi gian</th>
+                        <th>Trang thai</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach items="${lichHenSapDienRa}" var="b">
+                        <tr>
+                            <td>${b.id}</td>
+                            <td>${b.khachHangTen}</td>
+                            <td>${b.khachHangSdt}</td>
+                            <td>${b.nhanVienTen}</td>
+                            <td>${b.dichVuTen}</td>
+                            <td>${b.thoiGianHenText}</td>
+                            <td>${b.trangThaiBooking}</td>
+                        </tr>
+                    </c:forEach>
+                    <c:if test="${lichHenSapDienRa.size() == 0}">
+                        <tr>
+                            <td colspan="7">Chua co lich sap dien ra.</td>
+                        </tr>
+                    </c:if>
+                    </tbody>
+                </table>
+            </div>
+        </article>
     </section>
 
     <article class="panel">

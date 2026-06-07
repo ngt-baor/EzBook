@@ -1,6 +1,7 @@
 package com.example.ezbook.controller;
 
 import com.example.ezbook.entity.Booking;
+import com.example.ezbook.entity.BookingView;
 import com.example.ezbook.entity.KhachHang;
 import com.example.ezbook.repository.BookingRepository;
 import com.example.ezbook.repository.DichVuRepository;
@@ -55,7 +56,10 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
         req.setAttribute("khungGio", KHUNG_GIO);
         req.setAttribute("todayDate", LocalDate.now().toString());
         if (!isBlank(sdt)) {
-            req.setAttribute("bookingCuaToi", bookingRepository.getByKhachHangSdt(sdt));
+            List<BookingView> bookingCuaToi = bookingRepository.getByKhachHangSdt(sdt);
+            req.setAttribute("bookingCuaToi", bookingCuaToi);
+            req.setAttribute("lichHomNayCount", demLichHomNay(bookingCuaToi));
+            req.setAttribute("lichSapToiCount", demLichSapToi(bookingCuaToi));
             req.setAttribute("sdtTimKiem", sdt);
             req.setAttribute("customerName", session == null ? null : session.getAttribute("customerName"));
         }
@@ -170,6 +174,36 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
 
     private boolean isBlank(String value) {
         return value == null || value.trim().isEmpty();
+    }
+
+    private int demLichHomNay(List<BookingView> bookings) {
+        int count = 0;
+        LocalDate today = LocalDate.now();
+        for (BookingView booking : bookings) {
+            if (booking.getThoiGianHen() == null || "Cancelled".equals(booking.getTrangThaiBooking())) {
+                continue;
+            }
+            if (booking.getThoiGianHen().toLocalDateTime().toLocalDate().isEqual(today)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private int demLichSapToi(List<BookingView> bookings) {
+        int count = 0;
+        LocalDateTime now = LocalDateTime.now();
+        for (BookingView booking : bookings) {
+            if (booking.getThoiGianHen() == null) {
+                continue;
+            }
+            String status = booking.getTrangThaiBooking();
+            boolean activeStatus = "Pending".equals(status) || "Confirmed".equals(status);
+            if (activeStatus && !booking.getThoiGianHen().toLocalDateTime().isBefore(now)) {
+                count++;
+            }
+        }
+        return count;
     }
 
     private String normalizePaymentMethod(String value) {

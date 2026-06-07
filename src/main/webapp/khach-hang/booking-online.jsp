@@ -35,6 +35,14 @@
             <span>Lich cua toi</span>
             <strong>${bookingCuaToi.size()}</strong>
         </article>
+        <article class="stat-card">
+            <span>Lich hom nay</span>
+            <strong>${lichHomNayCount}</strong>
+        </article>
+        <article class="stat-card">
+            <span>Lich sap toi</span>
+            <strong>${lichSapToiCount}</strong>
+        </article>
     </section>
 
     <c:if test="${param.msg == 'created-success'}">
