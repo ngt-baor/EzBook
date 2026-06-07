@@ -100,7 +100,7 @@
         </div>
     </article>
 
-    <article class="panel">
+    <article class="panel" style="margin-top:32px;">
         <div class="panel-head">
             <h2>${editingHoaDon != null ? 'Sua Hoa Don' : 'Them Hoa Don'}</h2>
             <span class="meta-chip">Billing form</span>
@@ -163,7 +163,7 @@
         </div>
     </article>
 
-    <article class="panel">
+    <article class="panel" style="margin-top:32px;">
         <div class="panel-head">
             <h2>Danh Sach Hoa Don</h2>
             <span class="meta-chip">${listHoaDon.size()} muc</span>
