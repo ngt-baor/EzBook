@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>Quan Ly Nhan Vien</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css?v=font-20260608-2">
     <script>
         function deleteEmployee(id) {
             if (confirm('Ban chac chan muon xoa?')) {
@@ -144,4 +144,5 @@
 </div>
 </body>
 </html>
+
 

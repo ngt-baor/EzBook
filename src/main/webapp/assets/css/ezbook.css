@@ -2,7 +2,33 @@
     box-sizing: border-box;
 }
 
+@font-face {
+    font-family: "EzBook Xuong";
+    src: url("../fonts/TNH-Xuong.otf") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "EzBook Ganh";
+    src: url("../fonts/ganh-type-regular.otf") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "EzBook Ganh";
+    src: url("../fonts/ganh-type-regularitalic.otf") format("opentype");
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
 :root {
+    --font-title: "EzBook Xuong", Georgia, "Times New Roman", serif;
+    --font-body: "EzBook Ganh", "Courier New", "Lucida Console", monospace;
     --paper: #f7eed4;
     --paper-strong: #fff8e6;
     --paper-soft: #efe2bd;
@@ -38,7 +64,7 @@ body {
         radial-gradient(circle at 88% 22%, rgba(15, 107, 99, 0.18), transparent 28%),
         linear-gradient(135deg, #f9f0d2 0%, #eee0b6 54%, #dfcf9f 100%);
     background-size: 22px 22px, 22px 22px, auto, auto, auto;
-    font: 14px/1.55 "Courier New", "Lucida Console", monospace;
+    font: 14px/1.55 var(--font-body);
 }
 
 body::before {
@@ -64,6 +90,22 @@ a {
     color: var(--teal-dark);
     font-weight: 800;
     text-decoration: none;
+}
+
+body,
+input,
+select,
+textarea,
+button,
+.btn,
+.data-table,
+.stat-card,
+.panel-body,
+.panel-note,
+.action-card span,
+.mini-note,
+.alert {
+    font-family: var(--font-body);
 }
 
 a:hover {
@@ -140,9 +182,18 @@ a:hover {
     letter-spacing: 0.06em;
 }
 
-.page-title {
+.page-title,
+.auth-title,
+.panel-head h2,
+.panel-head h3,
+.action-card strong,
+.stat-card strong {
     margin: 0;
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: var(--font-title);
+    font-weight: 400;
+}
+
+.page-title {
     font-size: 34px;
     line-height: 1.08;
     letter-spacing: 0;
@@ -161,6 +212,15 @@ a:hover {
     justify-content: flex-end;
     gap: 8px;
     min-width: 330px;
+}
+
+.toolbar,
+.toolbar-link,
+.eyebrow,
+.meta-chip,
+.status-chip {
+    font-family: var(--font-title);
+    font-weight: 400;
 }
 
 .toolbar-link {
@@ -246,8 +306,6 @@ a:hover {
 
 .panel-head h2,
 .panel-head h3 {
-    margin: 0;
-    font-family: Georgia, "Times New Roman", serif;
     font-size: 20px;
     letter-spacing: 0;
 }
@@ -679,7 +737,6 @@ form[action*="huy"] button:hover {
 .stat-card strong {
     display: block;
     margin-top: 6px;
-    font-family: Georgia, "Times New Roman", serif;
     font-size: 25px;
     line-height: 1.05;
 }
@@ -723,7 +780,6 @@ form[action*="huy"] button:hover {
     display: block;
     margin-bottom: 8px;
     color: var(--ink);
-    font-family: Georgia, "Times New Roman", serif;
     font-size: 22px;
     line-height: 1.2;
 }
@@ -754,7 +810,6 @@ form[action*="huy"] button:hover {
 
 .auth-title {
     margin: 0 0 6px;
-    font-family: Georgia, "Times New Roman", serif;
     font-size: 28px;
     text-align: center;
 }

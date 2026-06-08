@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>Quan Ly Booking</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css?v=font-20260608-2">
 </head>
 <body>
 <div class="app-shell">
@@ -267,4 +267,5 @@
 </div>
 </body>
 </html>
+
 

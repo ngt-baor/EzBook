@@ -1,9 +1,9 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+﻿<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
     <title>EZBook</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css?v=font-20260608-2">
 </head>
 <body>
 <div class="landing">
@@ -32,3 +32,4 @@
 </div>
 </body>
 </html>
+

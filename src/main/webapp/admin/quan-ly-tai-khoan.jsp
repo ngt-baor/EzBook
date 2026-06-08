@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>Quan Ly Tai Khoan</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css?v=font-20260608-2">
 </head>
 <body>
 <c:set var="staffCount" value="0" />
@@ -210,4 +210,5 @@
 </div>
 </body>
 </html>
+
 

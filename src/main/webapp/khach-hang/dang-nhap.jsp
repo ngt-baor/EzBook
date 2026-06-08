@@ -1,9 +1,9 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <html>
 <head>
     <title>Khach Hang Dang Nhap</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css?v=font-20260608-2">
 </head>
 <body>
 <div class="auth-shell">
@@ -61,3 +61,4 @@
 </div>
 </body>
 </html>
+
