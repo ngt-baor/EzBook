@@ -12,6 +12,7 @@ public class BookingView {
     private final String nhanVienTen;
     private final String dichVuId;
     private final String dichVuTen;
+    private final String khuyenMaiCode;
     private final Timestamp thoiGianHen;
     private final String trangThaiBooking;
     private final String ghiChuKhachHang;
@@ -21,12 +22,20 @@ public class BookingView {
                        String nhanVienId, String nhanVienTen, String dichVuId, String dichVuTen,
                        Timestamp thoiGianHen, String trangThaiBooking, String ghiChuKhachHang) {
         this(id, khachHangId, khachHangTen, khachHangSdt, nhanVienId, nhanVienTen, dichVuId, dichVuTen,
-                thoiGianHen, trangThaiBooking, ghiChuKhachHang, "Tien mat");
+                null, thoiGianHen, trangThaiBooking, ghiChuKhachHang, "Tien mat");
     }
 
     public BookingView(String id, String khachHangId, String khachHangTen, String khachHangSdt,
                        String nhanVienId, String nhanVienTen, String dichVuId, String dichVuTen,
                        Timestamp thoiGianHen, String trangThaiBooking, String ghiChuKhachHang,
+                       String phuongThucThanhToan) {
+        this(id, khachHangId, khachHangTen, khachHangSdt, nhanVienId, nhanVienTen, dichVuId, dichVuTen,
+                null, thoiGianHen, trangThaiBooking, ghiChuKhachHang, phuongThucThanhToan);
+    }
+
+    public BookingView(String id, String khachHangId, String khachHangTen, String khachHangSdt,
+                       String nhanVienId, String nhanVienTen, String dichVuId, String dichVuTen,
+                       String khuyenMaiCode, Timestamp thoiGianHen, String trangThaiBooking, String ghiChuKhachHang,
                        String phuongThucThanhToan) {
         this.id = id;
         this.khachHangId = khachHangId;
@@ -36,6 +45,7 @@ public class BookingView {
         this.nhanVienTen = nhanVienTen;
         this.dichVuId = dichVuId;
         this.dichVuTen = dichVuTen;
+        this.khuyenMaiCode = khuyenMaiCode;
         this.thoiGianHen = thoiGianHen;
         this.trangThaiBooking = trangThaiBooking;
         this.ghiChuKhachHang = ghiChuKhachHang;
@@ -72,6 +82,10 @@ public class BookingView {
 
     public String getDichVuTen() {
         return dichVuTen;
+    }
+
+    public String getKhuyenMaiCode() {
+        return khuyenMaiCode;
     }
 
     public Timestamp getThoiGianHen() {

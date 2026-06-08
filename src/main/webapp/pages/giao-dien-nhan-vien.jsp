@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <html>
 <head>
@@ -20,6 +20,10 @@
                 <a class="toolbar-link" href="${pageContext.request.contextPath}/nhan-vien/hien-thi">Nhan vien</a>
                 <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Tai khoan</a>
                 <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Dich vu</a>
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">Khuyen mai</a>
+            </c:if>
+            <c:if test="${sessionScope.role == 'STAFF'}">
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">Khuyen mai</a>
             </c:if>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/booking/hien-thi">Booking</a>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hoa don</a>
@@ -63,6 +67,20 @@
                 <span>CRUD loai dich vu va dich vu voi form lon, bang ro rang, phu hop thao tac tren PC.</span>
                 <em>Service setup</em>
             </a>
+
+            <a class="action-card" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">
+                <strong>Quan Ly Khuyen Mai</strong>
+                <span>Tao ma giam gia, gioi han so luong va ap dung truc tiep vao booking, hoa don.</span>
+                <em>Promotion setup</em>
+            </a>
+        </c:if>
+
+        <c:if test="${sessionScope.role == 'STAFF'}">
+            <a class="action-card" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">
+                <strong>Danh Sach Khuyen Mai</strong>
+                <span>Xem cac ma khuyen mai dang co de tu van va ho tro khach hang khi tao booking.</span>
+                <em>View only</em>
+            </a>
         </c:if>
 
         <a class="action-card" href="${pageContext.request.contextPath}/booking/hien-thi">
@@ -92,3 +110,4 @@
 </div>
 </body>
 </html>
+

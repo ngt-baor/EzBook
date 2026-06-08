@@ -60,6 +60,9 @@
     <c:if test="${param.error == 'past-booking-not-allowed'}">
         <p class="alert error">Khach hang chi duoc dat lich tu thoi diem hien tai tro di.</p>
     </c:if>
+    <c:if test="${param.error == 'invalid-promotion'}">
+        <p class="alert error">Ma khuyen mai khong hop le, da het han, het luot hoac dang tam ngung.</p>
+    </c:if>
     <c:if test="${param.error == 'customer-not-found'}">
         <p class="alert error">Khong tim thay ho so khach hang. Vui long dang nhap lai.</p>
     </c:if>
@@ -69,7 +72,7 @@
     <c:if test="${param.error == 'cancel-missing-data'}">
         <p class="alert error">Khong du thong tin de huy lich.</p>
     </c:if>
-    <c:if test="${param.error != null && param.error != 'staff-time-conflict' && param.error != 'staff-not-bookable' && param.error != 'past-booking-not-allowed' && param.error != 'customer-not-found' && param.error != 'cancel-not-allowed' && param.error != 'cancel-missing-data'}">
+    <c:if test="${param.error != null && param.error != 'staff-time-conflict' && param.error != 'staff-not-bookable' && param.error != 'past-booking-not-allowed' && param.error != 'invalid-promotion' && param.error != 'customer-not-found' && param.error != 'cancel-not-allowed' && param.error != 'cancel-missing-data'}">
         <p class="alert error">Co loi: ${param.error}</p>
     </c:if>
 
@@ -122,6 +125,23 @@
                             </select>
                         </label>
                         <label class="field">
+                            <span>Ma khuyen mai</span>
+                            <input type="text" name="ma_khuyen_mai" placeholder="VD: CHAOHE, GIAM50K">
+                        </label>
+                        <div class="field">
+                            <span>Ma dang co</span>
+                            <p class="panel-note">
+                                <c:choose>
+                                    <c:when test="${listKhuyenMai.size() > 0}">
+                                        <c:forEach items="${listKhuyenMai}" var="km" varStatus="st">
+                                            ${km.ma_giam_gia}${st.last ? '' : ', '}
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise>Chua co ma khuyen mai dang hoat dong.</c:otherwise>
+                                </c:choose>
+                            </p>
+                        </div>
+                        <label class="field">
                             <span>Ghi chu</span>
                             <textarea name="ghi_chu" rows="4"></textarea>
                         </label>
@@ -170,6 +190,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Dich vu</th>
+                            <th>Khuyen mai</th>
                             <th>Nhan vien</th>
                             <th>Thoi gian</th>
                             <th>Thanh toan</th>
@@ -182,6 +203,7 @@
                             <tr>
                                 <td>${b.id}</td>
                                 <td>${b.dichVuTen}</td>
+                                <td>${b.khuyenMaiCode}</td>
                                 <td>${b.nhanVienTen}</td>
                                 <td>${b.thoiGianHenText}</td>
                                 <td>${b.phuongThucThanhToan}</td>

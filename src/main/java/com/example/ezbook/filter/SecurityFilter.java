@@ -98,13 +98,14 @@ public class SecurityFilter implements Filter {
 
     private boolean requiresAdmin(String path) {
         return path.startsWith("/nhan-vien/")
-                || path.startsWith("/admin/");
+                || (path.startsWith("/admin/") && !path.startsWith("/admin/quan-ly-khuyen-mai"));
     }
 
     private boolean requiresStaffOrAdmin(String path) {
         return path.startsWith("/booking/")
                 || path.startsWith("/hoa-don/")
                 || path.startsWith("/thong-ke/")
+                || path.startsWith("/admin/quan-ly-khuyen-mai")
                 || path.equals("/pages/giao-dien-nhan-vien.jsp");
     }
 

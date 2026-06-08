@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <html>
 <head>
@@ -20,6 +20,10 @@
                 <a class="toolbar-link" href="${pageContext.request.contextPath}/nhan-vien/hien-thi">Nhan vien</a>
                 <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Tai khoan</a>
                 <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Dich vu</a>
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">Khuyen mai</a>
+            </c:if>
+            <c:if test="${sessionScope.role == 'STAFF'}">
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">Khuyen mai</a>
             </c:if>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/booking/hien-thi">Booking</a>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hoa don</a>
@@ -127,8 +131,13 @@
                         <input type="number" min="0" step="1000" name="tong_tien_goc" value="${editingHoaDon.tong_tien_goc}" required>
                     </label>
                     <label class="field">
-                        <span>Tien giam gia</span>
-                        <input type="number" min="0" step="1000" name="tien_giam_gia" value="${editingHoaDon.tien_giam_gia}" required>
+                        <span>Khuyen mai</span>
+                        <select name="khuyen_mai_id">
+                            <option value="">-- Theo booking / Khong ap dung --</option>
+                            <c:forEach items="${listKhuyenMai}" var="km">
+                                <option value="${km.id}">${km.ma_giam_gia} - ${km.loai_giam} - ${km.gia_tri}</option>
+                            </c:forEach>
+                        </select>
                     </label>
                     <label class="field">
                         <span>Phuong thuc thanh toan</span>
@@ -151,7 +160,7 @@
                     </label>
                     <div class="field">
                         <span>Ghi chu</span>
-                        <p class="panel-note">Thanh tien duoc tinh tu dong = Tong tien goc - Tien giam gia.</p>
+                        <p class="panel-note">Thanh tien duoc tinh tu dong = Tong tien goc - Khuyen mai. Neu booking da co ma khuyen mai, he thong tu ap dung khi de trong.</p>
                     </div>
                 </div>
                 <div class="form-actions">
@@ -176,7 +185,7 @@
                     <th>Ma HD</th>
                     <th>Booking</th>
                     <th>Tong goc</th>
-                    <th>Giam gia</th>
+                    <th>Khuyen mai / Giam gia</th>
                     <th>Thanh tien</th>
                     <th>PTTT</th>
                     <th>Thoi gian TT</th>
@@ -246,3 +255,4 @@
 </div>
 </body>
 </html>
+

@@ -1,8 +1,10 @@
 package com.example.ezbook.controller;
 
 import com.example.ezbook.entity.HoaDon;
+import com.example.ezbook.entity.KhuyenMai;
 import com.example.ezbook.repository.BookingRepository;
 import com.example.ezbook.repository.HoaDonRepository;
+import com.example.ezbook.repository.KhuyenMaiRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -26,6 +28,7 @@ import java.time.format.DateTimeFormatter;
 public class HoaDonServlet extends HttpServlet {
     private final HoaDonRepository hoaDonRepository = new HoaDonRepository();
     private final BookingRepository bookingRepository = new BookingRepository();
+    private final KhuyenMaiRepository khuyenMaiRepository = new KhuyenMaiRepository();
     private static final String PAID_STATUS = "Da thanh toan";
     private static final DateTimeFormatter DB_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -46,6 +49,7 @@ public class HoaDonServlet extends HttpServlet {
 
         req.setAttribute("listHoaDon", hoaDonRepository.search(keyword, paymentStatus, paymentMethod, fromDate, toDate));
         req.setAttribute("listBooking", bookingRepository.getAll());
+        req.setAttribute("listKhuyenMai", khuyenMaiRepository.getDangHoatDong());
         req.getRequestDispatcher("/hoa-don/hien-thi.jsp").forward(req, resp);
     }
 
@@ -115,21 +119,25 @@ public class HoaDonServlet extends HttpServlet {
         String id = trim(req.getParameter("id"));
         String bookingId = trim(req.getParameter("booking_id"));
         String tongTienRaw = trim(req.getParameter("tong_tien_goc"));
-        String tienGiamRaw = trim(req.getParameter("tien_giam_gia"));
+        String khuyenMaiId = trim(req.getParameter("khuyen_mai_id"));
         String phuongThuc = normalizePaymentMethod(trim(req.getParameter("phuong_thuc_thanh_toan")));
         String trangThai = trim(req.getParameter("trang_thai_thanh_toan"));
         String thoiGianThanhToan = trim(req.getParameter("thoi_gian_thanh_toan"));
 
-        if (id == null || bookingId == null || tongTienRaw == null || tienGiamRaw == null || trangThai == null || phuongThuc == null) {
+        if (id == null || bookingId == null || tongTienRaw == null || trangThai == null || phuongThuc == null) {
             return null;
         }
 
         Double tongTien = parseDouble(tongTienRaw);
-        Double tienGiam = parseDouble(tienGiamRaw);
-        if (tongTien == null || tienGiam == null || tongTien < 0 || tienGiam < 0) {
+        if (tongTien == null || tongTien < 0) {
             return null;
         }
 
+        if (khuyenMaiId == null) {
+            khuyenMaiId = bookingRepository.findKhuyenMaiIdByBookingId(bookingId);
+        }
+        KhuyenMai khuyenMai = khuyenMaiId == null ? null : khuyenMaiRepository.findById(khuyenMaiId);
+        double tienGiam = khuyenMaiRepository.tinhTienGiam(khuyenMai, tongTien);
         double thanhTien = Math.max(0, tongTien - tienGiam);
 
         if (PAID_STATUS.equalsIgnoreCase(trangThai)) {

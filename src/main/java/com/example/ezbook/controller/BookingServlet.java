@@ -1,10 +1,12 @@
 package com.example.ezbook.controller;
 
 import com.example.ezbook.entity.Booking;
+import com.example.ezbook.entity.KhuyenMai;
 import com.example.ezbook.repository.BookingRepository;
 import com.example.ezbook.repository.DichVuRepository;
 import com.example.ezbook.repository.HoaDonRepository;
 import com.example.ezbook.repository.KhachHangRepository;
+import com.example.ezbook.repository.KhuyenMaiRepository;
 import com.example.ezbook.repository.NhanVienRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -34,6 +36,7 @@ public class BookingServlet extends HttpServlet {
     private final NhanVienRepository nhanVienRepository = new NhanVienRepository();
     private final DichVuRepository dichVuRepository = new DichVuRepository();
     private final HoaDonRepository hoaDonRepository = new HoaDonRepository();
+    private final KhuyenMaiRepository khuyenMaiRepository = new KhuyenMaiRepository();
 
     private static final List<String> KHUNG_GIO = Arrays.asList(
             "08:00", "09:00", "10:00", "11:00",
@@ -70,6 +73,7 @@ public class BookingServlet extends HttpServlet {
         req.setAttribute("listKhachHang", khachHangRepository.getAll());
         req.setAttribute("listNhanVien", nhanVienRepository.getNhanVienCoTheDatLich());
         req.setAttribute("listDichVu", dichVuRepository.getAll());
+        req.setAttribute("listKhuyenMai", khuyenMaiRepository.getDangHoatDong());
         req.setAttribute("khungGio", KHUNG_GIO);
 
         req.getRequestDispatcher("/booking/hien-thi.jsp").forward(req, resp);
@@ -79,6 +83,7 @@ public class BookingServlet extends HttpServlet {
         String khachHangId = trim(req.getParameter("khach_hang_id"));
         String nhanVienId = trim(req.getParameter("nhan_vien_id"));
         String dichVuId = trim(req.getParameter("dich_vu_id"));
+        String khuyenMaiId = trim(req.getParameter("khuyen_mai_id"));
         String ngayHen = trim(req.getParameter("ngay_hen"));
         String khungGio = trim(req.getParameter("khung_gio"));
         String ghiChu = trim(req.getParameter("ghi_chu"));
@@ -98,6 +103,15 @@ public class BookingServlet extends HttpServlet {
             return;
         }
 
+        KhuyenMai khuyenMai = null;
+        if (khuyenMaiId != null) {
+            khuyenMai = khuyenMaiRepository.findUsableById(khuyenMaiId, thoiGianHen);
+            if (khuyenMai == null) {
+                redirectWithMessage(resp, req.getContextPath() + "/booking/hien-thi", "error", "invalid-promotion");
+                return;
+            }
+        }
+
         if (!nhanVienRepository.coTheNhanBooking(nhanVienId)) {
             redirectWithMessage(resp, req.getContextPath() + "/booking/hien-thi", "error", "staff-not-bookable");
             return;
@@ -114,7 +128,7 @@ public class BookingServlet extends HttpServlet {
                 khachHangId,
                 nhanVienId,
                 dichVuId,
-                null,
+                khuyenMai == null ? null : khuyenMai.getId(),
                 thoiGianHen.toString(),
                 "Pending",
                 ghiChu == null ? "" : ghiChu
@@ -122,6 +136,9 @@ public class BookingServlet extends HttpServlet {
 
         boolean ok = bookingRepository.them(booking, thoiGianHen, "Tien mat");
         if (ok) {
+            if (khuyenMai != null) {
+                khuyenMaiRepository.giamSoLuongConLai(khuyenMai.getId());
+            }
             redirectWithMessage(resp, req.getContextPath() + "/booking/hien-thi", "msg", "created-success");
         } else {
             redirectWithMessage(resp, req.getContextPath() + "/booking/hien-thi", "error", "create-failed");

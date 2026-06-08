@@ -1,6 +1,7 @@
 package com.example.ezbook.repository;
 
 import com.example.ezbook.entity.HoaDon;
+import com.example.ezbook.entity.KhuyenMai;
 import com.example.ezbook.entity.MonthlyRevenue;
 import com.example.ezbook.util.DBConnect;
 
@@ -12,6 +13,7 @@ import java.util.Map;
 
 public class HoaDonRepository {
     private Connection connection = null;
+    private final KhuyenMaiRepository khuyenMaiRepository = new KhuyenMaiRepository();
 
     public HoaDonRepository() {
         connection = DBConnect.getConnection();
@@ -185,7 +187,7 @@ public class HoaDonRepository {
             return true;
         }
 
-        String sqlGia = "SELECT dv.gia_tien, b.ghi_chu_khach_hang FROM Booking b " +
+        String sqlGia = "SELECT dv.gia_tien, b.khuyen_mai_id, b.ghi_chu_khach_hang FROM Booking b " +
                 "JOIN DichVu dv ON b.dich_vu_id = dv.id WHERE b.id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sqlGia)) {
             ps.setString(1, bookingId);
@@ -194,13 +196,17 @@ public class HoaDonRepository {
                     return false;
                 }
                 double tongTienGoc = rs.getDouble("gia_tien");
+                String khuyenMaiId = rs.getString("khuyen_mai_id");
+                KhuyenMai khuyenMai = isBlank(khuyenMaiId) ? null : khuyenMaiRepository.findById(khuyenMaiId);
+                double tienGiamGia = khuyenMaiRepository.tinhTienGiam(khuyenMai, tongTienGoc);
+                double thanhTien = Math.max(0.0, tongTienGoc - tienGiamGia);
                 String paymentMethod = extractPaymentMethod(rs.getString("ghi_chu_khach_hang"));
                 HoaDon autoBill = new HoaDon(
                         generateHoaDonId(),
                         bookingId,
                         tongTienGoc,
-                        0.0,
-                        tongTienGoc,
+                        tienGiamGia,
+                        thanhTien,
                         paymentMethod,
                         null,
                         "Chua thanh toan"

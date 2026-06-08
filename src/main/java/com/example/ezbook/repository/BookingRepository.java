@@ -176,6 +176,24 @@ public class BookingRepository {
         return null;
     }
 
+    public String findKhuyenMaiIdByBookingId(String bookingId) {
+        if (isBlank(bookingId)) {
+            return null;
+        }
+        String sql = "SELECT khuyen_mai_id FROM Booking WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, bookingId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("khuyen_mai_id");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public boolean updateStatus(String bookingId, String newStatus) {
         String sql = "UPDATE Booking SET trang_thai_booking = ? WHERE id = ?";
         try {
@@ -221,10 +239,11 @@ public class BookingRepository {
         StringBuilder sql = new StringBuilder(
                 "SELECT b.id, b.khach_hang_id, kh.ho_ten AS khach_hang_ten, kh.sdt AS khach_hang_sdt, " +
                         "b.nhan_vien_id, nv.ho_ten AS nhan_vien_ten, b.dich_vu_id, dv.ten_dich_vu, " +
-                        "b.thoi_gian_hen, b.trang_thai_booking, b.ghi_chu_khach_hang " +
+                        "km.ma_giam_gia AS ma_giam_gia, b.thoi_gian_hen, b.trang_thai_booking, b.ghi_chu_khach_hang " +
                         "FROM Booking b " +
                         "JOIN KhachHang kh ON b.khach_hang_id = kh.id " +
                         "LEFT JOIN NhanVien nv ON b.nhan_vien_id = nv.id " +
+                        "LEFT JOIN KhuyenMai km ON b.khuyen_mai_id = km.id " +
                         "JOIN DichVu dv ON b.dich_vu_id = dv.id " +
                         "WHERE 1=1 "
         );
@@ -292,6 +311,7 @@ public class BookingRepository {
                         rs.getString("nhan_vien_ten"),
                         rs.getString("dich_vu_id"),
                         rs.getString("ten_dich_vu"),
+                        rs.getString("ma_giam_gia"),
                         rs.getTimestamp("thoi_gian_hen"),
                         normalizeStatus(rs.getString("trang_thai_booking")),
                         stripPaymentMarker(rawNote),
@@ -307,10 +327,11 @@ public class BookingRepository {
     public List<BookingView> getByKhachHangSdt(String sdt) {
         String sql = "SELECT b.id, b.khach_hang_id, kh.ho_ten AS khach_hang_ten, kh.sdt AS khach_hang_sdt, " +
                 "b.nhan_vien_id, nv.ho_ten AS nhan_vien_ten, b.dich_vu_id, dv.ten_dich_vu, " +
-                "b.thoi_gian_hen, b.trang_thai_booking, b.ghi_chu_khach_hang " +
+                "km.ma_giam_gia AS ma_giam_gia, b.thoi_gian_hen, b.trang_thai_booking, b.ghi_chu_khach_hang " +
                 "FROM Booking b " +
                 "JOIN KhachHang kh ON b.khach_hang_id = kh.id " +
                 "LEFT JOIN NhanVien nv ON b.nhan_vien_id = nv.id " +
+                "LEFT JOIN KhuyenMai km ON b.khuyen_mai_id = km.id " +
                 "JOIN DichVu dv ON b.dich_vu_id = dv.id " +
                 "WHERE kh.sdt = ? " +
                 "ORDER BY b.thoi_gian_hen DESC";
@@ -331,6 +352,7 @@ public class BookingRepository {
                         rs.getString("nhan_vien_ten"),
                         rs.getString("dich_vu_id"),
                         rs.getString("ten_dich_vu"),
+                        rs.getString("ma_giam_gia"),
                         rs.getTimestamp("thoi_gian_hen"),
                         normalizeStatus(rs.getString("trang_thai_booking")),
                         stripPaymentMarker(rawNote),
@@ -496,10 +518,11 @@ public class BookingRepository {
         return new StringBuilder(
                 "SELECT b.id, b.khach_hang_id, kh.ho_ten AS khach_hang_ten, kh.sdt AS khach_hang_sdt, " +
                         "b.nhan_vien_id, nv.ho_ten AS nhan_vien_ten, b.dich_vu_id, dv.ten_dich_vu, " +
-                        "b.thoi_gian_hen, b.trang_thai_booking, b.ghi_chu_khach_hang " +
+                        "km.ma_giam_gia AS ma_giam_gia, b.thoi_gian_hen, b.trang_thai_booking, b.ghi_chu_khach_hang " +
                         "FROM Booking b " +
                         "JOIN KhachHang kh ON b.khach_hang_id = kh.id " +
                         "LEFT JOIN NhanVien nv ON b.nhan_vien_id = nv.id " +
+                        "LEFT JOIN KhuyenMai km ON b.khuyen_mai_id = km.id " +
                         "JOIN DichVu dv ON b.dich_vu_id = dv.id "
         );
     }
@@ -534,6 +557,7 @@ public class BookingRepository {
                             rs.getString("nhan_vien_ten"),
                             rs.getString("dich_vu_id"),
                             rs.getString("ten_dich_vu"),
+                            rs.getString("ma_giam_gia"),
                             rs.getTimestamp("thoi_gian_hen"),
                             normalizeStatus(rs.getString("trang_thai_booking")),
                             stripPaymentMarker(rawNote),

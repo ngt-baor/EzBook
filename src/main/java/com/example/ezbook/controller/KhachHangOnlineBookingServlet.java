@@ -3,9 +3,11 @@ package com.example.ezbook.controller;
 import com.example.ezbook.entity.Booking;
 import com.example.ezbook.entity.BookingView;
 import com.example.ezbook.entity.KhachHang;
+import com.example.ezbook.entity.KhuyenMai;
 import com.example.ezbook.repository.BookingRepository;
 import com.example.ezbook.repository.DichVuRepository;
 import com.example.ezbook.repository.KhachHangRepository;
+import com.example.ezbook.repository.KhuyenMaiRepository;
 import com.example.ezbook.repository.NhanVienRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -34,6 +36,7 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
     private final BookingRepository bookingRepository = new BookingRepository();
     private final DichVuRepository dichVuRepository = new DichVuRepository();
     private final NhanVienRepository nhanVienRepository = new NhanVienRepository();
+    private final KhuyenMaiRepository khuyenMaiRepository = new KhuyenMaiRepository();
 
     private static final List<String> KHUNG_GIO = Arrays.asList(
             "08:00", "09:00", "10:00", "11:00",
@@ -53,6 +56,7 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
         req.setAttribute("listDichVu", dichVuRepository.getAll());
         req.setAttribute("listNhanVien", nhanVienRepository.getNhanVienCoTheDatLich());
         req.setAttribute("topDichVuHot", bookingRepository.thongKeTop3DichVuDuocDatNhieu());
+        req.setAttribute("listKhuyenMai", khuyenMaiRepository.getDangHoatDong());
         req.setAttribute("khungGio", KHUNG_GIO);
         req.setAttribute("todayDate", LocalDate.now().toString());
         if (!isBlank(sdt)) {
@@ -84,6 +88,7 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
         String nhanVienId = trim(req.getParameter("nhan_vien_id"));
         String ngayHen = trim(req.getParameter("ngay_hen"));
         String khungGio = trim(req.getParameter("khung_gio"));
+        String maKhuyenMai = trim(req.getParameter("ma_khuyen_mai"));
         String ghiChu = trim(req.getParameter("ghi_chu"));
         String phuongThucThanhToan = normalizePaymentMethod(trim(req.getParameter("phuong_thuc_thanh_toan")));
 
@@ -103,6 +108,15 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
         } catch (Exception e) {
             redirectWithMessage(resp, req.getContextPath() + "/khach-hang/booking-online", "error", "invalid-datetime", sdt);
             return;
+        }
+
+        KhuyenMai khuyenMai = null;
+        if (maKhuyenMai != null) {
+            khuyenMai = khuyenMaiRepository.findUsableByCode(maKhuyenMai, thoiGianHen);
+            if (khuyenMai == null) {
+                redirectWithMessage(resp, req.getContextPath() + "/khach-hang/booking-online", "error", "invalid-promotion", sdt);
+                return;
+            }
         }
 
         if (nhanVienId != null && !nhanVienRepository.coTheNhanBooking(nhanVienId)) {
@@ -128,7 +142,7 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
                 khachHangId,
                 nhanVienId,
                 dichVuId,
-                null,
+                khuyenMai == null ? null : khuyenMai.getId(),
                 thoiGianHen.toString(),
                 "Pending",
                 ghiChu == null ? "" : ghiChu
@@ -136,6 +150,9 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
 
         boolean ok = bookingRepository.them(booking, thoiGianHen, phuongThucThanhToan);
         if (ok) {
+            if (khuyenMai != null) {
+                khuyenMaiRepository.giamSoLuongConLai(khuyenMai.getId());
+            }
             redirectWithMessage(resp, req.getContextPath() + "/khach-hang/booking-online", "msg", "created-success", sdt);
         } else {
             redirectWithMessage(resp, req.getContextPath() + "/khach-hang/booking-online", "error", "create-booking-failed", sdt);

@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <html>
 <head>
@@ -20,6 +20,10 @@
                 <a class="toolbar-link" href="${pageContext.request.contextPath}/nhan-vien/hien-thi">Nhan vien</a>
                 <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Tai khoan</a>
                 <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Dich vu</a>
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">Khuyen mai</a>
+            </c:if>
+            <c:if test="${sessionScope.role == 'STAFF'}">
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">Khuyen mai</a>
             </c:if>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/booking/hien-thi">Booking</a>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hoa don</a>
@@ -59,13 +63,16 @@
     <c:if test="${param.error == 'staff-not-bookable'}">
         <p class="alert error">Khong the dat lich cho tai khoan admin. Vui long chon nhan vien khac.</p>
     </c:if>
+    <c:if test="${param.error == 'invalid-promotion'}">
+        <p class="alert error">Khuyen mai khong hop le, da het han, het luot hoac dang tam ngung.</p>
+    </c:if>
     <c:if test="${param.error == 'invalid-status-transition'}">
         <p class="alert error">Khong hop le workflow: Pending -> Confirmed -> Completed -> Cancelled.</p>
     </c:if>
     <c:if test="${param.error == 'invoice-auto-create-failed'}">
         <p class="alert error">Da chuyen Completed nhung tao hoa don tu dong that bai.</p>
     </c:if>
-    <c:if test="${param.error != null && param.error != 'staff-time-conflict' && param.error != 'staff-not-bookable' && param.error != 'invalid-status-transition' && param.error != 'invoice-auto-create-failed'}">
+    <c:if test="${param.error != null && param.error != 'staff-time-conflict' && param.error != 'staff-not-bookable' && param.error != 'invalid-promotion' && param.error != 'invalid-status-transition' && param.error != 'invoice-auto-create-failed'}">
         <p class="alert error">Co loi: ${param.error}</p>
     </c:if>
 
@@ -115,6 +122,15 @@
                                 <option value="">-- Chon khung gio --</option>
                                 <c:forEach items="${khungGio}" var="slot">
                                     <option value="${slot}">${slot}</option>
+                                </c:forEach>
+                            </select>
+                        </label>
+                        <label class="field">
+                            <span>Khuyen mai</span>
+                            <select name="khuyen_mai_id">
+                                <option value="">-- Khong ap dung --</option>
+                                <c:forEach items="${listKhuyenMai}" var="km">
+                                    <option value="${km.id}">${km.ma_giam_gia} - ${km.gia_tri}</option>
                                 </c:forEach>
                             </select>
                         </label>
@@ -187,6 +203,7 @@
                     <th>SDT</th>
                     <th>Nhan vien</th>
                     <th>Dich vu</th>
+                    <th>Khuyen mai</th>
                     <th>Thoi gian hen</th>
                     <th>Thanh toan</th>
                     <th>Trang thai</th>
@@ -202,6 +219,7 @@
                         <td>${b.khachHangSdt}</td>
                         <td>${b.nhanVienTen}</td>
                         <td>${b.dichVuTen}</td>
+                        <td>${b.khuyenMaiCode}</td>
                         <td>${b.thoiGianHenText}</td>
                         <td>${b.phuongThucThanhToan}</td>
                         <td>${b.trangThaiBooking}</td>
@@ -249,3 +267,4 @@
 </div>
 </body>
 </html>
+
