@@ -128,7 +128,7 @@
                     </label>
                     <label class="field">
                         <span>Gia tri</span>
-                        <input type="number" min="0" step="1000" name="gia_tri" value="${editingKhuyenMai.gia_tri}" required>
+                        <input type="number" min="0" step="0.01" name="gia_tri" value="${editingKhuyenMai.gia_tri}" required>
                     </label>
                     <label class="field">
                         <span>Ngay bat dau</span>

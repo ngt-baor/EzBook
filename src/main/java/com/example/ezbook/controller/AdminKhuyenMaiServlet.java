@@ -110,7 +110,8 @@ public class AdminKhuyenMaiServlet extends HttpServlet {
 
         Double giaTri = parseDouble(giaTriRaw);
         Integer soLuong = parseInteger(soLuongRaw);
-        if (giaTri == null || giaTri < 0 || soLuong == null || soLuong < 0) {
+        if (giaTri == null || giaTri < 0 || isPercentDiscount(loaiGiam) && giaTri > 100
+                || soLuong == null || soLuong < 0) {
             return null;
         }
 
@@ -162,6 +163,10 @@ public class AdminKhuyenMaiServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             return null;
         }
+    }
+
+    private boolean isPercentDiscount(String loaiGiam) {
+        return loaiGiam != null && "Phan tram".equalsIgnoreCase(loaiGiam.trim());
     }
 
     private void redirectWithMessage(HttpServletResponse resp, String contextPath, String msg) throws IOException {
