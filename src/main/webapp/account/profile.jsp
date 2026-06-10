@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <html>
 <head>
-    <title>Ho So Ca Nhan</title>
+    <title>Hồ Sơ Cá Nhân</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css?v=font-20260608-2">
 </head>
 <body>
@@ -10,37 +10,37 @@
     <header class="page-header">
         <div class="page-heading">
             <p class="eyebrow">Account Center</p>
-            <h1 class="page-title">Ho So Ca Nhan</h1>
-            <p class="page-subtitle">Cap nhat thong tin lien he va doi mat khau tren cung mot man hinh, giu bo cuc on dinh cho ca Admin, Staff va Khach hang.</p>
+            <h1 class="page-title">Hồ Sơ Cá Nhân</h1>
+            <p class="page-subtitle">Cập nhật thông tin liên hệ và đổi mật khẩu trên cung một màn hình, giữ bố cục ổn định cho ca Admin, Staff và Khách hàng.</p>
         </div>
         <nav class="toolbar">
             <c:choose>
                 <c:when test="${sessionScope.role == 'USER'}">
-                    <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-khach.jsp">Trang khach hang</a>
-                    <a class="toolbar-link" href="${pageContext.request.contextPath}/khach-hang/booking-online">Dat lich</a>
-                    <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Ho so</a>
-                    <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/khach-hang/dang-xuat">Dang xuat</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-khach.jsp">Trang khách hàng</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/khach-hang/booking-online">Đặt lịch</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Hồ sơ</a>
+                    <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/khach-hang/dang-xuat">Đăng xuất</a>
                 </c:when>
                 <c:when test="${sessionScope.role == 'ADMIN'}">
-                    <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Trang Chu</a>
-                    <a class="toolbar-link" href="${pageContext.request.contextPath}/nhan-vien/hien-thi">Nhan vien</a>
-                    <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Tai khoan</a>
-                    <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Dich vu</a>
-                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">Khuyen mai</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Trang Chủ</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/nhan-vien/hien-thi">Nhân viên</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Tài khoản</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Dịch vụ</a>
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">Khuyến mãi</a>
                     <a class="toolbar-link" href="${pageContext.request.contextPath}/booking/hien-thi">Booking</a>
-                    <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hoa don</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/thong-ke/hien-thi">Thong ke</a>
-                    <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Ho so</a>
-                    <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/logout">Dang xuat</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hóa đơn</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/thong-ke/hien-thi">Thống kê</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Hồ sơ</a>
+                    <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
                 </c:when>
                 <c:otherwise>
-                    <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Trang Chu</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Trang Chủ</a>
                     <a class="toolbar-link" href="${pageContext.request.contextPath}/booking/hien-thi">Booking</a>
-                    <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hoa don</a>
-                    <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">Khuyen mai</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/thong-ke/hien-thi">Thong ke</a>
-                    <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Ho so</a>
-                    <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/logout">Dang xuat</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hóa đơn</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">Khuyến mãi</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/thong-ke/hien-thi">Thống kê</a>
+                    <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Hồ sơ</a>
+                    <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
                 </c:otherwise>
             </c:choose>
         </nav>
@@ -48,49 +48,49 @@
 
     <section class="stat-grid">
         <article class="stat-card">
-            <span>Tai khoan</span>
+            <span>Tài khoản</span>
             <strong>${accountInfo.username}</strong>
         </article>
         <article class="stat-card">
-            <span>Vai tro</span>
+            <span>Vai trò</span>
             <strong>${accountInfo.role}</strong>
         </article>
         <article class="stat-card">
-            <span>Trang thai</span>
-            <strong>${accountInfo.active ? 'Dang hoat dong' : 'Bi khoa'}</strong>
+            <span>Trạng thái</span>
+            <strong>${accountInfo.active ? 'Đang hoạt động' : 'Bị khóa'}</strong>
         </article>
     </section>
 
     <c:if test="${param.msg == 'update-profile-success'}">
-        <p class="alert success">Cap nhat ho so thanh cong.</p>
+        <p class="alert success">Cập nhật ho so thành công.</p>
     </c:if>
     <c:if test="${param.msg == 'change-pass-success'}">
-        <p class="alert success">Doi mat khau thanh cong.</p>
+        <p class="alert success">Đổi mật khẩu thành công.</p>
     </c:if>
     <c:if test="${param.error != null}">
-        <p class="alert error">Co loi: ${param.error}</p>
+        <p class="alert error">Có lỗi: ${param.error}</p>
     </c:if>
 
     <section class="workspace-grid equal-col">
         <article class="panel">
             <div class="panel-head">
-                <h2>Cap Nhat Ho So</h2>
+                <h2>Cập Nhật Hồ Sơ</h2>
                 <span class="meta-chip">Profile</span>
             </div>
             <div class="panel-body">
                 <form action="${pageContext.request.contextPath}/account/cap-nhat-ho-so" method="post">
                     <div class="form-grid">
                         <label class="field">
-                            <span>Ho ten</span>
+                            <span>Họ tên</span>
                             <input type="text" name="ho_ten" value="${accountInfo.fullName}" required>
                         </label>
                         <label class="field">
-                            <span>So dien thoai</span>
+                            <span>Số điện thoại</span>
                             <input type="text" name="sdt" value="${accountInfo.phone}" required>
                         </label>
                     </div>
                     <div class="form-actions">
-                        <button type="submit">Luu thay doi</button>
+                        <button type="submit">Lưu thay đổi</button>
                     </div>
                 </form>
             </div>
@@ -98,27 +98,27 @@
 
         <article class="panel">
             <div class="panel-head">
-                <h2>Doi Mat Khau</h2>
+                <h2>Đổi Mật Khẩu</h2>
                 <span class="meta-chip">Security</span>
             </div>
             <div class="panel-body">
                 <form action="${pageContext.request.contextPath}/account/doi-mat-khau" method="post">
                     <div class="form-grid">
                         <label class="field">
-                            <span>Mat khau cu</span>
+                            <span>Mật khẩu cu</span>
                             <input type="password" name="mat_khau_cu" required>
                         </label>
                         <label class="field">
-                            <span>Mat khau moi</span>
+                            <span>Mật khẩu moi</span>
                             <input type="password" name="mat_khau_moi" required>
                         </label>
                         <label class="field">
-                            <span>Xac nhan mat khau moi</span>
+                            <span>Xác nhận mật khẩu mới</span>
                             <input type="password" name="mat_khau_moi_xac_nhan" required>
                         </label>
                     </div>
                     <div class="form-actions">
-                        <button type="submit">Doi mat khau</button>
+                        <button type="submit">Đổi mật khẩu</button>
                     </div>
                 </form>
             </div>
@@ -127,5 +127,3 @@
 </div>
 </body>
 </html>
-
-

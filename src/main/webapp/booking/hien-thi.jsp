@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <html>
 <head>
-    <title>Quan Ly Booking</title>
+    <title>Quản Lý Booking</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css?v=font-20260608-2">
 </head>
 <body>
@@ -10,36 +10,36 @@
     <header class="page-header">
         <div class="page-heading">
             <p class="eyebrow">Operations Workspace</p>
-            <h1 class="page-title">Quan Ly Booking</h1>
-            <p class="page-subtitle">Dieu phoi lich hen theo khung gio, kiem tra trung lich nhan vien va theo doi workflow Pending -> Confirmed -> Completed -> Cancelled.</p>
+            <h1 class="page-title">Quản Lý Booking</h1>
+            <p class="page-subtitle">Điều phối lịch hẹn theo khung giờ, kiểm tra trùng lịch nhân viên và theo dõi workflow Pending -> Confirmed -> Completed -> Cancelled.</p>
         </div>
         <nav class="toolbar">
             
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Trang Chu</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Trang Chủ</a>
             <c:if test="${sessionScope.role == 'ADMIN'}">
-                <a class="toolbar-link" href="${pageContext.request.contextPath}/nhan-vien/hien-thi">Nhan vien</a>
-                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Tai khoan</a>
-                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Dich vu</a>
-                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">Khuyen mai</a>
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/nhan-vien/hien-thi">Nhân viên</a>
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Tài khoản</a>
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Dịch vụ</a>
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">Khuyến mãi</a>
             </c:if>
             <c:if test="${sessionScope.role == 'STAFF'}">
-                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">Khuyen mai</a>
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">Khuyến mãi</a>
             </c:if>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/booking/hien-thi">Booking</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hoa don</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/thong-ke/hien-thi">Thong ke</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Ho so</a>
-            <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/logout">Dang xuat</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hóa đơn</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/thong-ke/hien-thi">Thống kê</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Hồ sơ</a>
+            <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
         </nav>
     </header>
 
     <section class="stat-grid">
         <article class="stat-card">
-            <span>Tong booking</span>
+            <span>Tổng booking</span>
             <strong>${listBooking.size()}</strong>
         </article>
         <article class="stat-card">
-            <span>Khung gio</span>
+            <span>Khung giờ</span>
             <strong>${khungGio.size()} slot</strong>
         </article>
         <article class="stat-card">
@@ -49,102 +49,102 @@
     </section>
 
     <c:if test="${param.msg == 'created-success'}">
-        <p class="alert success">Tao booking thanh cong.</p>
+        <p class="alert success">Tạo booking thành công.</p>
     </c:if>
     <c:if test="${param.msg == 'status-updated'}">
-        <p class="alert success">Cap nhat trang thai thanh cong.</p>
+        <p class="alert success">Cập nhật trạng thái thành công.</p>
     </c:if>
     <c:if test="${param.msg == 'status-updated-invoice-created'}">
-        <p class="alert success">Da chuyen Completed va san sang hoa don o trang thai Chua thanh toan.</p>
+        <p class="alert success">Đã chuyển Completed và sẵn sàng hóa đơn o trạng thái Chưa thanh toán.</p>
     </c:if>
     <c:if test="${param.error == 'staff-time-conflict'}">
-        <p class="alert error">Nhan vien da co lich o khung gio nay.</p>
+        <p class="alert error">Nhân viên đã có lịch ở khung giờ này.</p>
     </c:if>
     <c:if test="${param.error == 'staff-not-bookable'}">
-        <p class="alert error">Khong the dat lich cho tai khoan admin. Vui long chon nhan vien khac.</p>
+        <p class="alert error">Không thể đặt lịch cho tài khoản admin. Vui lòng chọn nhân viên khác.</p>
     </c:if>
     <c:if test="${param.error == 'invalid-promotion'}">
-        <p class="alert error">Khuyen mai khong hop le, da het han, het luot hoac dang tam ngung.</p>
+        <p class="alert error">Khuyến mãi không hợp lệ, đã hết hạn, hết lượt hoặc đang tạm ngừng.</p>
     </c:if>
     <c:if test="${param.error == 'invalid-status-transition'}">
         <p class="alert error">Khong hop le workflow: Pending -> Confirmed -> Completed -> Cancelled.</p>
     </c:if>
     <c:if test="${param.error == 'invoice-auto-create-failed'}">
-        <p class="alert error">Da chuyen Completed nhung tao hoa don tu dong that bai.</p>
+        <p class="alert error">Đã chuyển Completed nhưng tạo hóa đơn tự động thất bại.</p>
     </c:if>
     <c:if test="${param.error != null && param.error != 'staff-time-conflict' && param.error != 'staff-not-bookable' && param.error != 'invalid-promotion' && param.error != 'invalid-status-transition' && param.error != 'invoice-auto-create-failed'}">
-        <p class="alert error">Co loi: ${param.error}</p>
+        <p class="alert error">Có lỗi: ${param.error}</p>
     </c:if>
 
     <section class="workspace-grid equal-col">
         <article class="panel">
             <div class="panel-head">
-                <h2>Tao Booking Moi</h2>
+                <h2>Tạo Booking Mới</h2>
                 <span class="meta-chip">Pending default</span>
             </div>
             <div class="panel-body">
                 <form action="${pageContext.request.contextPath}/booking/them" method="post">
                     <div class="form-grid two-col">
                         <label class="field">
-                            <span>Khach hang</span>
+                            <span>Khách hàng</span>
                             <select name="khach_hang_id" required>
-                                <option value="">-- Chon khach hang --</option>
+                                <option value="">-- Chọn khách hàng --</option>
                                 <c:forEach items="${listKhachHang}" var="kh">
                                     <option value="${kh.id}">${kh.ho_ten} - ${kh.sdt}</option>
                                 </c:forEach>
                             </select>
                         </label>
                         <label class="field">
-                            <span>Nhan vien</span>
+                            <span>Nhân viên</span>
                             <select name="nhan_vien_id" required>
-                                <option value="">-- Chon nhan vien --</option>
+                                <option value="">-- Chọn nhân viên --</option>
                                 <c:forEach items="${listNhanVien}" var="nv">
                                     <option value="${nv.id}">${nv.id} - ${nv.ho_ten}</option>
                                 </c:forEach>
                             </select>
                         </label>
                         <label class="field">
-                            <span>Dich vu</span>
+                            <span>Dịch vụ</span>
                             <select name="dich_vu_id" required>
-                                <option value="">-- Chon dich vu --</option>
+                                <option value="">-- Chọn dịch vụ --</option>
                                 <c:forEach items="${listDichVu}" var="dv">
                                     <option value="${dv.id}">${dv.ten_dich_vu}</option>
                                 </c:forEach>
                             </select>
                         </label>
                         <label class="field">
-                            <span>Ngay hen</span>
+                            <span>Ngày hẹn</span>
                             <input type="date" name="ngay_hen" required>
                         </label>
                         <label class="field">
-                            <span>Khung gio</span>
+                            <span>Khung giờ</span>
                             <select name="khung_gio" required>
-                                <option value="">-- Chon khung gio --</option>
+                                <option value="">-- Chọn khung giờ --</option>
                                 <c:forEach items="${khungGio}" var="slot">
                                     <option value="${slot}">${slot}</option>
                                 </c:forEach>
                             </select>
                         </label>
                         <label class="field">
-                            <span>Khuyen mai</span>
+                            <span>Khuyến mãi</span>
                             <select name="khuyen_mai_id">
-                                <option value="">-- Khong ap dung --</option>
+                                <option value="">-- Không áp dụng --</option>
                                 <c:forEach items="${listKhuyenMai}" var="km">
                                     <option value="${km.id}">${km.ma_giam_gia} - ${km.gia_tri}</option>
                                 </c:forEach>
                             </select>
                         </label>
                         <label class="field">
-                            <span>Ghi chu</span>
+                            <span>Ghi chú</span>
                             <textarea name="ghi_chu" rows="4"></textarea>
                         </label>
                         <div class="field">
-                            <span>Phuong thuc thanh toan</span>
-                            <p class="panel-note">Tien mat</p>
+                            <span>Phương thức thanh toán</span>
+                            <p class="panel-note">Tiền mặt</p>
                         </div>
                     </div>
                     <div class="form-actions">
-                        <button type="submit">Dat lich</button>
+                        <button type="submit">Đặt lịch</button>
                     </div>
                 </form>
             </div>
@@ -152,20 +152,20 @@
 
         <article class="panel">
             <div class="panel-head">
-                <h2>Bo Loc Va Tim Kiem</h2>
+                <h2>Bộ Lọc Và Tìm Kiếm</h2>
                 <span class="meta-chip">Realtime query</span>
             </div>
             <div class="panel-body">
                 <form action="${pageContext.request.contextPath}/booking/hien-thi" method="get">
                     <div class="form-grid two-col">
                         <label class="field">
-                            <span>Ten khach / so dien thoai</span>
+                            <span>Tên khách / so dien thoai</span>
                             <input type="text" name="tuKhoa" value="${param.tuKhoa}">
                         </label>
                         <label class="field">
-                            <span>Trang thai</span>
+                            <span>Trạng thái</span>
                             <select name="trangThai">
-                                <option value="">-- Tat ca --</option>
+                                <option value="">-- Tất cả --</option>
                                 <option value="Pending" ${param.trangThai == 'Pending' ? 'selected' : ''}>Pending</option>
                                 <option value="Confirmed" ${param.trangThai == 'Confirmed' ? 'selected' : ''}>Confirmed</option>
                                 <option value="Completed" ${param.trangThai == 'Completed' ? 'selected' : ''}>Completed</option>
@@ -173,16 +173,16 @@
                             </select>
                         </label>
                         <label class="field">
-                            <span>Tu ngay</span>
+                            <span>Từ ngày</span>
                             <input type="date" name="ngayTu" value="${param.ngayTu}">
                         </label>
                         <label class="field">
-                            <span>Den ngay</span>
+                            <span>Đến ngày</span>
                             <input type="date" name="ngayDen" value="${param.ngayDen}">
                         </label>
                     </div>
                     <div class="form-actions">
-                        <button type="submit">Ap dung bo loc</button>
+                        <button type="submit">Áp dụng bộ lọc</button>
                     </div>
                 </form>
             </div>
@@ -191,7 +191,7 @@
 
     <article class="panel booking-list-panel">
         <div class="panel-head">
-            <h2>Danh Sach Booking</h2>
+            <h2>Danh Sách Booking</h2>
             <span class="meta-chip">${listBooking.size()} lich</span>
         </div>
         <div class="table-wrap">
@@ -199,16 +199,16 @@
                 <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Khach hang</th>
+                    <th>Khách hàng</th>
                     <th>SDT</th>
-                    <th>Nhan vien</th>
-                    <th>Dich vu</th>
-                    <th>Khuyen mai</th>
-                    <th>Thoi gian hen</th>
-                    <th>Thanh toan</th>
-                    <th>Trang thai</th>
+                    <th>Nhân viên</th>
+                    <th>Dịch vụ</th>
+                    <th>Khuyến mãi</th>
+                    <th>Thời gian hẹn</th>
+                    <th>Thanh toán</th>
+                    <th>Trạng thái</th>
                     <th>Workflow</th>
-                    <th>Ghi chu</th>
+                    <th>Ghi chú</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -221,7 +221,13 @@
                         <td>${b.dichVuTen}</td>
                         <td>${b.khuyenMaiCode}</td>
                         <td>${b.thoiGianHenText}</td>
-                        <td>${b.phuongThucThanhToan}</td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${b.phuongThucThanhToan == 'Tien mat'}">Tiền mặt</c:when>
+                                <c:when test="${b.phuongThucThanhToan == 'Chuyen khoan'}">Chuyển khoản</c:when>
+                                <c:otherwise>${b.phuongThucThanhToan}</c:otherwise>
+                            </c:choose>
+                        </td>
                         <td>${b.trangThaiBooking}</td>
                         <td>
                             <div class="table-actions" style="display:flex; flex-wrap:nowrap; align-items:center; gap:8px; white-space:nowrap;">
@@ -251,7 +257,7 @@
                                         </form>
                                     </c:when>
                                     <c:otherwise>
-                                        <span class="mini-note">Khong co thao tac</span>
+                                        <span class="mini-note" style="font-size:18px; font-weight:800; color:#5f5445;">Không có thao tác</span>
                                     </c:otherwise>
                                 </c:choose>
                             </div>
@@ -267,5 +273,3 @@
 </div>
 </body>
 </html>
-
-

@@ -14,17 +14,17 @@
         <div class="action-grid">
             <a class="action-card" href="${pageContext.request.contextPath}/auth/login.jsp">
                 <strong>Admin / Staff</strong>
-                <span>Dang nhap de quan ly booking, hoa don, nhan vien va dich vu.</span>
+                <span>Đăng nhập để quản lý booking, hóa đơn, nhân viên và dịch vụ.</span>
                 <em>Back office</em>
             </a>
             <a class="action-card" href="${pageContext.request.contextPath}/khach-hang/dang-nhap.jsp">
-                <strong>Khach Hang</strong>
-                <span>Dang nhap de dat lich online va xem lich cua ban.</span>
+                <strong>Khách Hàng</strong>
+                <span>Đăng nhập để đặt lịch online và xem lịch của bạn.</span>
                 <em>Booking</em>
             </a>
             <a class="action-card" href="${pageContext.request.contextPath}/khach-hang/dang-ky.jsp">
-                <strong>Dang Ky</strong>
-                <span>Tao tai khoan khach hang moi bang so dien thoai.</span>
+                <strong>Đăng Ký</strong>
+                <span>Tạo tài khoản khách hàng moi bảng so dien thoai.</span>
                 <em>New account</em>
             </a>
         </div>

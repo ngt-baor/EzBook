@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <html>
 <head>
-    <title>Thong Ke</title>
+    <title>Thống Kê</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css?v=font-20260608-2">
 </head>
 <body>
@@ -10,47 +10,47 @@
     <header class="page-header">
         <div class="page-heading">
             <p class="eyebrow">Analytics Workspace</p>
-            <h1 class="page-title">Thong Ke</h1>
-            <p class="page-subtitle">Theo doi doanh thu theo thang tu cac hoa don da thanh toan, tach rieng khoi man hinh booking de de quan sat.</p>
+            <h1 class="page-title">Thống Kê</h1>
+            <p class="page-subtitle">Theo dõi doanh thu theo tháng từ các hóa đơn đã thanh toán, tách riêng khỏi màn hình booking để dễ quan sát.</p>
         </div>
         <nav class="toolbar">
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Trang Chu</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Trang Chủ</a>
             <c:if test="${sessionScope.role == 'ADMIN'}">
-                <a class="toolbar-link" href="${pageContext.request.contextPath}/nhan-vien/hien-thi">Nhan vien</a>
-                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Tai khoan</a>
-                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Dich vu</a>
-                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">Khuyen mai</a>
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/nhan-vien/hien-thi">Nhân viên</a>
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Tài khoản</a>
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Dịch vụ</a>
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">Khuyến mãi</a>
             </c:if>
             <c:if test="${sessionScope.role == 'STAFF'}">
-                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">Khuyen mai</a>
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">Khuyến mãi</a>
             </c:if>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/booking/hien-thi">Booking</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hoa don</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/thong-ke/hien-thi">Thong ke</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Ho so</a>
-            <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/logout">Dang xuat</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hóa đơn</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/thong-ke/hien-thi">Thống kê</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Hồ sơ</a>
+            <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
         </nav>
     </header>
 
     <section class="stat-grid">
         <article class="stat-card">
-            <span>Nam thong ke</span>
+            <span>Năm thống kê</span>
             <strong>${year}</strong>
         </article>
         <article class="stat-card">
-            <span>Tong doanh thu</span>
+            <span>Tổng doanh thu</span>
             <strong>${totalRevenue}</strong>
         </article>
         <article class="stat-card">
-            <span>Top dich vu</span>
+            <span>Top dịch vụ</span>
             <strong>${topDichVu.size()}</strong>
         </article>
         <article class="stat-card">
-            <span>Lich hen hom nay</span>
+            <span>Lich hen hôm này</span>
             <strong>${lichHenHomNay.size()}</strong>
         </article>
         <article class="stat-card">
-            <span>Lich sap dien ra</span>
+            <span>Lich sắp diễn ra</span>
             <strong>${lichHenSapDienRa.size()}</strong>
         </article>
     </section>
@@ -58,23 +58,23 @@
     <section class="workspace-grid equal-col" style="margin-top:32px;">
         <article class="panel">
             <div class="panel-head">
-                <h2>Lich Hen Hom Nay</h2>
+                <h2>Lịch Hẹn Hôm Nay</h2>
                 <span class="meta-chip">${lichHenHomNay.size()} lich</span>
             </div>
             <div class="panel-body" style="padding-bottom:0;">
-                <p class="panel-note">${bookingScopeLabel}. Khong tinh lich da huy.</p>
+                <p class="panel-note">${bookingScopeLabel}. Không tính lịch đã hủy.</p>
             </div>
             <div class="table-wrap">
                 <table class="data-table">
                     <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Khach hang</th>
+                        <th>Khách hàng</th>
                         <th>SDT</th>
-                        <th>Nhan vien</th>
-                        <th>Dich vu</th>
-                        <th>Thoi gian</th>
-                        <th>Trang thai</th>
+                        <th>Nhân viên</th>
+                        <th>Dịch vụ</th>
+                        <th>Thời gian</th>
+                        <th>Trạng thái</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -91,7 +91,7 @@
                     </c:forEach>
                     <c:if test="${lichHenHomNay.size() == 0}">
                         <tr>
-                            <td colspan="7">Hom nay chua co lich hen.</td>
+                            <td colspan="7">Hom này chưa có lịch hẹn.</td>
                         </tr>
                     </c:if>
                     </tbody>
@@ -101,23 +101,23 @@
 
         <article class="panel">
             <div class="panel-head">
-                <h2>Lich Hen Sap Dien Ra</h2>
+                <h2>Lịch Hẹn Sắp Diễn Ra</h2>
                 <span class="meta-chip">${lichHenSapDienRa.size()} lich</span>
             </div>
             <div class="panel-body" style="padding-bottom:0;">
-                <p class="panel-note">${bookingScopeLabel}. Chi tinh Pending va Confirmed tu hien tai tro di.</p>
+                <p class="panel-note">${bookingScopeLabel}. Chỉ tính Pending và Confirmed từ hiện tại trở đi.</p>
             </div>
             <div class="table-wrap">
                 <table class="data-table">
                     <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Khach hang</th>
+                        <th>Khách hàng</th>
                         <th>SDT</th>
-                        <th>Nhan vien</th>
-                        <th>Dich vu</th>
-                        <th>Thoi gian</th>
-                        <th>Trang thai</th>
+                        <th>Nhân viên</th>
+                        <th>Dịch vụ</th>
+                        <th>Thời gian</th>
+                        <th>Trạng thái</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -134,7 +134,7 @@
                     </c:forEach>
                     <c:if test="${lichHenSapDienRa.size() == 0}">
                         <tr>
-                            <td colspan="7">Chua co lich sap dien ra.</td>
+                            <td colspan="7">Chưa có lich sắp diễn ra.</td>
                         </tr>
                     </c:if>
                     </tbody>
@@ -145,23 +145,23 @@
 
     <article class="panel">
         <div class="panel-head">
-            <h2>Bo Loc Thong Ke</h2>
+            <h2>Bộ Lọc Thống Kê</h2>
             <span class="meta-chip">Revenue year</span>
         </div>
         <div class="panel-body">
             <form action="${pageContext.request.contextPath}/thong-ke/hien-thi" method="get">
                 <div class="form-grid two-col">
                     <label class="field">
-                        <span>Nam thong ke</span>
+                        <span>Năm thống kê</span>
                         <input type="number" name="year" value="${year}" min="2000" max="2100">
                     </label>
                     <div class="field">
-                        <span>Ghi chu</span>
-                        <p class="panel-note">Chi tinh cac hoa don co thoi gian thanh toan va trang thai da thanh toan.</p>
+                        <span>Ghi chú</span>
+                        <p class="panel-note">Chi tinh các hóa đơn có thời gian thanh toán và trạng thái đã thanh toán.</p>
                     </div>
                 </div>
                 <div class="form-actions">
-                    <button type="submit">Xem thong ke</button>
+                    <button type="submit">Xem thống kê</button>
                 </div>
             </form>
         </div>
@@ -169,17 +169,17 @@
 
     <article class="panel" style="margin-top:32px;">
         <div class="panel-head">
-            <h2>Bieu Do Doanh Thu Thang (${year})</h2>
+            <h2>Biểu Đồ Doanh Thu Tháng (${year})</h2>
             <span class="meta-chip">Paid revenue</span>
         </div>
         <div class="panel-body">
             <c:if test="${!hasRevenueData}">
-                <p class="panel-note">Nam nay chua co doanh thu da thanh toan.</p>
+                <p class="panel-note">Năm này chưa có doanh thu đã thanh toán.</p>
             </c:if>
             <div class="chart-list">
                 <c:forEach items="${doanhThuThang}" var="dt">
                     <div class="chart-row">
-                        <div>Thang ${dt.month}</div>
+                        <div>Tháng ${dt.month}</div>
                         <div class="chart-track">
                             <div class="chart-bar" style="width:${dt.widthPercent}%"></div>
                         </div>
@@ -192,18 +192,18 @@
 
     <article class="panel" style="margin-top:32px;">
         <div class="panel-head">
-            <h2>Top Dich Vu Duoc Dat Nhieu (${year})</h2>
+            <h2>Top Dịch Vụ Được Đặt Nhiều (${year})</h2>
             <span class="meta-chip">${topDichVu.size()} muc</span>
         </div>
         <div class="table-wrap">
             <table class="data-table">
                 <thead>
                 <tr>
-                    <th>Hang</th>
-                    <th>Ma DV</th>
-                    <th>Ten dich vu</th>
-                    <th>So luot dat</th>
-                    <th>Doanh thu du kien</th>
+                    <th>Hạng</th>
+                    <th>Mã DV</th>
+                    <th>Tên dịch vụ</th>
+                    <th>Số lượt đặt</th>
+                    <th>Doanh thu dự kiến</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -218,7 +218,7 @@
                 </c:forEach>
                 <c:if test="${topDichVu.size() == 0}">
                     <tr>
-                        <td colspan="5">Chua co du lieu booking dich vu trong nam nay.</td>
+                        <td colspan="5">Chưa có dữ liệu booking dịch vụ trong năm này.</td>
                     </tr>
                 </c:if>
                 </tbody>

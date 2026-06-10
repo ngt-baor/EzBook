@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>EZBook Nhan Vien</title>
+    <title>EZBook Nhân Viên</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css?v=font-20260608-2">
 </head>
 <body>
@@ -16,28 +16,28 @@
     <header class="page-header">
         <div class="page-heading">
             <p class="eyebrow">Admin Workspace</p>
-            <h1 class="page-title">Nhan Vien</h1>
-            <p class="page-subtitle">Trang dieu huong nhanh ve man hinh quan ly nhan vien.</p>
+            <h1 class="page-title">Nhân Viên</h1>
+            <p class="page-subtitle">Trang điều hướng nhanh về màn hình quản lý nhân viên.</p>
         </div>
         <nav class="toolbar">
             
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Trang Chu</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/nhan-vien/hien-thi">Nhan vien</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Tai khoan</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Dich vu</a>
-                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">Khuyen mai</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Trang Chủ</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/nhan-vien/hien-thi">Nhân viên</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Tài khoản</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Dịch vụ</a>
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">Khuyến mãi</a>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/booking/hien-thi">Booking</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hoa don</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/thong-ke/hien-thi">Thong ke</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Ho so</a>
-            <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/logout">Dang xuat</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hóa đơn</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/thong-ke/hien-thi">Thống kê</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Hồ sơ</a>
+            <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
         </nav>
     </header>
 
     <section class="action-grid">
         <a class="action-card" href="${pageContext.request.contextPath}/nhan-vien/hien-thi">
-            <strong>Mo Danh Sach Nhan Vien</strong>
-            <span>Them, sua, xoa va kiem tra trang thai lam viec cua nhan vien.</span>
+            <strong>Mở Danh Sách Nhân Viên</strong>
+            <span>Thêm, sửa, xóa và kiểm tra trạng thái làm việc của nhân viên.</span>
             <em>Admin</em>
         </a>
     </section>

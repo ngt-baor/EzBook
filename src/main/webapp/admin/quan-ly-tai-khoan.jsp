@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <html>
 <head>
-    <title>Quan Ly Tai Khoan</title>
+    <title>Quản Lý Tài Khoản</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css?v=font-20260608-2">
 </head>
 <body>
@@ -23,54 +23,54 @@
     <header class="page-header">
         <div class="page-heading">
             <p class="eyebrow">Admin Workspace</p>
-            <h1 class="page-title">Quan Ly Tai Khoan</h1>
-            <p class="page-subtitle">Theo doi tai khoan nhan vien va khach hang o hai bang rieng, thao tac khoa mo khoa nhanh ma khong bi roi bo cuc.</p>
+            <h1 class="page-title">Quản Lý Tài Khoản</h1>
+            <p class="page-subtitle">Theo dõi tài khoản nhân viên và khách hàng o hai bảng riêng, thao tác khóa mở khóa nhanh mà không bị rời bố cục.</p>
         </div>
         <nav class="toolbar">
             
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Trang Chu</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/nhan-vien/hien-thi">Nhan vien</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Tai khoan</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Dich vu</a>
-                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">Khuyen mai</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp">Trang Chủ</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/nhan-vien/hien-thi">Nhân viên</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Tài khoản</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-dich-vu">Dịch vụ</a>
+                <a class="toolbar-link" href="${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai">Khuyến mãi</a>
             <a class="toolbar-link" href="${pageContext.request.contextPath}/booking/hien-thi">Booking</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hoa don</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/thong-ke/hien-thi">Thong ke</a>
-            <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Ho so</a>
-            <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/logout">Dang xuat</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/hoa-don/hien-thi">Hóa đơn</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/thong-ke/hien-thi">Thống kê</a>
+            <a class="toolbar-link" href="${pageContext.request.contextPath}/account/ho-so">Hồ sơ</a>
+            <a class="toolbar-link" style="background:#f7d2bf; color:#a23923;" href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
         </nav>
     </header>
 
     <section class="stat-grid">
         <article class="stat-card">
-            <span>Tai khoan nhan vien</span>
+            <span>Tài khoản nhân viên</span>
             <strong>${staffCount}</strong>
         </article>
         <article class="stat-card">
-            <span>Tai khoan khach hang</span>
+            <span>Tài khoản khách hàng</span>
             <strong>${customerCount}</strong>
         </article>
         <article class="stat-card">
-            <span>Tong so</span>
+            <span>Tổng số</span>
             <strong>${accounts.size()}</strong>
         </article>
     </section>
 
     <c:if test="${param.msg == 'status-updated'}">
-        <p class="alert success">Cap nhat trang thai tai khoan thanh cong.</p>
+        <p class="alert success">Cập nhật trạng thái tài khoản thành công.</p>
     </c:if>
     <c:if test="${param.msg == 'account-deleted'}">
-        <p class="alert success">Xoa tai khoan thanh cong.</p>
+        <p class="alert success">Xóa tài khoản thành công.</p>
     </c:if>
     <c:if test="${param.error != null}">
-        <p class="alert error">Co loi: ${param.error}</p>
+        <p class="alert error">Có lỗi: ${param.error}</p>
     </c:if>
 
     <c:if test="${detailAccount != null}">
         <div class="modal-overlay">
             <article class="modal-card">
                 <div class="panel-head">
-                    <h2>Thong Tin Tai Khoan</h2>
+                    <h2>Thông Tin Tài Khoản</h2>
                     <span class="meta-chip">${detailAccount.username}</span>
                 </div>
                 <div class="table-wrap">
@@ -85,26 +85,26 @@
                             <td>${detailAccount.password}</td>
                         </tr>
                         <tr>
-                            <th>Ho ten</th>
+                            <th>Họ tên</th>
                             <td>${detailAccount.fullName}</td>
                         </tr>
                         <tr>
-                            <th>So dien thoai</th>
+                            <th>Số điện thoại</th>
                             <td>${detailAccount.phone}</td>
                         </tr>
                         <tr>
-                            <th>Vai tro</th>
+                            <th>Vai trò</th>
                             <td>${detailAccount.role}</td>
                         </tr>
                         <tr>
-                            <th>Trang thai</th>
-                            <td>${detailAccount.active ? 'Hoat dong' : 'Bi khoa'}</td>
+                            <th>Trạng thái</th>
+                            <td>${detailAccount.active ? 'Hoạt động' : 'Bị khóa'}</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="panel-body">
-                    <a class="btn btn-muted" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Dong</a>
+                    <a class="btn btn-muted" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan">Đóng</a>
                 </div>
             </article>
         </div>
@@ -113,19 +113,19 @@
     <section class="content-stack">
         <article class="panel">
             <div class="panel-head">
-                <h2>Tai Khoan Nhan Vien</h2>
-                <span class="meta-chip">${staffCount} tai khoan</span>
+                <h2>Tài Khoản Nhân Viên</h2>
+                <span class="meta-chip">${staffCount} tài khoản</span>
             </div>
             <div class="table-wrap">
                 <table class="data-table">
                     <thead>
                     <tr>
                         <th>Username</th>
-                        <th>Ho ten</th>
-                        <th>So dien thoai</th>
-                        <th>Vai tro</th>
-                        <th>Trang thai</th>
-                        <th>Hanh dong</th>
+                        <th>Họ tên</th>
+                        <th>Số điện thoại</th>
+                        <th>Vai trò</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -136,18 +136,18 @@
                                 <td>${acc.fullName}</td>
                                 <td>${acc.phone}</td>
                                 <td>${acc.role}</td>
-                                <td>${acc.active ? 'Hoat dong' : 'Bi khoa'}</td>
+                                <td>${acc.active ? 'Hoạt động' : 'Bị khóa'}</td>
                                 <td>
                                     <div class="table-actions">
                                         <a class="btn btn-muted btn-compact" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan/detail?username=${acc.username}">Info</a>
                                         <form action="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan/trang-thai" method="post">
                                             <input type="hidden" name="username" value="${acc.username}">
                                             <input type="hidden" name="currentStatus" value="${acc.active}">
-                                            <button type="submit">${acc.active ? 'Khoa' : 'Mo khoa'}</button>
+                                            <button type="submit">${acc.active ? 'Khóa' : 'Mở khóa'}</button>
                                         </form>
                                         <form action="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan/xoa" method="post">
                                             <input type="hidden" name="username" value="${acc.username}">
-                                            <button type="submit" onclick="return confirm('Xoa tai khoan ${acc.username}? Ho so nhan vien/khach hang se duoc giu lai nhung khong con dang nhap bang tai khoan nay.')">Xoa</button>
+                                            <button type="submit" onclick="return confirm('Xóa tài khoản ${acc.username}? Hồ sơ nhân viên/khách hàng sẽ được giữ lại nhưng không còn đăng nhập bảng tài khoản này.')">Xóa</button>
                                         </form>
                                     </div>
                                 </td>
@@ -161,19 +161,19 @@
 
         <article class="panel">
             <div class="panel-head">
-                <h2>Tai Khoan Khach Hang</h2>
-                <span class="meta-chip">${customerCount} tai khoan</span>
+                <h2>Tài Khoản Khách Hàng</h2>
+                <span class="meta-chip">${customerCount} tài khoản</span>
             </div>
             <div class="table-wrap">
                 <table class="data-table">
                     <thead>
                     <tr>
                         <th>Username</th>
-                        <th>Ho ten</th>
-                        <th>So dien thoai</th>
-                        <th>Vai tro</th>
-                        <th>Trang thai</th>
-                        <th>Hanh dong</th>
+                        <th>Họ tên</th>
+                        <th>Số điện thoại</th>
+                        <th>Vai trò</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -184,18 +184,18 @@
                                 <td>${acc.fullName}</td>
                                 <td>${acc.phone}</td>
                                 <td>${acc.role}</td>
-                                <td>${acc.active ? 'Hoat dong' : 'Bi khoa'}</td>
+                                <td>${acc.active ? 'Hoạt động' : 'Bị khóa'}</td>
                                 <td>
                                     <div class="table-actions">
                                         <a class="btn btn-muted btn-compact" href="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan/detail?username=${acc.username}">Info</a>
                                         <form action="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan/trang-thai" method="post">
                                             <input type="hidden" name="username" value="${acc.username}">
                                             <input type="hidden" name="currentStatus" value="${acc.active}">
-                                            <button type="submit">${acc.active ? 'Khoa' : 'Mo khoa'}</button>
+                                            <button type="submit">${acc.active ? 'Khóa' : 'Mở khóa'}</button>
                                         </form>
                                         <form action="${pageContext.request.contextPath}/admin/quan-ly-tai-khoan/xoa" method="post">
                                             <input type="hidden" name="username" value="${acc.username}">
-                                            <button type="submit" onclick="return confirm('Xoa tai khoan ${acc.username}? Ho so khach hang se duoc giu lai nhung khong con dang nhap bang tai khoan nay.')">Xoa</button>
+                                            <button type="submit" onclick="return confirm('Xóa tài khoản ${acc.username}? Hồ sơ khách hàng sẽ được giữ lại nhưng không còn đăng nhập bảng tài khoản này.')">Xóa</button>
                                         </form>
                                     </div>
                                 </td>
@@ -210,5 +210,4 @@
 </div>
 </body>
 </html>
-
 
