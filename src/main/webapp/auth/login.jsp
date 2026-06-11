@@ -40,7 +40,7 @@
     <div class="form-grid">
       <label class="field">
         <span>Tài khoản</span>
-        <input type="text" name="username" placeholder="username / SDT / mà NV" required>
+        <input type="text" name="username" placeholder="username / SĐT / mã NV / Gmail" required>
       </label>
 
       <label class="field">

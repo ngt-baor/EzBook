@@ -93,6 +93,10 @@
                             <td>${detailAccount.phone}</td>
                         </tr>
                         <tr>
+                            <th>Gmail</th>
+                            <td>${detailAccount.email}</td>
+                        </tr>
+                        <tr>
                             <th>Vai trò</th>
                             <td>${detailAccount.role}</td>
                         </tr>
@@ -123,6 +127,7 @@
                         <th>Username</th>
                         <th>Họ tên</th>
                         <th>Số điện thoại</th>
+                        <th>Gmail</th>
                         <th>Vai trò</th>
                         <th>Trạng thái</th>
                         <th>Hành động</th>
@@ -135,6 +140,7 @@
                                 <td>${acc.username}</td>
                                 <td>${acc.fullName}</td>
                                 <td>${acc.phone}</td>
+                                <td>${acc.email}</td>
                                 <td>${acc.role}</td>
                                 <td>${acc.active ? 'Hoạt động' : 'Bị khóa'}</td>
                                 <td>
@@ -171,6 +177,7 @@
                         <th>Username</th>
                         <th>Họ tên</th>
                         <th>Số điện thoại</th>
+                        <th>Gmail</th>
                         <th>Vai trò</th>
                         <th>Trạng thái</th>
                         <th>Hành động</th>
@@ -183,6 +190,7 @@
                                 <td>${acc.username}</td>
                                 <td>${acc.fullName}</td>
                                 <td>${acc.phone}</td>
+                                <td>${acc.email}</td>
                                 <td>${acc.role}</td>
                                 <td>${acc.active ? 'Hoạt động' : 'Bị khóa'}</td>
                                 <td>
@@ -210,4 +218,3 @@
 </div>
 </body>
 </html>
-

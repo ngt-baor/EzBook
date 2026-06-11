@@ -16,6 +16,21 @@
     <c:if test="${param.error == 'password-not-match'}">
         <p class="alert error">Mật khẩu xác nhận không khớp.</p>
     </c:if>
+    <c:if test="${param.error == 'invalid-email'}">
+        <p class="alert error">Gmail không hợp lệ. Vui lòng nhập địa chỉ kết thúc bằng @gmail.com.</p>
+    </c:if>
+    <c:if test="${param.error == 'email-exists'}">
+        <p class="alert error">Gmail này đã được sử dụng cho tài khoản khác.</p>
+    </c:if>
+    <c:if test="${param.error == 'invalid-code'}">
+        <p class="alert error">Mã xác nhận không chính xác.</p>
+    </c:if>
+    <c:if test="${param.error == 'mail-send-failed'}">
+        <p class="alert error">Không gửi được mã về Gmail. Vui lòng kiểm tra cấu hình Gmail SMTP.</p>
+    </c:if>
+    <c:if test="${param.msg == 'code-sent'}">
+        <p class="alert success">Đã gửi mã xác nhận về Gmail.</p>
+    </c:if>
     <c:if test="${param.error == 'register-failed'}">
         <p class="alert error">Đăng ký thất bại. Số điện thoại có thể đã tồn tại.</p>
     </c:if>
@@ -31,6 +46,16 @@
                 <span>Số điện thoại</span>
                 <input type="text" name="sdt" required>
             </label>
+
+            <label class="field">
+                <span>Gmail</span>
+                <input type="email" name="email" placeholder="tenkhachhang@gmail.com" pattern="^[A-Za-z0-9._%+-]+@gmail\.com$" required>
+            </label>
+            <div class="field">
+                <span>Mã xác nhận Gmail</span>
+                <input type="text" name="ma_xac_nhan" maxlength="6" placeholder="Nhập mã 6 số" required>
+                <button type="submit" formaction="${pageContext.request.contextPath}/khach-hang/dang-ky/gui-ma" formnovalidate>Gửi mã</button>
+            </div>
 
             <label class="field">
                 <span>Mật khẩu</span>

@@ -1,5 +1,7 @@
 ﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<fmt:setLocale value="vi_VN"/>
 <html>
 <head>
     <title>Thống Kê</title>
@@ -39,7 +41,7 @@
         </article>
         <article class="stat-card">
             <span>Tổng doanh thu</span>
-            <strong>${totalRevenue}</strong>
+            <strong><fmt:formatNumber value="${totalRevenue}" type="number" groupingUsed="true" maxFractionDigits="0"/> đ</strong>
         </article>
         <article class="stat-card">
             <span>Top dịch vụ</span>
@@ -183,7 +185,7 @@
                         <div class="chart-track">
                             <div class="chart-bar" style="width:${dt.widthPercent}%"></div>
                         </div>
-                        <div>${dt.revenue}</div>
+                        <div><fmt:formatNumber value="${dt.revenue}" type="number" groupingUsed="true" maxFractionDigits="0"/> đ</div>
                     </div>
                 </c:forEach>
             </div>
@@ -213,7 +215,7 @@
                         <td>${dv.dichVuId}</td>
                         <td>${dv.tenDichVu}</td>
                         <td>${dv.soLuotDat}</td>
-                        <td>${dv.doanhThuDuKien}</td>
+                        <td><fmt:formatNumber value="${dv.doanhThuDuKien}" type="number" groupingUsed="true" maxFractionDigits="0"/> đ</td>
                     </tr>
                 </c:forEach>
                 <c:if test="${topDichVu.size() == 0}">
@@ -228,5 +230,4 @@
 </div>
 </body>
 </html>
-
 

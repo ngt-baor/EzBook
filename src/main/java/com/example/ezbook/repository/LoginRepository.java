@@ -22,13 +22,14 @@ public class LoginRepository {
         String sql = "SELECT tk.username, tk.vai_tro, tk.trang_thai, nv.ho_ten " +
                 "FROM TaiKhoan tk " +
                 "JOIN NhanVien nv ON nv.username = tk.username " +
-                "WHERE (tk.username = ? OR nv.sdt = ? OR nv.id = ?) AND tk.mat_khau = ?";
+                "WHERE (tk.username = ? OR tk.email = ? OR nv.sdt = ? OR nv.id = ?) AND tk.mat_khau = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, usernameOrSdtOrId);
             ps.setString(2, usernameOrSdtOrId);
             ps.setString(3, usernameOrSdtOrId);
-            ps.setString(4, password);
+            ps.setString(4, usernameOrSdtOrId);
+            ps.setString(5, password);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (!rs.next()) {
@@ -51,12 +52,13 @@ public class LoginRepository {
         String sql = "SELECT tk.username, tk.vai_tro, tk.trang_thai, kh.ho_ten " +
                 "FROM TaiKhoan tk " +
                 "JOIN KhachHang kh ON kh.username = tk.username " +
-                "WHERE (tk.username = ? OR kh.sdt = ?) AND tk.mat_khau = ?";
+                "WHERE (tk.username = ? OR tk.email = ? OR kh.sdt = ?) AND tk.mat_khau = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, usernameOrPhone);
             ps.setString(2, usernameOrPhone);
-            ps.setString(3, password);
+            ps.setString(3, usernameOrPhone);
+            ps.setString(4, password);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (!rs.next()) {
@@ -80,13 +82,14 @@ public class LoginRepository {
         String sql = "SELECT nv.id, nv.ho_ten, nv.sdt, nv.vai_tro, tk.trang_thai " +
                 "FROM NhanVien nv " +
                 "JOIN TaiKhoan tk ON nv.username = tk.username " +
-                "WHERE (nv.id = ? OR nv.sdt = ? OR tk.username = ?) AND tk.mat_khau = ?";
+                "WHERE (nv.id = ? OR nv.sdt = ? OR tk.username = ? OR tk.email = ?) AND tk.mat_khau = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, username);
             ps.setString(2, username);
             ps.setString(3, username);
-            ps.setString(4, password);
+            ps.setString(4, username);
+            ps.setString(5, password);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -111,12 +114,13 @@ public class LoginRepository {
         String sql = "SELECT kh.id, kh.ho_ten, kh.sdt, kh.ngay_sinh, tk.trang_thai " +
                 "FROM KhachHang kh " +
                 "JOIN TaiKhoan tk ON kh.username = tk.username " +
-                "WHERE (kh.sdt = ? OR tk.username = ?) AND tk.mat_khau = ?";
+                "WHERE (kh.sdt = ? OR tk.username = ? OR tk.email = ?) AND tk.mat_khau = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, username);
             ps.setString(2, username);
-            ps.setString(3, password);
+            ps.setString(3, username);
+            ps.setString(4, password);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {

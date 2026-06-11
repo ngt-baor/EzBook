@@ -7,6 +7,7 @@ import com.example.ezbook.repository.DichVuRepository;
 import com.example.ezbook.repository.HoaDonRepository;
 import com.example.ezbook.repository.KhachHangRepository;
 import com.example.ezbook.repository.KhuyenMaiRepository;
+import com.example.ezbook.repository.LoaiDichVuRepository;
 import com.example.ezbook.repository.NhanVienRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -35,6 +36,7 @@ public class BookingServlet extends HttpServlet {
     private final KhachHangRepository khachHangRepository = new KhachHangRepository();
     private final NhanVienRepository nhanVienRepository = new NhanVienRepository();
     private final DichVuRepository dichVuRepository = new DichVuRepository();
+    private final LoaiDichVuRepository loaiDichVuRepository = new LoaiDichVuRepository();
     private final HoaDonRepository hoaDonRepository = new HoaDonRepository();
     private final KhuyenMaiRepository khuyenMaiRepository = new KhuyenMaiRepository();
 
@@ -72,7 +74,8 @@ public class BookingServlet extends HttpServlet {
         req.setAttribute("listBooking", bookingRepository.getAllForView(tuKhoa, trangThai, ngayTu, ngayDen));
         req.setAttribute("listKhachHang", khachHangRepository.getAll());
         req.setAttribute("listNhanVien", nhanVienRepository.getNhanVienCoTheDatLich());
-        req.setAttribute("listDichVu", dichVuRepository.getAll());
+        req.setAttribute("listLoaiDichVu", loaiDichVuRepository.getAll());
+        req.setAttribute("listDichVu", dichVuRepository.getDangHoatDong());
         req.setAttribute("listKhuyenMai", khuyenMaiRepository.getDangHoatDong());
         req.setAttribute("khungGio", KHUNG_GIO);
 
@@ -90,6 +93,11 @@ public class BookingServlet extends HttpServlet {
 
         if (khachHangId == null || nhanVienId == null || dichVuId == null || ngayHen == null || khungGio == null) {
             redirectWithMessage(resp, req.getContextPath() + "/booking/hien-thi", "error", "missing-data");
+            return;
+        }
+
+        if (!dichVuRepository.dangHoatDong(dichVuId)) {
+            redirectWithMessage(resp, req.getContextPath() + "/booking/hien-thi", "error", "service-not-active");
             return;
         }
 

@@ -63,6 +63,9 @@
     <c:if test="${param.error == 'invalid-promotion'}">
         <p class="alert error">Mã khuyến mãi không hợp lệ, đã hết hạn, hết lượt hoặc đang tạm ngừng.</p>
     </c:if>
+    <c:if test="${param.error == 'service-not-active'}">
+        <p class="alert error">Dịch vụ này đang ngừng hoạt động. Vui lòng chọn dịch vụ khác.</p>
+    </c:if>
     <c:if test="${param.error == 'customer-not-found'}">
         <p class="alert error">Khong tim thay ho so khách hàng. Vui lòng đăng nhập lại.</p>
     </c:if>
@@ -72,7 +75,7 @@
     <c:if test="${param.error == 'cancel-missing-data'}">
         <p class="alert error">Không đủ thông tin để hủy lịch.</p>
     </c:if>
-    <c:if test="${param.error != null && param.error != 'staff-time-conflict' && param.error != 'staff-not-bookable' && param.error != 'past-booking-not-allowed' && param.error != 'invalid-promotion' && param.error != 'customer-not-found' && param.error != 'cancel-not-allowed' && param.error != 'cancel-missing-data'}">
+    <c:if test="${param.error != null && param.error != 'staff-time-conflict' && param.error != 'staff-not-bookable' && param.error != 'past-booking-not-allowed' && param.error != 'invalid-promotion' && param.error != 'service-not-active' && param.error != 'customer-not-found' && param.error != 'cancel-not-allowed' && param.error != 'cancel-missing-data'}">
         <p class="alert error">Có lỗi: ${param.error}</p>
     </c:if>
 
@@ -87,14 +90,27 @@
                 <form action="${pageContext.request.contextPath}/khach-hang/booking-online/tao" method="post">
                     <div class="form-grid">
                         <label class="field">
-                            <span>Dịch vụ</span>
-                            <select name="dich_vu_id" required>
-                                <option value="">-- Chọn dịch vụ --</option>
-                                <c:forEach items="${listDichVu}" var="dv">
-                                    <option value="${dv.id}">${dv.ten_dich_vu}</option>
+                            <span>Loại dịch vụ</span>
+                            <select id="customerServiceTypeSelect" required>
+                                <option value="">-- Chọn loại dịch vụ --</option>
+                                <c:forEach items="${listLoaiDichVu}" var="ldv">
+                                    <option value="${ldv.id}">${ldv.ten_loai}</option>
                                 </c:forEach>
                             </select>
                         </label>
+                        <label class="field">
+                            <span>Dịch vụ</span>
+                            <select id="customerServiceSelect" name="dich_vu_id" required disabled>
+                                <option value="">-- Chọn loại dịch vụ trước --</option>
+                                <c:forEach items="${listDichVu}" var="dv">
+                                    <option value="${dv.id}" data-loai-id="${dv.loai_dich_vu_id}" data-price="${dv.gia_tien}">${dv.ten_dich_vu}</option>
+                                </c:forEach>
+                            </select>
+                        </label>
+                        <div class="field">
+                            <span>Giá dịch vụ</span>
+                            <p id="customerServicePrice" class="panel-note">Chọn dịch vụ để xem giá.</p>
+                        </div>
                         <label class="field">
                             <span>Nhân viên</span>
                             <select name="nhan_vien_id">
@@ -226,5 +242,62 @@
         </div>
     </section>
 </div>
+<script>
+    (function () {
+        const loaiSelect = document.getElementById('customerServiceTypeSelect');
+        const dichVuSelect = document.getElementById('customerServiceSelect');
+        const priceText = document.getElementById('customerServicePrice');
+        if (!loaiSelect || !dichVuSelect) {
+            return;
+        }
+
+        const allServiceOptions = Array.from(dichVuSelect.querySelectorAll('option[data-loai-id]'));
+
+        function resetServicePlaceholder(text) {
+            dichVuSelect.innerHTML = '';
+            const placeholder = document.createElement('option');
+            placeholder.value = '';
+            placeholder.textContent = text;
+            dichVuSelect.appendChild(placeholder);
+        }
+
+        function formatCurrency(rawPrice) {
+            const price = Number(rawPrice);
+            if (!Number.isFinite(price)) {
+                return 'Chọn dịch vụ để xem giá.';
+            }
+            return new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 }).format(price) + ' đ';
+        }
+
+        function updateServicePrice() {
+            if (!priceText) {
+                return;
+            }
+            const selectedOption = dichVuSelect.options[dichVuSelect.selectedIndex];
+            priceText.textContent = selectedOption && selectedOption.dataset.price
+                ? formatCurrency(selectedOption.dataset.price)
+                : 'Chọn dịch vụ để xem giá.';
+        }
+
+        function renderServicesByType() {
+            const selectedLoaiId = loaiSelect.value;
+            resetServicePlaceholder(selectedLoaiId ? '-- Chọn dịch vụ --' : '-- Chọn loại dịch vụ trước --');
+            dichVuSelect.disabled = !selectedLoaiId;
+            updateServicePrice();
+
+            if (!selectedLoaiId) {
+                return;
+            }
+
+            allServiceOptions
+                .filter(option => option.dataset.loaiId === selectedLoaiId)
+                .forEach(option => dichVuSelect.appendChild(option.cloneNode(true)));
+        }
+
+        loaiSelect.addEventListener('change', renderServicesByType);
+        dichVuSelect.addEventListener('change', updateServicePrice);
+        renderServicesByType();
+    })();
+</script>
 </body>
 </html>

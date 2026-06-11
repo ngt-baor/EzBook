@@ -8,6 +8,7 @@ import com.example.ezbook.repository.BookingRepository;
 import com.example.ezbook.repository.DichVuRepository;
 import com.example.ezbook.repository.KhachHangRepository;
 import com.example.ezbook.repository.KhuyenMaiRepository;
+import com.example.ezbook.repository.LoaiDichVuRepository;
 import com.example.ezbook.repository.NhanVienRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -35,6 +36,7 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
     private final KhachHangRepository khachHangRepository = new KhachHangRepository();
     private final BookingRepository bookingRepository = new BookingRepository();
     private final DichVuRepository dichVuRepository = new DichVuRepository();
+    private final LoaiDichVuRepository loaiDichVuRepository = new LoaiDichVuRepository();
     private final NhanVienRepository nhanVienRepository = new NhanVienRepository();
     private final KhuyenMaiRepository khuyenMaiRepository = new KhuyenMaiRepository();
 
@@ -53,7 +55,8 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
             sdt = customerUsername;
         }
 
-        req.setAttribute("listDichVu", dichVuRepository.getAll());
+        req.setAttribute("listDichVu", dichVuRepository.getDangHoatDong());
+        req.setAttribute("listLoaiDichVu", loaiDichVuRepository.getAll());
         req.setAttribute("listNhanVien", nhanVienRepository.getNhanVienCoTheDatLich());
         req.setAttribute("topDichVuHot", bookingRepository.thongKeTop3DichVuDuocDatNhieu());
         req.setAttribute("listKhuyenMai", khuyenMaiRepository.getDangHoatDong());
@@ -94,6 +97,11 @@ public class KhachHangOnlineBookingServlet extends HttpServlet {
 
         if (sdt == null || dichVuId == null || ngayHen == null || khungGio == null || phuongThucThanhToan == null) {
             redirectWithMessage(resp, req.getContextPath() + "/khach-hang/booking-online", "error", "missing-data", sdt);
+            return;
+        }
+
+        if (!dichVuRepository.dangHoatDong(dichVuId)) {
+            redirectWithMessage(resp, req.getContextPath() + "/khach-hang/booking-online", "error", "service-not-active", sdt);
             return;
         }
 

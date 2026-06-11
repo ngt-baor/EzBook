@@ -90,9 +90,11 @@ public class SecurityFilter implements Filter {
                 || path.equals("/khach-hang/dang-ky.jsp")
                 || path.equals("/khach-hang/dang-nhap")
                 || path.equals("/khach-hang/dang-ky")
+                || path.equals("/khach-hang/dang-ky/gui-ma")
                 || path.equals("/khach-hang/dang-xuat")
                 || path.equals("/account/dang-ky")
                 || path.equals("/account/quen-mat-khau")
+                || path.equals("/account/quen-mat-khau/gui-ma")
                 || path.startsWith("/uploads/");
     }
 

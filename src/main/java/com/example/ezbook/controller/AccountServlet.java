@@ -2,6 +2,8 @@ package com.example.ezbook.controller;
 
 import com.example.ezbook.entity.AccountInfo;
 import com.example.ezbook.repository.AccountRepository;
+import com.example.ezbook.util.MailService;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,13 +15,16 @@ import jakarta.servlet.http.Part;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.UUID;
 
 @WebServlet(name = "accountServlet", value = {
         "/account/dang-ky",
         "/account/quen-mat-khau",
+        "/account/quen-mat-khau/gui-ma",
         "/account/doi-mat-khau",
+        "/account/doi-mat-khau/gui-ma",
         "/account/cap-nhat-ho-so",
         "/account/upload-avatar",
         "/account/ho-so",
@@ -35,6 +40,8 @@ import java.util.UUID;
 )
 public class AccountServlet extends HttpServlet {
     private final AccountRepository accountRepo = new AccountRepository();
+    private final MailService mailService = new MailService();
+    private final SecureRandom secureRandom = new SecureRandom();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -66,8 +73,16 @@ public class AccountServlet extends HttpServlet {
             xuLyDangKy(req, resp);
             return;
         }
+        if (uri.contains("quen-mat-khau/gui-ma")) {
+            guiMaQuenMatKhau(req, resp);
+            return;
+        }
         if (uri.contains("quen-mat-khau")) {
             xuLyQuenMatKhau(req, resp);
+            return;
+        }
+        if (uri.contains("doi-mat-khau/gui-ma")) {
+            guiMaDoiMatKhau(req, resp);
             return;
         }
         if (uri.contains("doi-mat-khau")) {
@@ -97,14 +112,23 @@ public class AccountServlet extends HttpServlet {
     private void xuLyDangKy(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String sdt = trim(req.getParameter("sdt"));
         String hoTen = trim(req.getParameter("ho_ten"));
+        String email = trim(req.getParameter("email"));
         String matKhau = trim(req.getParameter("mat_khau"));
 
-        if (sdt == null || hoTen == null || matKhau == null) {
+        if (sdt == null || hoTen == null || email == null || matKhau == null) {
             resp.sendRedirect(req.getContextPath() + "/khach-hang/dang-ky.jsp?error=missing-data");
             return;
         }
+        if (!isGmail(email)) {
+            resp.sendRedirect(req.getContextPath() + "/khach-hang/dang-ky.jsp?error=invalid-email");
+            return;
+        }
+        if (accountRepo.existsByEmail(email)) {
+            resp.sendRedirect(req.getContextPath() + "/khach-hang/dang-ky.jsp?error=email-exists");
+            return;
+        }
 
-        boolean thanhCong = accountRepo.registerUser(sdt, matKhau, hoTen);
+        boolean thanhCong = accountRepo.registerUser(sdt, matKhau, hoTen, email);
         if (thanhCong) {
             resp.sendRedirect(req.getContextPath() + "/khach-hang/dang-nhap.jsp?msg=register-success");
             return;
@@ -113,34 +137,75 @@ public class AccountServlet extends HttpServlet {
     }
 
     private void xuLyQuenMatKhau(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String username = trim(req.getParameter("username"));
+        String email = trim(req.getParameter("email"));
+        String maXacNhan = trim(req.getParameter("ma_xac_nhan"));
         String mkMoi = trim(req.getParameter("mat_khau_moi"));
         String mkMoiConfirm = trim(req.getParameter("mat_khau_moi_xac_nhan"));
 
-        if (username == null) {
+        if (email == null) {
             resp.sendRedirect(req.getContextPath() + "/auth/forgot-password.jsp?error=missing-username");
             return;
         }
-        if (mkMoi == null || mkMoiConfirm == null) {
+        if (maXacNhan == null || mkMoi == null || mkMoiConfirm == null) {
             resp.sendRedirect(req.getContextPath() + "/auth/forgot-password.jsp?error=missing-data");
+            return;
+        }
+        if (!isGmail(email)) {
+            resp.sendRedirect(req.getContextPath() + "/auth/forgot-password.jsp?error=invalid-email");
             return;
         }
         if (!mkMoi.equals(mkMoiConfirm)) {
             resp.sendRedirect(req.getContextPath() + "/auth/forgot-password.jsp?error=password-not-match");
             return;
         }
-        if (!accountRepo.existsByUsername(username)) {
+        if (!accountRepo.existsByEmail(email)) {
             resp.sendRedirect(req.getContextPath() + "/auth/forgot-password.jsp?error=username-not-found");
             return;
         }
+        if (!accountRepo.verifyCodeByEmail(email, maXacNhan)) {
+            resp.sendRedirect(req.getContextPath() + "/auth/forgot-password.jsp?error=invalid-code");
+            return;
+        }
 
-        boolean ok = accountRepo.updatePassword(username, mkMoi);
+        boolean ok = accountRepo.updatePasswordByUsernameOrEmail(email, mkMoi);
         if (!ok) {
             resp.sendRedirect(req.getContextPath() + "/auth/forgot-password.jsp?error=system");
             return;
         }
 
+        accountRepo.clearVerificationCodeByEmail(email);
         resp.sendRedirect(req.getContextPath() + "/auth/login.jsp?msg=reset-success");
+    }
+
+    private void guiMaQuenMatKhau(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String email = trim(req.getParameter("email"));
+        if (email == null) {
+            resp.sendRedirect(req.getContextPath() + "/auth/forgot-password.jsp?error=missing-email");
+            return;
+        }
+        if (!isGmail(email)) {
+            resp.sendRedirect(req.getContextPath() + "/auth/forgot-password.jsp?error=invalid-email");
+            return;
+        }
+        if (!accountRepo.existsByEmail(email)) {
+            resp.sendRedirect(req.getContextPath() + "/auth/forgot-password.jsp?error=username-not-found");
+            return;
+        }
+
+        String code = generateCode();
+        if (!accountRepo.saveVerificationCodeByEmail(email, code)) {
+            resp.sendRedirect(req.getContextPath() + "/auth/forgot-password.jsp?error=system");
+            return;
+        }
+        try {
+            mailService.sendVerificationCode(email, code, "quen mat khau");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            resp.sendRedirect(req.getContextPath() + "/auth/forgot-password.jsp?error=mail-send-failed");
+            return;
+        }
+
+        resp.sendRedirect(req.getContextPath() + "/auth/forgot-password.jsp?msg=code-sent");
     }
 
     private void xuLyDoiMatKhau(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -152,11 +217,25 @@ public class AccountServlet extends HttpServlet {
         }
 
         String mkCu = trim(req.getParameter("mat_khau_cu"));
+        String email = trim(req.getParameter("email"));
+        String maXacNhan = trim(req.getParameter("ma_xac_nhan"));
         String mkMoi = trim(req.getParameter("mat_khau_moi"));
         String mkMoiXacNhan = trim(req.getParameter("mat_khau_moi_xac_nhan"));
 
-        if (mkCu == null || mkMoi == null || mkMoiXacNhan == null) {
+        if (mkCu == null || email == null || maXacNhan == null || mkMoi == null || mkMoiXacNhan == null) {
             resp.sendRedirect(req.getContextPath() + "/account/ho-so?error=missing-data");
+            return;
+        }
+        if (!isGmail(email)) {
+            resp.sendRedirect(req.getContextPath() + "/account/ho-so?error=invalid-email");
+            return;
+        }
+        if (!accountRepo.emailBelongsToAccount(email, username)) {
+            resp.sendRedirect(req.getContextPath() + "/account/ho-so?error=email-not-match-account");
+            return;
+        }
+        if (!accountRepo.verifyCodeByEmail(email, maXacNhan)) {
+            resp.sendRedirect(req.getContextPath() + "/account/ho-so?error=invalid-code");
             return;
         }
         if (!mkMoi.equals(mkMoiXacNhan)) {
@@ -171,10 +250,49 @@ public class AccountServlet extends HttpServlet {
 
         boolean ok = accountRepo.updatePassword(username, mkMoi);
         if (ok) {
+            accountRepo.clearVerificationCodeByEmail(email);
             resp.sendRedirect(req.getContextPath() + "/account/ho-so?msg=change-pass-success");
             return;
         }
         resp.sendRedirect(req.getContextPath() + "/account/ho-so?error=change-pass-failed");
+    }
+
+    private void guiMaDoiMatKhau(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        HttpSession session = req.getSession(false);
+        String username = resolveUsername(req, session);
+        if (username == null) {
+            resp.sendRedirect(req.getContextPath() + "/auth/login.jsp?error=login-required");
+            return;
+        }
+
+        String email = trim(req.getParameter("email"));
+        if (email == null) {
+            resp.sendRedirect(req.getContextPath() + "/account/ho-so?error=missing-email");
+            return;
+        }
+        if (!isGmail(email)) {
+            resp.sendRedirect(req.getContextPath() + "/account/ho-so?error=invalid-email");
+            return;
+        }
+        if (!accountRepo.emailBelongsToAccount(email, username)) {
+            resp.sendRedirect(req.getContextPath() + "/account/ho-so?error=email-not-match-account");
+            return;
+        }
+
+        String code = generateCode();
+        if (!accountRepo.saveVerificationCodeByEmail(email, code)) {
+            resp.sendRedirect(req.getContextPath() + "/account/ho-so?error=system");
+            return;
+        }
+        try {
+            mailService.sendVerificationCode(email, code, "doi mat khau");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            resp.sendRedirect(req.getContextPath() + "/account/ho-so?error=mail-send-failed");
+            return;
+        }
+
+        resp.sendRedirect(req.getContextPath() + "/account/ho-so?msg=code-sent");
     }
 
     private void xuLyUploadAvatar(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -216,21 +334,35 @@ public class AccountServlet extends HttpServlet {
         String role = session == null ? null : (String) session.getAttribute("role");
         String hoTen = trim(req.getParameter("ho_ten"));
         String sdt = trim(req.getParameter("sdt"));
+        String email = trim(req.getParameter("email"));
+        String matKhauXacNhan = trim(req.getParameter("mat_khau_xac_nhan"));
 
-        if (hoTen == null || sdt == null) {
+        if (hoTen == null || sdt == null || email == null || matKhauXacNhan == null) {
             resp.sendRedirect(req.getContextPath() + "/account/ho-so?error=missing-data");
+            return;
+        }
+        if (!accountRepo.validatePassword(username, matKhauXacNhan)) {
+            resp.sendRedirect(req.getContextPath() + "/account/ho-so?error=wrong-profile-password");
+            return;
+        }
+        if (!isGmail(email)) {
+            resp.sendRedirect(req.getContextPath() + "/account/ho-so?error=invalid-email");
+            return;
+        }
+        if (accountRepo.emailBelongsToOtherAccount(email, username)) {
+            resp.sendRedirect(req.getContextPath() + "/account/ho-so?error=email-exists");
             return;
         }
 
         boolean ok;
         if ("USER".equals(role)) {
-            ok = accountRepo.updateKhachHangProfile(username, hoTen, sdt);
+            ok = accountRepo.updateKhachHangProfile(username, hoTen, sdt, email);
             if (ok) {
                 session.setAttribute("customerName", hoTen);
                 session.setAttribute("customerPhone", sdt);
             }
         } else {
-            ok = accountRepo.updateNhanVienProfile(username, hoTen, sdt);
+            ok = accountRepo.updateNhanVienProfile(username, hoTen, sdt, email);
         }
 
         if (ok) {
@@ -362,5 +494,13 @@ public class AccountServlet extends HttpServlet {
         }
         String v = value.trim();
         return v.isEmpty() ? null : v;
+    }
+
+    private boolean isGmail(String value) {
+        return value != null && value.matches("^[A-Za-z0-9._%+-]+@gmail\\.com$");
+    }
+
+    private String generateCode() {
+        return String.format("%06d", secureRandom.nextInt(1_000_000));
     }
 }

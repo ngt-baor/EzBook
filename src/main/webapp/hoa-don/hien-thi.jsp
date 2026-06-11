@@ -1,5 +1,7 @@
 ﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<fmt:setLocale value="vi_VN"/>
 <html>
 <head>
     <title>Quản Lý Hóa Đơn</title>
@@ -135,7 +137,17 @@
                         <select name="khuyen_mai_id">
                             <option value="">-- Theo booking / Không áp dụng --</option>
                             <c:forEach items="${listKhuyenMai}" var="km">
-                                <option value="${km.id}">${km.ma_giam_gia} - ${km.loai_giam} - ${km.gia_tri}</option>
+                                <option value="${km.id}">
+                                    ${km.ma_giam_gia} -
+                                    <c:choose>
+                                        <c:when test="${km.loai_giam == 'Phan tram'}">
+                                            <fmt:formatNumber value="${km.gia_tri}" type="number" groupingUsed="true" maxFractionDigits="0"/>%
+                                        </c:when>
+                                        <c:otherwise>
+                                            <fmt:formatNumber value="${km.gia_tri}" type="number" groupingUsed="true" maxFractionDigits="0"/> đ
+                                        </c:otherwise>
+                                    </c:choose>
+                                </option>
                             </c:forEach>
                         </select>
                     </label>
@@ -198,9 +210,9 @@
                     <tr>
                         <td>${hd.id}</td>
                         <td>${hd.booking_id}</td>
-                        <td>${hd.tong_tien_goc}</td>
-                        <td>${hd.tien_giam_gia}</td>
-                        <td>${hd.thanh_tien}</td>
+                        <td><fmt:formatNumber value="${hd.tong_tien_goc}" type="number" groupingUsed="true" maxFractionDigits="0"/> đ</td>
+                        <td><fmt:formatNumber value="${hd.tien_giam_gia}" type="number" groupingUsed="true" maxFractionDigits="0"/> đ</td>
+                        <td><fmt:formatNumber value="${hd.thanh_tien}" type="number" groupingUsed="true" maxFractionDigits="0"/> đ</td>
                         <td>
                             <c:choose>
                                 <c:when test="${hd.phuong_thuc_thanh_toan == 'Tien mat'}">Tiền mặt</c:when>

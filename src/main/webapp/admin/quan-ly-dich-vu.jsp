@@ -1,5 +1,7 @@
 ﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<fmt:setLocale value="vi_VN"/>
 <html>
 <head>
     <title>Quản Lý Dịch Vụ</title>
@@ -201,7 +203,7 @@
                                     </c:if>
                                 </c:forEach>
                             </td>
-                            <td>${dv.gia_tien}</td>
+                            <td><fmt:formatNumber value="${dv.gia_tien}" type="number" groupingUsed="true" maxFractionDigits="0"/> đ</td>
                             <td>${dv.trang_thai ? 'Hoạt động' : 'Ngừng'}</td>
                             <td>
                                 <div class="table-actions" style="display:flex; flex-wrap:nowrap; align-items:center; gap:8px; white-space:nowrap;">
@@ -226,5 +228,4 @@
 </div>
 </body>
 </html>
-
 

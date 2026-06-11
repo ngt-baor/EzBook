@@ -1,5 +1,7 @@
-﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<fmt:setLocale value="vi_VN"/>
 <html>
 <head>
     <title>Quản Lý Booking</title>
@@ -66,13 +68,16 @@
     <c:if test="${param.error == 'invalid-promotion'}">
         <p class="alert error">Khuyến mãi không hợp lệ, đã hết hạn, hết lượt hoặc đang tạm ngừng.</p>
     </c:if>
+    <c:if test="${param.error == 'service-not-active'}">
+        <p class="alert error">Dịch vụ này đang ngừng hoạt động. Vui lòng chọn dịch vụ khác.</p>
+    </c:if>
     <c:if test="${param.error == 'invalid-status-transition'}">
         <p class="alert error">Khong hop le workflow: Pending -> Confirmed -> Completed -> Cancelled.</p>
     </c:if>
     <c:if test="${param.error == 'invoice-auto-create-failed'}">
         <p class="alert error">Đã chuyển Completed nhưng tạo hóa đơn tự động thất bại.</p>
     </c:if>
-    <c:if test="${param.error != null && param.error != 'staff-time-conflict' && param.error != 'staff-not-bookable' && param.error != 'invalid-promotion' && param.error != 'invalid-status-transition' && param.error != 'invoice-auto-create-failed'}">
+    <c:if test="${param.error != null && param.error != 'staff-time-conflict' && param.error != 'staff-not-bookable' && param.error != 'invalid-promotion' && param.error != 'service-not-active' && param.error != 'invalid-status-transition' && param.error != 'invoice-auto-create-failed'}">
         <p class="alert error">Có lỗi: ${param.error}</p>
     </c:if>
 
@@ -104,14 +109,27 @@
                             </select>
                         </label>
                         <label class="field">
-                            <span>Dịch vụ</span>
-                            <select name="dich_vu_id" required>
-                                <option value="">-- Chọn dịch vụ --</option>
-                                <c:forEach items="${listDichVu}" var="dv">
-                                    <option value="${dv.id}">${dv.ten_dich_vu}</option>
+                            <span>Loại dịch vụ</span>
+                            <select id="staffServiceTypeSelect" required>
+                                <option value="">-- Chọn loại dịch vụ --</option>
+                                <c:forEach items="${listLoaiDichVu}" var="ldv">
+                                    <option value="${ldv.id}">${ldv.id} - ${ldv.ten_loai}</option>
                                 </c:forEach>
                             </select>
                         </label>
+                        <label class="field">
+                            <span>Dịch vụ</span>
+                            <select id="staffServiceSelect" name="dich_vu_id" required disabled>
+                                <option value="">-- Chọn loại dịch vụ trước --</option>
+                                <c:forEach items="${listDichVu}" var="dv">
+                                    <option value="${dv.id}" data-loai-id="${dv.loai_dich_vu_id}" data-price="${dv.gia_tien}">${dv.ten_dich_vu}</option>
+                                </c:forEach>
+                            </select>
+                        </label>
+                        <div class="field">
+                            <span>Giá dịch vụ</span>
+                            <p id="staffServicePrice" class="panel-note">Chọn dịch vụ để xem giá.</p>
+                        </div>
                         <label class="field">
                             <span>Ngày hẹn</span>
                             <input type="date" name="ngay_hen" required>
@@ -130,7 +148,17 @@
                             <select name="khuyen_mai_id">
                                 <option value="">-- Không áp dụng --</option>
                                 <c:forEach items="${listKhuyenMai}" var="km">
-                                    <option value="${km.id}">${km.ma_giam_gia} - ${km.gia_tri}</option>
+                                    <option value="${km.id}">
+                                        ${km.ma_giam_gia} -
+                                        <c:choose>
+                                            <c:when test="${km.loai_giam == 'Phan tram'}">
+                                                <fmt:formatNumber value="${km.gia_tri}" type="number" groupingUsed="true" maxFractionDigits="0"/>%
+                                            </c:when>
+                                            <c:otherwise>
+                                                <fmt:formatNumber value="${km.gia_tri}" type="number" groupingUsed="true" maxFractionDigits="0"/> đ
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </option>
                                 </c:forEach>
                             </select>
                         </label>
@@ -271,5 +299,62 @@
     </article>
 
 </div>
+<script>
+    (function () {
+        const loaiSelect = document.getElementById('staffServiceTypeSelect');
+        const dichVuSelect = document.getElementById('staffServiceSelect');
+        const priceText = document.getElementById('staffServicePrice');
+        if (!loaiSelect || !dichVuSelect) {
+            return;
+        }
+
+        const allServiceOptions = Array.from(dichVuSelect.querySelectorAll('option[data-loai-id]'));
+
+        function resetServicePlaceholder(text) {
+            dichVuSelect.innerHTML = '';
+            const placeholder = document.createElement('option');
+            placeholder.value = '';
+            placeholder.textContent = text;
+            dichVuSelect.appendChild(placeholder);
+        }
+
+        function formatCurrency(rawPrice) {
+            const price = Number(rawPrice);
+            if (!Number.isFinite(price)) {
+                return 'Chọn dịch vụ để xem giá.';
+            }
+            return new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 }).format(price) + ' đ';
+        }
+
+        function updateServicePrice() {
+            if (!priceText) {
+                return;
+            }
+            const selectedOption = dichVuSelect.options[dichVuSelect.selectedIndex];
+            priceText.textContent = selectedOption && selectedOption.dataset.price
+                ? formatCurrency(selectedOption.dataset.price)
+                : 'Chọn dịch vụ để xem giá.';
+        }
+
+        function renderServicesByType() {
+            const selectedLoaiId = loaiSelect.value;
+            resetServicePlaceholder(selectedLoaiId ? '-- Chọn dịch vụ --' : '-- Chọn loại dịch vụ trước --');
+            dichVuSelect.disabled = !selectedLoaiId;
+            updateServicePrice();
+
+            if (!selectedLoaiId) {
+                return;
+            }
+
+            allServiceOptions
+                .filter(option => option.dataset.loaiId === selectedLoaiId)
+                .forEach(option => dichVuSelect.appendChild(option.cloneNode(true)));
+        }
+
+        loaiSelect.addEventListener('change', renderServicesByType);
+        dichVuSelect.addEventListener('change', updateServicePrice);
+        renderServicesByType();
+    })();
+</script>
 </body>
 </html>

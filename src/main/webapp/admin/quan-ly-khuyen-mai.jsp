@@ -1,5 +1,7 @@
 ﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<fmt:setLocale value="vi_VN"/>
 <html>
 <head>
     <title>Quản Lý Khuyến Mãi</title>
@@ -189,7 +191,16 @@
                         <td>${km.id}</td>
                         <td>${km.ma_giam_gia}</td>
                         <td>${km.loai_giam}</td>
-                        <td>${km.gia_tri}</td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${km.loai_giam == 'Phan tram'}">
+                                    <fmt:formatNumber value="${km.gia_tri}" type="number" groupingUsed="true" maxFractionDigits="0"/>%
+                                </c:when>
+                                <c:otherwise>
+                                    <fmt:formatNumber value="${km.gia_tri}" type="number" groupingUsed="true" maxFractionDigits="0"/> đ
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
                         <td>${km.ngay_bat_dau}</td>
                         <td>${km.ngay_ket_thuc}</td>
                         <td>${km.so_luong_gioi_han}</td>

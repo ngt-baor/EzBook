@@ -39,7 +39,7 @@
         <div class="form-grid">
             <label class="field">
                 <span>Tài khoản</span>
-                <input type="text" name="username" placeholder="Số điện thoại" required>
+                <input type="text" name="username" placeholder="Số điện thoại hoặc Gmail" required>
             </label>
 
             <label class="field">

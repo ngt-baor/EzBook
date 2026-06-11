@@ -11,7 +11,7 @@
         <div class="page-heading">
             <p class="eyebrow">Account Center</p>
             <h1 class="page-title">Hồ Sơ Cá Nhân</h1>
-            <p class="page-subtitle">Cập nhật thông tin liên hệ và đổi mật khẩu trên cung một màn hình, giữ bố cục ổn định cho ca Admin, Staff và Khách hàng.</p>
+            <p class="page-subtitle">Cập nhật thông tin liên hệ và đổi mật khẩu trên cùng một màn hình, giữ bố cục ổn định cho Admin, Staff và Khách hàng.</p>
         </div>
         <nav class="toolbar">
             <c:choose>
@@ -62,12 +62,51 @@
     </section>
 
     <c:if test="${param.msg == 'update-profile-success'}">
-        <p class="alert success">Cập nhật ho so thành công.</p>
+        <p class="alert success">Cập nhật hồ sơ thành công.</p>
     </c:if>
     <c:if test="${param.msg == 'change-pass-success'}">
         <p class="alert success">Đổi mật khẩu thành công.</p>
     </c:if>
-    <c:if test="${param.error != null}">
+    <c:if test="${param.msg == 'code-sent'}">
+        <p class="alert success">Đã gửi mã xác nhận về Gmail.</p>
+    </c:if>
+    <c:if test="${param.error == 'invalid-email'}">
+        <p class="alert error">Gmail không hợp lệ. Vui lòng nhập địa chỉ kết thúc bằng @gmail.com.</p>
+    </c:if>
+    <c:if test="${param.error == 'email-exists'}">
+        <p class="alert error">Gmail này đã được sử dụng cho tài khoản khác.</p>
+    </c:if>
+    <c:if test="${param.error == 'wrong-profile-password'}">
+        <p class="alert error">Mật khẩu xác nhận không chính xác. Hồ sơ chưa được cập nhật.</p>
+    </c:if>
+    <c:if test="${param.error == 'email-not-match-account'}">
+        <p class="alert error">Gmail không khớp với tài khoản hiện tại.</p>
+    </c:if>
+    <c:if test="${param.error == 'invalid-code'}">
+        <p class="alert error">Mã xác nhận không chính xác.</p>
+    </c:if>
+    <c:if test="${param.error == 'missing-data'}">
+        <p class="alert error">Vui lòng nhập đầy đủ thông tin.</p>
+    </c:if>
+    <c:if test="${param.error == 'password-not-match'}">
+        <p class="alert error">Mật khẩu mới và xác nhận mật khẩu mới không khớp.</p>
+    </c:if>
+    <c:if test="${param.error == 'wrong-old-pass'}">
+        <p class="alert error">Mật khẩu cũ không chính xác.</p>
+    </c:if>
+    <c:if test="${param.error == 'change-pass-failed'}">
+        <p class="alert error">Không thể đổi mật khẩu. Vui lòng thử lại.</p>
+    </c:if>
+    <c:if test="${param.error == 'missing-email'}">
+        <p class="alert error">Vui lòng nhập Gmail để nhận mã xác nhận.</p>
+    </c:if>
+    <c:if test="${param.error == 'update-profile-failed'}">
+        <p class="alert error">Không thể cập nhật hồ sơ. Vui lòng thử lại.</p>
+    </c:if>
+    <c:if test="${param.error == 'mail-send-failed'}">
+        <p class="alert error">Không gửi được mã về Gmail. Vui lòng kiểm tra cấu hình Gmail SMTP.</p>
+    </c:if>
+    <c:if test="${param.error != null && param.error != 'invalid-email' && param.error != 'email-exists' && param.error != 'wrong-profile-password' && param.error != 'email-not-match-account' && param.error != 'invalid-code' && param.error != 'missing-data' && param.error != 'password-not-match' && param.error != 'wrong-old-pass' && param.error != 'change-pass-failed' && param.error != 'missing-email' && param.error != 'update-profile-failed' && param.error != 'mail-send-failed'}">
         <p class="alert error">Có lỗi: ${param.error}</p>
     </c:if>
 
@@ -88,6 +127,14 @@
                             <span>Số điện thoại</span>
                             <input type="text" name="sdt" value="${accountInfo.phone}" required>
                         </label>
+                        <label class="field">
+                            <span>Gmail</span>
+                            <input type="email" name="email" value="${accountInfo.email}" placeholder="ten@gmail.com" pattern="^[A-Za-z0-9._%+-]+@gmail\.com$" required>
+                        </label>
+                        <label class="field">
+                            <span>Mật khẩu xác nhận</span>
+                            <input type="password" name="mat_khau_xac_nhan" placeholder="Nhập mật khẩu hiện tại để lưu hồ sơ" required>
+                        </label>
                     </div>
                     <div class="form-actions">
                         <button type="submit">Lưu thay đổi</button>
@@ -105,11 +152,20 @@
                 <form action="${pageContext.request.contextPath}/account/doi-mat-khau" method="post">
                     <div class="form-grid">
                         <label class="field">
-                            <span>Mật khẩu cu</span>
+                            <span>Mật khẩu cũ</span>
                             <input type="password" name="mat_khau_cu" required>
                         </label>
+                        <div class="field">
+                            <span>Gmail nhận mã</span>
+                            <input type="email" name="email" value="${accountInfo.email}" pattern="^[A-Za-z0-9._%+-]+@gmail\.com$" required>
+                            <button type="submit" formaction="${pageContext.request.contextPath}/account/doi-mat-khau/gui-ma" formnovalidate>Gửi mã</button>
+                        </div>
                         <label class="field">
-                            <span>Mật khẩu moi</span>
+                            <span>Mã xác nhận Gmail</span>
+                            <input type="text" name="ma_xac_nhan" maxlength="6" placeholder="Nhập mã 6 số" required>
+                        </label>
+                        <label class="field">
+                            <span>Mật khẩu mới</span>
                             <input type="password" name="mat_khau_moi" required>
                         </label>
                         <label class="field">

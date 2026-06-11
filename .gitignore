@@ -34,5 +34,8 @@ build/
 ### VS Code ###
 .vscode/
 
+### Local secrets ###
+src/main/resources/ezbook-mail.properties
+
 ### Mac OS ###
 .DS_Store
