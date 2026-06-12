@@ -136,6 +136,20 @@ Project hiện kết nối SQL Server qua lớp [DBConnect.java](src/main/java/c
 
 Bạn cần chỉnh lại thông tin kết nối trong `DBConnect` cho phù hợp với máy của mình trước khi chạy.
 
+## Sample Database
+
+Database mẫu để test project:
+
+- Google Drive: [EZBook Sample Database](https://drive.google.com/file/d/1Qvhy7URHr_NNQoohw9AlQXrXzOKZMH6B/view?usp=sharing)
+
+Sau khi tải về:
+
+1. Mở SQL Server Management Studio
+2. Import hoặc chạy script database mẫu
+3. Đảm bảo tên database khớp với cấu hình hiện tại trong `DBConnect.java`
+
+Nếu database bạn import có tên khác `EZBookDB`, hãy cập nhật lại cấu hình kết nối trong `DBConnect`.
+
 ## Gmail SMTP Configuration
 
 Tính năng OTP Gmail hiện dùng `smtp.gmail.com:587` với STARTTLS qua [MailService.java](src/main/java/com/example/ezbook/util/MailService.java).
@@ -197,4 +211,3 @@ Ví dụ:
 ## Author
 
 - GitHub: [Baor-05](https://github.com/Baor-05)
-
