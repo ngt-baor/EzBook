@@ -160,7 +160,15 @@ Tính năng OTP Gmail hiện dùng `smtp.gmail.com:587` với STARTTLS qua [Mail
 2. Environment variables
 3. File local `src/main/resources/ezbook-mail.properties`
 
-Ví dụ file local:
+File mẫu đã được đưa lên repo:
+
+```properties
+src/main/resources/ezbook-mail.example.properties
+```
+
+Bạn cần tự tạo file local `src/main/resources/ezbook-mail.properties` từ file mẫu đó.
+
+Ví dụ:
 
 ```properties
 ezbook.mail.username=your_email@gmail.com
@@ -170,6 +178,7 @@ ezbook.mail.appPassword=your_app_password
 Lưu ý:
 
 - File `src/main/resources/ezbook-mail.properties` đã được đưa vào `.gitignore`
+- File `src/main/resources/ezbook-mail.example.properties` có thể push lên GitHub vì chỉ chứa placeholder
 - Không commit app password lên GitHub
 - Cần bật xác thực 2 bước cho Gmail trước khi tạo App Password
 
