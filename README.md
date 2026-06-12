@@ -179,25 +179,37 @@ Lưu ý:
 - Không đẩy file chứa secret lên GitHub
 - Nên chuyển phần cấu hình DB và SMTP sang biến môi trường hoặc file local riêng khi triển khai thực tế
 
-## Suggested Screenshots
-
-Bạn nên thêm 3-5 ảnh minh họa vào README:
-
-- Trang đăng nhập / đăng ký
-- Trang booking online của khách hàng
-- Trang quản lý tài khoản / dịch vụ / khuyến mãi
-- Trang hóa đơn
-- Trang thống kê
-
-Ví dụ:
-
-```md
 ## Screenshots
 
-![Login](docs/screenshots/login.png)
-![Booking](docs/screenshots/booking-online.png)
-![Dashboard](docs/screenshots/admin-dashboard.png)
-```
+### 1. Admin Login
+
+Màn hình đăng nhập cho nhân viên và admin.
+
+![Admin Login](docs/screenshots/admin-login.png)
+
+### 2. Customer Online Booking
+
+Khách hàng chọn dịch vụ, nhân viên, ngày hẹn, khung giờ và xem lịch đã đặt ngay trên cùng màn hình.
+
+![Customer Online Booking](docs/screenshots/online-booking.png)
+
+### 3. Customer Registration With Gmail OTP
+
+Khách hàng đăng ký tài khoản mới và xác nhận mã OTP gửi qua Gmail.
+
+![Customer Registration](docs/screenshots/customer-register.png)
+
+### 4. Staff Management
+
+Admin quản lý danh sách nhân viên, vai trò và trạng thái làm việc.
+
+![Staff Management](docs/screenshots/staff-management.png)
+
+### 5. Invoice Management
+
+Nhân viên hoặc admin quản lý hóa đơn, lọc dữ liệu thanh toán và xác nhận trạng thái thanh toán.
+
+![Invoice Management](docs/screenshots/invoice-management.png)
 
 ## Future Improvements
 
