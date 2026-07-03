@@ -1,0 +1,16 @@
+name: Keep EzBook Warm
+
+on:
+  schedule:
+    - cron: "*/14 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Ping Render health endpoint
+        run: |
+          curl --fail --show-error --silent --max-time 30 \
+            https://ezbook-dz8b.onrender.com/health
