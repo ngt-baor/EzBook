@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>Quản Lý Tài Khoản</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css?v=font-20260608-2">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css?v=ui-20260703">
 </head>
 <body>
 <c:set var="staffCount" value="0" />

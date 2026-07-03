@@ -3,13 +3,13 @@
 <html>
 <head>
     <title>EZBook</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css?v=font-20260608-2">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css?v=ui-20260703">
 </head>
 <body>
 <div class="landing">
     <div class="app-shell">
         <h1 class="auth-title">EZBook</h1>
-        <p class="auth-subtitle">Retro booking workspace</p>
+        <p class="auth-subtitle">Không gian vận hành lịch hẹn chuyên nghiệp</p>
 
         <div class="action-grid">
             <a class="action-card" href="${pageContext.request.contextPath}/auth/login.jsp">
@@ -32,4 +32,3 @@
 </div>
 </body>
 </html>
-

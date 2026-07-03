@@ -190,35 +190,91 @@ Lưu ý:
 
 ## Screenshots
 
-### 1. Admin Login
+Toàn bộ ảnh giao diện mới được lưu tại [`docs/screenshots/ezbook-ui-showcase`](docs/screenshots/ezbook-ui-showcase).
 
-Màn hình đăng nhập cho nhân viên và admin.
+### Public and authentication
 
-![Admin Login](docs/screenshots/admin-login.png)
+#### Landing page
 
-### 2. Customer Online Booking
+![EZBook landing page](docs/screenshots/ezbook-ui-showcase/01-landing.png)
 
-Khách hàng chọn dịch vụ, nhân viên, ngày hẹn, khung giờ và xem lịch đã đặt ngay trên cùng màn hình.
+#### Admin and staff login
 
-![Customer Online Booking](docs/screenshots/online-booking.png)
+![Admin and staff login](docs/screenshots/ezbook-ui-showcase/02-admin-staff-login.png)
 
-### 3. Customer Registration With Gmail OTP
+#### Customer login
 
-Khách hàng đăng ký tài khoản mới và xác nhận mã OTP gửi qua Gmail.
+![Customer login](docs/screenshots/ezbook-ui-showcase/03-customer-login.png)
 
-![Customer Registration](docs/screenshots/customer-register.png)
+#### Customer registration with Gmail OTP
 
-### 4. Staff Management
+![Customer registration with Gmail OTP](docs/screenshots/ezbook-ui-showcase/04-customer-registration.png)
 
-Admin quản lý danh sách nhân viên, vai trò và trạng thái làm việc.
+#### Forgot password
 
-![Staff Management](docs/screenshots/staff-management.png)
+![Forgot password](docs/screenshots/ezbook-ui-showcase/05-forgot-password.png)
 
-### 5. Invoice Management
+### Admin functions
 
-Nhân viên hoặc admin quản lý hóa đơn, lọc dữ liệu thanh toán và xác nhận trạng thái thanh toán.
+#### Admin dashboard
 
-![Invoice Management](docs/screenshots/invoice-management.png)
+![Admin dashboard](docs/screenshots/ezbook-ui-showcase/06-admin-dashboard.png)
+
+#### Staff management
+
+![Staff management](docs/screenshots/ezbook-ui-showcase/07-staff-management.png)
+
+#### Staff edit
+
+![Staff edit](docs/screenshots/ezbook-ui-showcase/08-staff-edit.png)
+
+#### Account management
+
+![Account management](docs/screenshots/ezbook-ui-showcase/09-account-management.png)
+
+#### Service management
+
+![Service management](docs/screenshots/ezbook-ui-showcase/10-service-management.png)
+
+#### Promotion management
+
+![Promotion management](docs/screenshots/ezbook-ui-showcase/11-promotion-management.png)
+
+#### Booking management
+
+![Booking management](docs/screenshots/ezbook-ui-showcase/12-booking-management.png)
+
+#### Invoice management
+
+![Invoice management](docs/screenshots/ezbook-ui-showcase/13-invoice-management.png)
+
+#### Statistics dashboard
+
+![Statistics dashboard](docs/screenshots/ezbook-ui-showcase/14-statistics-dashboard.png)
+
+#### Admin profile
+
+![Admin profile](docs/screenshots/ezbook-ui-showcase/15-admin-profile.png)
+
+### Staff functions
+
+#### Staff dashboard
+
+![Staff dashboard](docs/screenshots/ezbook-ui-showcase/16-staff-dashboard.png)
+
+### Customer functions
+
+#### Customer dashboard
+
+![Customer dashboard](docs/screenshots/ezbook-ui-showcase/17-customer-dashboard.png)
+
+#### Customer online booking
+
+![Customer online booking](docs/screenshots/ezbook-ui-showcase/18-customer-online-booking.png)
+
+#### Customer profile
+
+![Customer profile](docs/screenshots/ezbook-ui-showcase/19-customer-profile.png)
 
 ## Future Improvements
 

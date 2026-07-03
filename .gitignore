@@ -39,3 +39,17 @@ src/main/resources/ezbook-mail.properties
 
 ### Mac OS ###
 .DS_Store
+
+### AI/Agent files ###
+MEMORY.md
+CLAUDE.md
+AGENTS.md
+.agents/
+.codex/
+.claude/
+.cursor/
+.copilot/
+.windsurf/
+.gemini/
+.continue/
+.aider*

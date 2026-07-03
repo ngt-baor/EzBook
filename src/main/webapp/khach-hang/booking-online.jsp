@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>Đặt Lịch Online</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css?v=font-20260608-2">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css?v=ui-20260703">
 </head>
 <body>
 <div class="app-shell">
@@ -162,20 +162,17 @@
                 <h2>Top Dịch Vụ Được Đặt Nhiều Nhất</h2>
                 <span class="meta-chip">Hot services</span>
             </div>
-            <div class="panel-body" style="padding-bottom:16px;">
-                <div style="display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:10px; margin-bottom:16px;">
+            <div class="panel-body">
+                <div class="service-rank-grid">
                     <c:forEach items="${topDichVuHot}" var="dv" varStatus="st">
-                        <article style="min-height:118px; padding:12px; border:2px solid #2b2520; border-radius:6px; background:#fff8e6; box-shadow:4px 4px 0 rgba(31,26,23,0.16);">
-                            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;">
-                                <span style="font-size:22px;">&#128293;</span>
-                                <span class="meta-chip">Top ${st.index + 1}</span>
-                            </div>
-                            <strong style="display:block; margin-bottom:6px;">${dv.tenDichVu}</strong>
+                        <article class="service-rank-card" data-rank="${st.index + 1}">
+                            <span class="meta-chip">Top ${st.index + 1}</span>
+                            <strong>${dv.tenDichVu}</strong>
                             <span class="mini-note">${dv.soLuotDat} lượt đặt</span>
                         </article>
                     </c:forEach>
                     <c:if test="${topDichVuHot.size() == 0}">
-                        <p class="panel-note" style="grid-column:1 / -1;">Chưa có dữ liệu dịch vụ hot.</p>
+                        <p class="panel-note">Chưa có dữ liệu dịch vụ hot.</p>
                     </c:if>
                 </div>
             </div>

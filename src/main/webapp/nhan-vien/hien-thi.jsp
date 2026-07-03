@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>Quản Lý Nhân Viên</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css?v=font-20260608-2">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css?v=ui-20260703">
     <script>
         function deleteEmployee(id) {
             if (confirm('Bạn chắc chắn muốn xóa?')) {
@@ -144,4 +144,3 @@
 </div>
 </body>
 </html>
-

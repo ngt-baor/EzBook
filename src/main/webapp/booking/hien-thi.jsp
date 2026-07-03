@@ -5,7 +5,7 @@
 <html>
 <head>
     <title>Quản Lý Booking</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css?v=font-20260608-2">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ezbook.css?v=ui-20260703">
 </head>
 <body>
 <div class="app-shell">
