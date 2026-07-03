@@ -9,9 +9,14 @@ EzBook là hệ thống đặt lịch dịch vụ, quản lý booking và quản
 ![JSP](https://img.shields.io/badge/JSP-Java%20Server%20Pages-green?style=for-the-badge)
 ![JSTL](https://img.shields.io/badge/JSTL-3.0-purple?style=for-the-badge)
 ![Maven](https://img.shields.io/badge/Maven-Build-red?style=for-the-badge&logo=apachemaven)
-![SQL Server](https://img.shields.io/badge/SQL%20Server-Database-darkred?style=for-the-badge&logo=microsoftsqlserver)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-Cloud%20Database-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![Render](https://img.shields.io/badge/Render-Deploy-46E3B7?style=for-the-badge&logo=render&logoColor=black)
 ![Tomcat](https://img.shields.io/badge/Tomcat-10.1-yellow?style=for-the-badge&logo=apachetomcat&logoColor=black)
 ![Jakarta Mail](https://img.shields.io/badge/Jakarta%20Mail-SMTP-009688?style=for-the-badge)
+
+- Live demo: [https://ezbook-dz8b.onrender.com](https://ezbook-dz8b.onrender.com)
+- Latest release: [EzBook v2.0](https://github.com/ngt-baor/EzBook/releases/tag/v2.0)
 
 ## Project Overview
 
@@ -35,6 +40,10 @@ EzBook phục vụ 3 nhóm người dùng chính:
 - CRUD khuyến mãi
 - CRUD hóa đơn và xác nhận thanh toán
 - Thống kê doanh thu và top dịch vụ
+- Chỉ cho phép một phiên đăng nhập hoạt động trên mỗi tài khoản
+- Prefetch các trang theo quyền sau khi đăng nhập để giảm cảm giác chờ
+- Endpoint `/health` phục vụ health check và keep-alive khi triển khai cloud
+- Triển khai Docker trên Render, database dùng Supabase PostgreSQL
 
 ## Main Workflows
 
@@ -78,13 +87,17 @@ EzBook phục vụ 3 nhóm người dùng chính:
 EzBook/
 ├── src/main/java/com/example/ezbook/
 │   ├── controller/        # Servlet xử lý request
-│   ├── repository/        # Truy vấn và thao tác SQL Server
+│   ├── repository/        # Truy vấn và thao tác PostgreSQL
 │   ├── entity/            # Entity/DTO
 │   ├── filter/            # Filter phân quyền
 │   └── util/              # DBConnect, MailService, tiện ích chung
 ├── src/main/resources/    # File cấu hình local không đưa lên git
 ├── src/main/webapp/       # JSP, CSS, assets, view
+├── docs/                  # Script bổ sung và ảnh giao diện
+├── .github/workflows/     # Workflow keep-alive cho bản deploy free
 ├── .mvn/                  # Maven wrapper
+├── Dockerfile
+├── render.yaml
 ├── pom.xml
 ├── mvnw
 └── mvnw.cmd
@@ -96,13 +109,13 @@ EzBook/
 
 - JDK 17
 - Apache Tomcat 10.1.x
-- SQL Server
+- Supabase PostgreSQL hoặc PostgreSQL tương thích
 - IntelliJ IDEA hoặc IDE hỗ trợ Maven Web App
 
 ### Clone Project
 
 ```bash
-git clone https://github.com/<your-username>/EzBook.git
+git clone https://github.com/ngt-baor/EzBook.git
 cd EzBook
 ```
 
@@ -116,39 +129,79 @@ cd EzBook
 ### Build Project
 
 ```bash
-./mvnw clean compile
+./mvnw clean package
 ```
 
 Trên Windows:
 
 ```powershell
-.\mvnw.cmd clean compile
+.\mvnw.cmd clean package
 ```
 
 ## Database Configuration
 
-Project hiện kết nối SQL Server qua lớp [DBConnect.java](src/main/java/com/example/ezbook/util/DBConnect.java). Mặc định code đang dùng:
+Project hiện kết nối PostgreSQL/Supabase qua lớp [DBConnect.java](src/main/java/com/example/ezbook/util/DBConnect.java).
 
-- Host: `localhost`
-- Port: `1433`
-- Database: `EZBookDB`
-- Username: `sa`
+`DBConnect` đọc cấu hình theo thứ tự:
 
-Bạn cần chỉnh lại thông tin kết nối trong `DBConnect` cho phù hợp với máy của mình trước khi chạy.
+1. Java system properties
+2. Environment variables
+3. File local `src/main/resources/ezbook-db.properties`
 
-## Sample Database
+Khi chạy trên Render hoặc môi trường cloud, cấu hình bằng environment variables:
 
-Database mẫu để test project:
+```env
+EZBOOK_DB_URL=jdbc:postgresql://<supabase-session-pooler-host>:5432/postgres?sslmode=require
+EZBOOK_DB_USER=postgres.<project-ref>
+EZBOOK_DB_PASSWORD=<your-db-password>
+```
 
-- Google Drive: [EZBook Sample Database](https://drive.google.com/file/d/1Qvhy7URHr_NNQoohw9AlQXrXzOKZMH6B/view?usp=sharing)
+Khi chạy local, có thể tạo file riêng:
 
-Sau khi tải về:
+```properties
+src/main/resources/ezbook-db.properties
+```
 
-1. Mở SQL Server Management Studio
-2. Import hoặc chạy script database mẫu
-3. Đảm bảo tên database khớp với cấu hình hiện tại trong `DBConnect.java`
+Ví dụ:
 
-Nếu database bạn import có tên khác `EZBookDB`, hãy cập nhật lại cấu hình kết nối trong `DBConnect`.
+```properties
+ezbook.db.url=jdbc:postgresql://<supabase-session-pooler-host>:5432/postgres?sslmode=require
+ezbook.db.user=postgres.<project-ref>
+ezbook.db.password=<your-db-password>
+```
+
+Lưu ý:
+
+- Nên dùng Session Pooler của Supabase khi deploy free để tránh hết giới hạn connection.
+- File `src/main/resources/ezbook-db.properties` đã được đưa vào `.gitignore`.
+- Không commit password, API key, connection string thật hoặc file cấu hình local lên GitHub.
+
+## Supabase Setup
+
+1. Tạo project Supabase và import schema/data của EzBook vào database PostgreSQL.
+2. Lấy JDBC Session Pooler trong mục database connection của Supabase.
+3. Khai báo `EZBOOK_DB_URL`, `EZBOOK_DB_USER`, `EZBOOK_DB_PASSWORD` ở local hoặc Render.
+4. Nếu database chưa có cột quản lý phiên đăng nhập, chạy script [docs/single-session-login.sql](docs/single-session-login.sql). Ứng dụng cũng có cơ chế tự bổ sung cột này khi khởi động nếu tài khoản database có quyền `ALTER TABLE`.
+
+## Cloud Deployment
+
+Project có sẵn [Dockerfile](Dockerfile) và [render.yaml](render.yaml) để deploy trên Render.
+
+Thiết lập tối thiểu trên Render:
+
+```env
+EZBOOK_DB_URL=jdbc:postgresql://<supabase-session-pooler-host>:5432/postgres?sslmode=require
+EZBOOK_DB_USER=postgres.<project-ref>
+EZBOOK_DB_PASSWORD=<your-db-password>
+```
+
+Sau khi deploy, kiểm tra health check:
+
+```text
+GET /health
+```
+
+Workflow [keepalive.yml](.github/workflows/keepalive.yml) ping `/health` mỗi 14 phút để giảm tình trạng web free bị ngủ quá lâu.
 
 ## Gmail SMTP Configuration
 
@@ -186,7 +239,10 @@ Lưu ý:
 
 - Không lưu Gmail app password trong source code public
 - Không đẩy file chứa secret lên GitHub
-- Nên chuyển phần cấu hình DB và SMTP sang biến môi trường hoặc file local riêng khi triển khai thực tế
+- Cấu hình DB và SMTP được đọc từ environment variables hoặc file local đã ignore
+- Không hardcode Supabase password, publishable key, secret key hoặc connection string thật vào README/source code
+- Đăng nhập dùng token phiên lưu ở database để tự vô hiệu hóa phiên cũ khi cùng tài khoản đăng nhập ở nơi khác
+- Các truy vấn database nên tiếp tục dùng `PreparedStatement` để tránh SQL Injection
 
 ## Screenshots
 
@@ -281,10 +337,10 @@ Toàn bộ ảnh giao diện mới được lưu tại [`docs/screenshots/ezbook
 - Hỗ trợ đặt nhiều dịch vụ trong một booking
 - Thêm email template HTML đẹp hơn cho OTP
 - Mã hóa mật khẩu thay vì lưu plain text
-- Tách cấu hình DB/mail khỏi source code
+- Bổ sung connection pool chuẩn như HikariCP khi traffic tăng
 - Thêm test cho repository và servlet
 - Hoàn thiện validation lịch trống và xung đột booking
 
 ## Author
 
-- GitHub: [Baor-05](https://github.com/Baor-05)
+- GitHub: [ngt-baor](https://github.com/ngt-baor)
