@@ -146,7 +146,7 @@ public class BookingRepository {
 
     public boolean isNhanVienTrungLich(String nhanVienId, Timestamp thoiGianHen) {
         String sql = "SELECT COUNT(1) FROM Booking WHERE nhan_vien_id = ? AND thoi_gian_hen = ? " +
-                "AND trang_thai_booking NOT IN ('Cancelled', N'Da huy')";
+                "AND trang_thai_booking NOT IN ('Cancelled', 'Da huy')";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, nhanVienId);
@@ -369,7 +369,7 @@ public class BookingRepository {
         LocalDate today = LocalDate.now();
         StringBuilder sql = baseBookingViewSql();
         sql.append("WHERE b.thoi_gian_hen >= ? AND b.thoi_gian_hen < ? ")
-                .append("AND b.trang_thai_booking NOT IN ('Cancelled', N'Da huy') ");
+                .append("AND b.trang_thai_booking NOT IN ('Cancelled', 'Da huy') ");
 
         List<Object> params = new ArrayList<>();
         params.add(Timestamp.valueOf(today.atStartOfDay()));
@@ -383,7 +383,7 @@ public class BookingRepository {
     public List<BookingView> getLichHenSapDienRa(String role, String username) {
         StringBuilder sql = baseBookingViewSql();
         sql.append("WHERE b.thoi_gian_hen >= ? ")
-                .append("AND b.trang_thai_booking IN ('Pending', N'Cho xac nhan', 'Confirmed', N'Da xac nhan') ");
+                .append("AND b.trang_thai_booking IN ('Pending', 'Cho xac nhan', 'Confirmed', 'Da xac nhan') ");
 
         List<Object> params = new ArrayList<>();
         params.add(Timestamp.valueOf(LocalDateTime.now()));
@@ -394,14 +394,15 @@ public class BookingRepository {
     }
 
     public List<TopDichVuThongKe> thongKeTopDichVuDuocDatNhieu(int year) {
-        String sql = "SELECT TOP 10 dv.id, dv.ten_dich_vu, COUNT(b.id) AS so_luot_dat, " +
+        String sql = "SELECT dv.id, dv.ten_dich_vu, COUNT(b.id) AS so_luot_dat, " +
                 "SUM(dv.gia_tien) AS doanh_thu_du_kien " +
                 "FROM Booking b " +
                 "JOIN DichVu dv ON b.dich_vu_id = dv.id " +
-                "WHERE YEAR(b.thoi_gian_hen) = ? " +
-                "AND b.trang_thai_booking NOT IN ('Cancelled', N'Da huy') " +
+                "WHERE EXTRACT(YEAR FROM b.thoi_gian_hen) = ? " +
+                "AND b.trang_thai_booking NOT IN ('Cancelled', 'Da huy') " +
                 "GROUP BY dv.id, dv.ten_dich_vu " +
-                "ORDER BY so_luot_dat DESC, doanh_thu_du_kien DESC, dv.ten_dich_vu ASC";
+                "ORDER BY so_luot_dat DESC, doanh_thu_du_kien DESC, dv.ten_dich_vu ASC " +
+                "LIMIT 10";
 
         List<TopDichVuThongKe> result = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -423,13 +424,14 @@ public class BookingRepository {
     }
 
     public List<TopDichVuThongKe> thongKeTop3DichVuDuocDatNhieu() {
-        String sql = "SELECT TOP 3 dv.id, dv.ten_dich_vu, COUNT(b.id) AS so_luot_dat, " +
+        String sql = "SELECT dv.id, dv.ten_dich_vu, COUNT(b.id) AS so_luot_dat, " +
                 "SUM(dv.gia_tien) AS doanh_thu_du_kien " +
                 "FROM Booking b " +
                 "JOIN DichVu dv ON b.dich_vu_id = dv.id " +
-                "WHERE b.trang_thai_booking NOT IN ('Cancelled', N'Da huy') " +
+                "WHERE b.trang_thai_booking NOT IN ('Cancelled', 'Da huy') " +
                 "GROUP BY dv.id, dv.ten_dich_vu " +
-                "ORDER BY so_luot_dat DESC, doanh_thu_du_kien DESC, dv.ten_dich_vu ASC";
+                "ORDER BY so_luot_dat DESC, doanh_thu_du_kien DESC, dv.ten_dich_vu ASC " +
+                "LIMIT 3";
 
         List<TopDichVuThongKe> result = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(sql);
@@ -449,11 +451,10 @@ public class BookingRepository {
     }
 
     public boolean huyBookingChoKhachHang(String bookingId, String sdt) {
-        String sql = "UPDATE b SET b.trang_thai_booking = 'Cancelled' " +
-                "FROM Booking b " +
-                "JOIN KhachHang kh ON b.khach_hang_id = kh.id " +
-                "WHERE b.id = ? AND kh.sdt = ? " +
-                "AND b.trang_thai_booking IN ('Pending', N'Cho xac nhan', 'Confirmed', N'Da xac nhan')";
+        String sql = "UPDATE Booking b SET trang_thai_booking = 'Cancelled' " +
+                "FROM KhachHang kh " +
+                "WHERE b.khach_hang_id = kh.id AND b.id = ? AND kh.sdt = ? " +
+                "AND b.trang_thai_booking IN ('Pending', 'Cho xac nhan', 'Confirmed', 'Da xac nhan')";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, bookingId);
             ps.setString(2, sdt);

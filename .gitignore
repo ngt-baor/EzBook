@@ -36,6 +36,7 @@ build/
 
 ### Local secrets ###
 src/main/resources/ezbook-mail.properties
+src/main/resources/ezbook-db.properties
 
 ### Mac OS ###
 .DS_Store

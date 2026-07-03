@@ -18,7 +18,7 @@ public class AccountRepository {
     }
 
     public boolean registerUser(String sdt, String matKhau, String hoTen, String email) {
-        String sqlTaiKhoan = "INSERT INTO TaiKhoan (username, mat_khau, vai_tro, trang_thai, email) VALUES (?, ?, 'USER', 1, ?)";
+        String sqlTaiKhoan = "INSERT INTO TaiKhoan (username, mat_khau, vai_tro, trang_thai, email) VALUES (?, ?, 'USER', TRUE, ?)";
         String sqlKhachHang = "INSERT INTO KhachHang (id, ho_ten, sdt, username) VALUES (?, ?, ?, ?)";
 
         try {

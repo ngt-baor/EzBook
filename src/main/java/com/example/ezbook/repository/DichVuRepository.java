@@ -36,7 +36,7 @@ public class DichVuRepository {
     }
 
     public List<DichVu> getDangHoatDong() {
-        String sql = "SELECT * FROM DichVu WHERE trang_thai = 1 ORDER BY ten_dich_vu ASC";
+        String sql = "SELECT * FROM DichVu WHERE trang_thai = TRUE ORDER BY ten_dich_vu ASC";
         List<DichVu> danhSach = new ArrayList<>();
         try {
             PreparedStatement ps = connection.prepareStatement(sql);

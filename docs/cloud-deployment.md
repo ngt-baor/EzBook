@@ -1,62 +1,58 @@
-# EzBook cloud deployment checklist
+# EzBook free cloud deployment checklist
 
-EzBook is a Maven `war` application that runs on Tomcat and uses SQL Server.
-Deploy it as two cloud resources:
+EzBook is a Maven `war` application that runs on Tomcat and now targets a Supabase PostgreSQL database.
 
-1. Java/Tomcat web app
-2. SQL Server database
+Deploy it as two free resources:
 
-## Recommended cloud target
+1. Java/Tomcat web app on Render Free Web Service
+2. PostgreSQL database on Supabase Free
 
-Use Azure for the first production deployment:
-
-- App: Azure App Service, Java 17, Tomcat 10.1
-- Database: Azure SQL Database
-- Domain: custom domain mapped to Azure App Service
-
-This keeps the current SQL Server database script compatible with the smallest amount of code change.
-
-## Free deployment target
-
-For a free public demo, use:
+## Current deployment target
 
 - App: Render Free Web Service with Docker
-- Database: Azure SQL Database free offer
+- Database: Supabase PostgreSQL
 - Domain: free Render subdomain, for example `https://ezbook.onrender.com`
 
-This is the lowest-change free path for the current Java/Tomcat + SQL Server project.
-A paid custom domain such as `.com`, `.dev`, or `.site` is separate from hosting and usually requires buying the domain from a registrar.
-
-Render gives every web service an `onrender.com` subdomain. The project includes:
+Render deploys from GitHub using:
 
 ```text
 Dockerfile
 render.yaml
 ```
 
-Render should deploy the app from GitHub using the Docker runtime and the free instance plan.
+## Required Supabase environment variables
 
-## Required database environment variables
-
-Set these in the cloud app settings:
+Set these in Render service environment variables:
 
 ```text
-EZBOOK_DB_HOST=<your-sql-server>.database.windows.net
-EZBOOK_DB_PORT=1433
-EZBOOK_DB_NAME=EZBookDB
-EZBOOK_DB_USER=<sql-admin-user>
-EZBOOK_DB_PASSWORD=<sql-admin-password>
-EZBOOK_DB_ENCRYPT=true
-EZBOOK_DB_TRUST_SERVER_CERTIFICATE=false
+EZBOOK_DB_HOST=<supabase-db-host>
+EZBOOK_DB_PORT=5432
+EZBOOK_DB_NAME=postgres
+EZBOOK_DB_USER=postgres
+EZBOOK_DB_PASSWORD=<supabase-database-password>
+EZBOOK_DB_SSL_MODE=require
 ```
 
-If the provider gives a full JDBC connection string, use this instead:
+You can also use a full JDBC URL instead:
 
 ```text
-EZBOOK_DB_URL=jdbc:sqlserver://<your-sql-server>.database.windows.net:1433;databaseName=EZBookDB;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
-EZBOOK_DB_USER=<sql-admin-user>
-EZBOOK_DB_PASSWORD=<sql-admin-password>
+EZBOOK_DB_URL=jdbc:postgresql://<supabase-db-host>:5432/postgres?sslmode=require
+EZBOOK_DB_USER=postgres
+EZBOOK_DB_PASSWORD=<supabase-database-password>
 ```
+
+Do not commit real passwords or API keys to Git.
+
+## Where to get Supabase values
+
+In Supabase:
+
+1. Open the project.
+2. Click `Connect`.
+3. Choose Java/JDBC or connection string details.
+4. Copy the host, database name, username, and password into Render env vars.
+
+Use the direct/session pooler value recommended by Supabase for server-side apps.
 
 ## Required mail environment variables
 
@@ -67,26 +63,7 @@ EZBOOK_MAIL_USERNAME=<gmail-address>
 EZBOOK_MAIL_APP_PASSWORD=<gmail-app-password>
 ```
 
-Do not commit real passwords or API keys to Git.
-
-## Database setup
-
-The local database script is:
-
-```text
-C:\Users\Bao\Documents\SQL Server Management Studio\EZBookDB.sql
-```
-
-For Azure SQL:
-
-1. Create the Azure SQL server.
-2. Create database `EZBookDB`.
-3. Open SSMS or Azure Data Studio and connect to the created `EZBookDB` database.
-4. Run the schema/data part of the script against `EZBookDB`.
-5. Do not run destructive local-only setup lines against an existing production database unless you intentionally want to wipe it:
-   - `DROP DATABASE`
-   - `CREATE DATABASE`
-   - `ALTER DATABASE ... SINGLE_USER`
+Render Free may block outbound SMTP ports such as 587. If OTP mail fails on Render, replace Gmail SMTP with an HTTP email provider such as Resend or SendGrid.
 
 ## Build verification
 
@@ -112,7 +89,7 @@ target\EzBook-1.0-SNAPSHOT.war
 
 After deploying:
 
-1. Open the default cloud URL.
+1. Open the Render URL.
 2. Test login with the sample accounts.
 3. Test one DB-backed page for each role:
    - Admin dashboard
@@ -121,5 +98,4 @@ After deploying:
 4. Test one write flow:
    - Customer booking, or
    - Admin/staff edit flow
-5. Add the custom domain.
-6. Verify the custom domain over HTTPS.
+5. Check Render logs for database connection or query errors.

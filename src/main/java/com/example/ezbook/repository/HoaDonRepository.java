@@ -153,12 +153,12 @@ public class HoaDonRepository {
     }
 
     public List<MonthlyRevenue> thongKeDoanhThuTheoThang(int year) {
-        String sql = "SELECT MONTH(thoi_gian_thanh_toan) AS thang, SUM(thanh_tien) AS doanh_thu " +
+        String sql = "SELECT EXTRACT(MONTH FROM thoi_gian_thanh_toan) AS thang, SUM(thanh_tien) AS doanh_thu " +
                 "FROM HoaDon " +
                 "WHERE thoi_gian_thanh_toan IS NOT NULL " +
                 "AND trang_thai_thanh_toan = 'Da thanh toan' " +
-                "AND YEAR(thoi_gian_thanh_toan) = ? " +
-                "GROUP BY MONTH(thoi_gian_thanh_toan)";
+                "AND EXTRACT(YEAR FROM thoi_gian_thanh_toan) = ? " +
+                "GROUP BY EXTRACT(MONTH FROM thoi_gian_thanh_toan)";
 
         Map<Integer, Double> monthRevenueMap = new HashMap<>();
         try {

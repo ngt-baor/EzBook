@@ -57,13 +57,13 @@ public class KhuyenMaiRepository {
         }
 
         if ("active".equalsIgnoreCase(trangThai)) {
-            sql.append("AND trang_thai = 1 ");
+            sql.append("AND trang_thai = TRUE ");
         } else if ("inactive".equalsIgnoreCase(trangThai)) {
-            sql.append("AND trang_thai = 0 ");
+            sql.append("AND trang_thai = FALSE ");
         }
 
         if ("usable".equalsIgnoreCase(hieuLuc)) {
-            sql.append("AND trang_thai = 1 AND so_luong_gioi_han > 0 AND CURRENT_TIMESTAMP BETWEEN ngay_bat_dau AND ngay_ket_thuc ");
+            sql.append("AND trang_thai = TRUE AND so_luong_gioi_han > 0 AND CURRENT_TIMESTAMP BETWEEN ngay_bat_dau AND ngay_ket_thuc ");
         } else if ("upcoming".equalsIgnoreCase(hieuLuc)) {
             sql.append("AND CURRENT_TIMESTAMP < ngay_bat_dau ");
         } else if ("expired".equalsIgnoreCase(hieuLuc)) {
@@ -91,7 +91,7 @@ public class KhuyenMaiRepository {
     }
 
     public List<KhuyenMai> getDangHoatDong() {
-        String sql = "SELECT * FROM KhuyenMai WHERE trang_thai = 1 ORDER BY ngay_ket_thuc ASC, ma_giam_gia ASC";
+        String sql = "SELECT * FROM KhuyenMai WHERE trang_thai = TRUE ORDER BY ngay_ket_thuc ASC, ma_giam_gia ASC";
         List<KhuyenMai> danhSach = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -109,7 +109,7 @@ public class KhuyenMaiRepository {
             return null;
         }
         String sql = "SELECT * FROM KhuyenMai WHERE UPPER(ma_giam_gia) = UPPER(?) " +
-                "AND trang_thai = 1 AND so_luong_gioi_han > 0 " +
+                "AND trang_thai = TRUE AND so_luong_gioi_han > 0 " +
                 "AND ? BETWEEN ngay_bat_dau AND ngay_ket_thuc";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, maGiamGia.trim());
@@ -130,7 +130,7 @@ public class KhuyenMaiRepository {
             return null;
         }
         String sql = "SELECT * FROM KhuyenMai WHERE id = ? " +
-                "AND trang_thai = 1 AND so_luong_gioi_han > 0 " +
+                "AND trang_thai = TRUE AND so_luong_gioi_han > 0 " +
                 "AND ? BETWEEN ngay_bat_dau AND ngay_ket_thuc";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, id.trim());
