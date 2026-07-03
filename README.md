@@ -196,85 +196,85 @@ Toàn bộ ảnh giao diện mới được lưu tại [`docs/screenshots/ezbook
 
 #### Landing page
 
-![EZBook landing page](docs/screenshots/ezbook-ui-showcase/01-landing.png)
+![EZBook landing page](docs/screenshots/ezbook-ui-showcase/01-landing.png?raw=1&v=20260703-viewport)
 
 #### Admin and staff login
 
-![Admin and staff login](docs/screenshots/ezbook-ui-showcase/02-admin-staff-login.png)
+![Admin and staff login](docs/screenshots/ezbook-ui-showcase/02-admin-staff-login.png?raw=1&v=20260703-viewport)
 
 #### Customer login
 
-![Customer login](docs/screenshots/ezbook-ui-showcase/03-customer-login.png)
+![Customer login](docs/screenshots/ezbook-ui-showcase/03-customer-login.png?raw=1&v=20260703-viewport)
 
 #### Customer registration with Gmail OTP
 
-![Customer registration with Gmail OTP](docs/screenshots/ezbook-ui-showcase/04-customer-registration.png)
+![Customer registration with Gmail OTP](docs/screenshots/ezbook-ui-showcase/04-customer-registration.png?raw=1&v=20260703-viewport)
 
 #### Forgot password
 
-![Forgot password](docs/screenshots/ezbook-ui-showcase/05-forgot-password.png)
+![Forgot password](docs/screenshots/ezbook-ui-showcase/05-forgot-password.png?raw=1&v=20260703-viewport)
 
 ### Admin functions
 
 #### Admin dashboard
 
-![Admin dashboard](docs/screenshots/ezbook-ui-showcase/06-admin-dashboard.png)
+![Admin dashboard](docs/screenshots/ezbook-ui-showcase/06-admin-dashboard.png?raw=1&v=20260703-viewport)
 
 #### Staff management
 
-![Staff management](docs/screenshots/ezbook-ui-showcase/07-staff-management.png)
+![Staff management](docs/screenshots/ezbook-ui-showcase/07-staff-management.png?raw=1&v=20260703-viewport)
 
 #### Staff edit
 
-![Staff edit](docs/screenshots/ezbook-ui-showcase/08-staff-edit.png)
+![Staff edit](docs/screenshots/ezbook-ui-showcase/08-staff-edit.png?raw=1&v=20260703-viewport)
 
 #### Account management
 
-![Account management](docs/screenshots/ezbook-ui-showcase/09-account-management.png)
+![Account management](docs/screenshots/ezbook-ui-showcase/09-account-management.png?raw=1&v=20260703-viewport)
 
 #### Service management
 
-![Service management](docs/screenshots/ezbook-ui-showcase/10-service-management.png)
+![Service management](docs/screenshots/ezbook-ui-showcase/10-service-management.png?raw=1&v=20260703-viewport)
 
 #### Promotion management
 
-![Promotion management](docs/screenshots/ezbook-ui-showcase/11-promotion-management.png)
+![Promotion management](docs/screenshots/ezbook-ui-showcase/11-promotion-management.png?raw=1&v=20260703-viewport)
 
 #### Booking management
 
-![Booking management](docs/screenshots/ezbook-ui-showcase/12-booking-management.png)
+![Booking management](docs/screenshots/ezbook-ui-showcase/12-booking-management.png?raw=1&v=20260703-viewport)
 
 #### Invoice management
 
-![Invoice management](docs/screenshots/ezbook-ui-showcase/13-invoice-management.png)
+![Invoice management](docs/screenshots/ezbook-ui-showcase/13-invoice-management.png?raw=1&v=20260703-viewport)
 
 #### Statistics dashboard
 
-![Statistics dashboard](docs/screenshots/ezbook-ui-showcase/14-statistics-dashboard.png)
+![Statistics dashboard](docs/screenshots/ezbook-ui-showcase/14-statistics-dashboard.png?raw=1&v=20260703-viewport)
 
 #### Admin profile
 
-![Admin profile](docs/screenshots/ezbook-ui-showcase/15-admin-profile.png)
+![Admin profile](docs/screenshots/ezbook-ui-showcase/15-admin-profile.png?raw=1&v=20260703-viewport)
 
 ### Staff functions
 
 #### Staff dashboard
 
-![Staff dashboard](docs/screenshots/ezbook-ui-showcase/16-staff-dashboard.png)
+![Staff dashboard](docs/screenshots/ezbook-ui-showcase/16-staff-dashboard.png?raw=1&v=20260703-viewport)
 
 ### Customer functions
 
 #### Customer dashboard
 
-![Customer dashboard](docs/screenshots/ezbook-ui-showcase/17-customer-dashboard.png)
+![Customer dashboard](docs/screenshots/ezbook-ui-showcase/17-customer-dashboard.png?raw=1&v=20260703-viewport)
 
 #### Customer online booking
 
-![Customer online booking](docs/screenshots/ezbook-ui-showcase/18-customer-online-booking.png)
+![Customer online booking](docs/screenshots/ezbook-ui-showcase/18-customer-online-booking.png?raw=1&v=20260703-viewport)
 
 #### Customer profile
 
-![Customer profile](docs/screenshots/ezbook-ui-showcase/19-customer-profile.png)
+![Customer profile](docs/screenshots/ezbook-ui-showcase/19-customer-profile.png?raw=1&v=20260703-viewport)
 
 ## Future Improvements
 
