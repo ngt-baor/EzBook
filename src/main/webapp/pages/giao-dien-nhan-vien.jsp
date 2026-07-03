@@ -108,5 +108,27 @@
         </a>
     </section>
 </div>
+<script>
+    window.EZBOOK_PREFETCH = {
+        healthUrl: "${pageContext.request.contextPath}/health",
+        urls: [
+            "${pageContext.request.contextPath}/pages/giao-dien-nhan-vien.jsp",
+            <c:if test="${sessionScope.role == 'ADMIN'}">
+            "${pageContext.request.contextPath}/nhan-vien/hien-thi",
+            "${pageContext.request.contextPath}/admin/quan-ly-tai-khoan",
+            "${pageContext.request.contextPath}/admin/quan-ly-dich-vu",
+            "${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai",
+            </c:if>
+            <c:if test="${sessionScope.role == 'STAFF'}">
+            "${pageContext.request.contextPath}/admin/quan-ly-khuyen-mai",
+            </c:if>
+            "${pageContext.request.contextPath}/booking/hien-thi",
+            "${pageContext.request.contextPath}/hoa-don/hien-thi",
+            "${pageContext.request.contextPath}/thong-ke/hien-thi",
+            "${pageContext.request.contextPath}/account/ho-so"
+        ]
+    };
+</script>
+<script src="${pageContext.request.contextPath}/assets/js/ezbook-prefetch.js?v=ui-20260703"></script>
 </body>
 </html>

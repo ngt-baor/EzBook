@@ -82,6 +82,7 @@ public class SecurityFilter implements Filter {
     private boolean isPublicPath(String path) {
         return path.equals("/")
                 || path.equals("/index.jsp")
+                || path.equals("/health")
                 || path.equals("/auth/login.jsp")
                 || path.equals("/auth/forgot-password.jsp")
                 || path.equals("/login")

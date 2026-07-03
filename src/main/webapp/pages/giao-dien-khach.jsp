@@ -57,5 +57,16 @@
         </a>
     </section>
 </div>
+<script>
+    window.EZBOOK_PREFETCH = {
+        healthUrl: "${pageContext.request.contextPath}/health",
+        urls: [
+            "${pageContext.request.contextPath}/pages/giao-dien-khach.jsp",
+            "${pageContext.request.contextPath}/khach-hang/booking-online",
+            "${pageContext.request.contextPath}/account/ho-so"
+        ]
+    };
+</script>
+<script src="${pageContext.request.contextPath}/assets/js/ezbook-prefetch.js?v=ui-20260703"></script>
 </body>
 </html>
