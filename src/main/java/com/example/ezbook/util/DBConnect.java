@@ -7,6 +7,8 @@ import java.util.Properties;
 
 public class DBConnect {
     private static final Properties LOCAL_PROPERTIES = loadLocalProperties();
+    private static final Object CONNECTION_LOCK = new Object();
+    private static volatile Connection sharedConnection;
     private static final String HOSTNAME = config("EZBOOK_DB_HOST", "ezbook.db.host", "localhost");
     private static final String PORT = config("EZBOOK_DB_PORT", "ezbook.db.port", "5432");
     private static final String DATABASENAME = config("EZBOOK_DB_NAME", "ezbook.db.name", "postgres");
@@ -15,6 +17,20 @@ public class DBConnect {
     private static final String SSL_MODE = config("EZBOOK_DB_SSL_MODE", "ezbook.db.sslMode", "require");
 
     public static Connection getConnection() {
+        synchronized (CONNECTION_LOCK) {
+            try {
+                if (sharedConnection == null || sharedConnection.isClosed() || !sharedConnection.isValid(3)) {
+                    sharedConnection = openConnection();
+                }
+                return sharedConnection;
+            } catch (Exception e) {
+                sharedConnection = openConnection();
+                return sharedConnection;
+            }
+        }
+    }
+
+    private static Connection openConnection() {
         String connectionUrl = firstConfig(
                 new String[]{"EZBOOK_DB_URL", "DATABASE_URL"},
                 new String[]{"ezbook.db.url", "database.url"}
@@ -106,7 +122,8 @@ public class DBConnect {
     }
 
     public static void main(String[] args) {
-        try (Connection conn = getConnection()) {
+        try {
+            Connection conn = getConnection();
             if (conn != null) {
                 System.out.println("Ket noi PostgreSQL/Supabase thanh cong.");
             } else {
