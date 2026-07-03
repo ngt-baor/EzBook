@@ -4,17 +4,22 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class DBConnect {
-    // Thay đổi thông tin cho đúng với máy của bạn
-    private static final String HOSTNAME = "localhost";
-    private static final String PORT = "1433";
-    private static final String DATABASENAME = "EZBookDB";
-    private static final String USERNAME = "sa";
-    private static final String PASSWORD = "123456"; // Mật khẩu sa của bạn
+    private static final String HOSTNAME = env("EZBOOK_DB_HOST", "localhost");
+    private static final String PORT = env("EZBOOK_DB_PORT", "1433");
+    private static final String DATABASENAME = env("EZBOOK_DB_NAME", "EZBookDB");
+    private static final String USERNAME = env("EZBOOK_DB_USER", "sa");
+    private static final String PASSWORD = env("EZBOOK_DB_PASSWORD", "123456");
+    private static final String ENCRYPT = env("EZBOOK_DB_ENCRYPT", "true");
+    private static final String TRUST_SERVER_CERTIFICATE = env("EZBOOK_DB_TRUST_SERVER_CERTIFICATE", "true");
 
     public static Connection getConnection() {
-        String connectionUrl = "jdbc:sqlserver://" + HOSTNAME + ":" + PORT + ";"
-                + "databaseName=" + DATABASENAME + ";"
-                + "encrypt=true;trustServerCertificate=true;";
+        String connectionUrl = env("EZBOOK_DB_URL", "");
+        if (connectionUrl.isBlank()) {
+            connectionUrl = "jdbc:sqlserver://" + HOSTNAME + ":" + PORT + ";"
+                    + "databaseName=" + DATABASENAME + ";"
+                    + "encrypt=" + ENCRYPT + ";"
+                    + "trustServerCertificate=" + TRUST_SERVER_CERTIFICATE + ";";
+        }
 
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
@@ -28,13 +33,23 @@ public class DBConnect {
         }
     }
 
-    // Test nhanh xem kết nối chạy được không trước khi bật Tomcat
+    private static String env(String key, String defaultValue) {
+        String value = System.getenv(key);
+        if (value == null || value.isBlank()) {
+            return defaultValue;
+        }
+        return value.trim();
+    }
+
     public static void main(String[] args) {
-        Connection conn = getConnection();
-        if (conn != null) {
-            System.out.println("Kết nối thành công rồi Bảo ơi!");
-        } else {
-            System.out.println("Kết nối thất bại, xem lại tài khoản/mật khẩu SQL hoặc cổng Port nha!");
+        try (Connection conn = getConnection()) {
+            if (conn != null) {
+                System.out.println("Ket noi SQL Server thanh cong.");
+            } else {
+                System.out.println("Ket noi SQL Server that bai.");
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException("Ket noi SQL Server that bai.", e);
         }
     }
 }

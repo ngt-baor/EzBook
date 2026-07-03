@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: ezbook
+    runtime: docker
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: EZBOOK_DB_HOST
+        sync: false
+      - key: EZBOOK_DB_PORT
+        value: 1433
+      - key: EZBOOK_DB_NAME
+        value: EZBookDB
+      - key: EZBOOK_DB_USER
+        sync: false
+      - key: EZBOOK_DB_PASSWORD
+        sync: false
+      - key: EZBOOK_DB_ENCRYPT
+        value: true
+      - key: EZBOOK_DB_TRUST_SERVER_CERTIFICATE
+        value: false
+      - key: EZBOOK_MAIL_USERNAME
+        sync: false
+      - key: EZBOOK_MAIL_APP_PASSWORD
+        sync: false

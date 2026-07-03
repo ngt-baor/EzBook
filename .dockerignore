@@ -1,0 +1,12 @@
+.git
+.idea
+.vscode
+.agents
+.codex
+.codex-work
+target
+docs/screenshots
+*.iml
+*.iws
+*.ipr
+src/main/resources/ezbook-mail.properties
