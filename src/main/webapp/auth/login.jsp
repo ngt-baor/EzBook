@@ -32,6 +32,12 @@
   <c:if test="${param.error == 'missing-data'}">
     <p class="alert error">Vui lòng nhập đầy đủ thông tin đăng nhập.</p>
   </c:if>
+  <c:if test="${param.error == 'session-create-failed'}">
+    <p class="alert error">Không thể tạo phiên đăng nhập. Vui lòng thử lại.</p>
+  </c:if>
+  <c:if test="${param.error == 'session-replaced'}">
+    <p class="alert error">Tài khoản đã được đăng nhập ở nơi khác. Phiên này đã tự đăng xuất.</p>
+  </c:if>
   <c:if test="${param.error == 'login-required'}">
     <p class="alert error">Bạn cần đăng nhập truoc khi truy cap chức năng này.</p>
   </c:if>

@@ -34,6 +34,12 @@
     <c:if test="${param.error == 'missing-data'}">
         <p class="alert error">Vui lòng nhập đầy đủ thông tin.</p>
     </c:if>
+    <c:if test="${param.error == 'session-create-failed'}">
+        <p class="alert error">Không thể tạo phiên đăng nhập. Vui lòng thử lại.</p>
+    </c:if>
+    <c:if test="${param.error == 'session-replaced'}">
+        <p class="alert error">Tài khoản đã được đăng nhập ở nơi khác. Phiên này đã tự đăng xuất.</p>
+    </c:if>
 
     <form action="${pageContext.request.contextPath}/khach-hang/dang-nhap" method="post">
         <div class="form-grid">

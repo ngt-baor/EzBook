@@ -2,6 +2,7 @@ package com.example.ezbook.controller;
 
 import com.example.ezbook.entity.AuthUser;
 import com.example.ezbook.repository.LoginRepository;
+import com.example.ezbook.repository.SessionRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,6 +15,7 @@ import java.io.IOException;
 @WebServlet(name = "authServlet", value = {"/login", "/logout"})
 public class AuthServlet extends HttpServlet {
     private final LoginRepository loginRepository = new LoginRepository();
+    private final SessionRepository sessionRepository = new SessionRepository();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -21,6 +23,9 @@ public class AuthServlet extends HttpServlet {
         if (uri.endsWith("/logout")) {
             HttpSession session = req.getSession(false);
             if (session != null) {
+                String username = (String) session.getAttribute("username");
+                String token = (String) session.getAttribute(SessionRepository.SESSION_TOKEN_ATTRIBUTE);
+                sessionRepository.clearSessionTokenIfMatches(username, token);
                 session.invalidate();
             }
             resp.sendRedirect(req.getContextPath() + "/auth/login.jsp?msg=logged-out");
@@ -64,10 +69,22 @@ public class AuthServlet extends HttpServlet {
             return;
         }
 
+        HttpSession oldSession = req.getSession(false);
+        if (oldSession != null) {
+            oldSession.invalidate();
+        }
+
+        String sessionToken = sessionRepository.issueSessionToken(authUser.getUsername());
+        if (sessionToken == null) {
+            resp.sendRedirect(req.getContextPath() + "/auth/login.jsp?error=session-create-failed");
+            return;
+        }
+
         HttpSession session = req.getSession(true);
         session.setAttribute("username", authUser.getUsername());
         session.setAttribute("displayName", authUser.getDisplayName());
         session.setAttribute("role", role);
+        session.setAttribute(SessionRepository.SESSION_TOKEN_ATTRIBUTE, sessionToken);
 
         redirectByRole(req, resp, role);
     }

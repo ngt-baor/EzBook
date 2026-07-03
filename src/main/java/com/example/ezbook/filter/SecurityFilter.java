@@ -1,5 +1,6 @@
 package com.example.ezbook.filter;
 
+import com.example.ezbook.repository.SessionRepository;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -14,6 +15,8 @@ import java.io.IOException;
 
 @WebFilter(urlPatterns = {"/*"})
 public class SecurityFilter implements Filter {
+    private final SessionRepository sessionRepository = new SessionRepository();
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
@@ -39,6 +42,9 @@ public class SecurityFilter implements Filter {
                 resp.sendRedirect(req.getContextPath() + "/khach-hang/dang-nhap.jsp?error=forbidden");
                 return;
             }
+            if (!hasCurrentLoginSession(req, resp, true)) {
+                return;
+            }
             chain.doFilter(request, response);
             return;
         }
@@ -50,6 +56,9 @@ public class SecurityFilter implements Filter {
             }
             if (!"ADMIN".equals(role)) {
                 resp.sendRedirect(req.getContextPath() + "/auth/login.jsp?error=forbidden");
+                return;
+            }
+            if (!hasCurrentLoginSession(req, resp, false)) {
                 return;
             }
             chain.doFilter(request, response);
@@ -65,6 +74,9 @@ public class SecurityFilter implements Filter {
                 resp.sendRedirect(req.getContextPath() + "/auth/login.jsp?error=forbidden");
                 return;
             }
+            if (!hasCurrentLoginSession(req, resp, false)) {
+                return;
+            }
             chain.doFilter(request, response);
             return;
         }
@@ -74,9 +86,30 @@ public class SecurityFilter implements Filter {
                 resp.sendRedirect(req.getContextPath() + "/auth/login.jsp?error=login-required");
                 return;
             }
+            if (!hasCurrentLoginSession(req, resp, "USER".equals(role))) {
+                return;
+            }
         }
 
         chain.doFilter(request, response);
+    }
+
+    private boolean hasCurrentLoginSession(HttpServletRequest req, HttpServletResponse resp, boolean customerLogin)
+            throws IOException {
+        HttpSession session = req.getSession(false);
+        String username = session == null ? null : (String) session.getAttribute("username");
+        String token = session == null ? null : (String) session.getAttribute(SessionRepository.SESSION_TOKEN_ATTRIBUTE);
+
+        if (sessionRepository.isCurrentSession(username, token)) {
+            return true;
+        }
+
+        if (session != null) {
+            session.invalidate();
+        }
+        String loginPath = customerLogin ? "/khach-hang/dang-nhap.jsp" : "/auth/login.jsp";
+        resp.sendRedirect(req.getContextPath() + loginPath + "?error=session-replaced");
+        return false;
     }
 
     private boolean isPublicPath(String path) {

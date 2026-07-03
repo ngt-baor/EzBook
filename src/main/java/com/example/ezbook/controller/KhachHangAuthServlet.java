@@ -3,6 +3,7 @@ package com.example.ezbook.controller;
 import com.example.ezbook.entity.AuthUser;
 import com.example.ezbook.repository.AccountRepository;
 import com.example.ezbook.repository.LoginRepository;
+import com.example.ezbook.repository.SessionRepository;
 import com.example.ezbook.util.MailService;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletException;
@@ -24,6 +25,7 @@ import java.security.SecureRandom;
 public class KhachHangAuthServlet extends HttpServlet {
     private final LoginRepository loginRepository = new LoginRepository();
     private final AccountRepository accountRepository = new AccountRepository();
+    private final SessionRepository sessionRepository = new SessionRepository();
     private final MailService mailService = new MailService();
     private final SecureRandom secureRandom = new SecureRandom();
 
@@ -33,6 +35,9 @@ public class KhachHangAuthServlet extends HttpServlet {
         if (uri.contains("/dang-xuat")) {
             HttpSession session = req.getSession(false);
             if (session != null) {
+                String username = (String) session.getAttribute("username");
+                String token = (String) session.getAttribute(SessionRepository.SESSION_TOKEN_ATTRIBUTE);
+                sessionRepository.clearSessionTokenIfMatches(username, token);
                 session.invalidate();
             }
             resp.sendRedirect(req.getContextPath() + "/khach-hang/dang-nhap.jsp?msg=logged-out");
@@ -155,10 +160,22 @@ public class KhachHangAuthServlet extends HttpServlet {
             return;
         }
 
+        HttpSession oldSession = req.getSession(false);
+        if (oldSession != null) {
+            oldSession.invalidate();
+        }
+
+        String sessionToken = sessionRepository.issueSessionToken(authUser.getUsername());
+        if (sessionToken == null) {
+            resp.sendRedirect(req.getContextPath() + "/khach-hang/dang-nhap.jsp?error=session-create-failed");
+            return;
+        }
+
         HttpSession session = req.getSession(true);
         session.setAttribute("username", authUser.getUsername());
         session.setAttribute("displayName", authUser.getDisplayName());
         session.setAttribute("role", "USER");
+        session.setAttribute(SessionRepository.SESSION_TOKEN_ATTRIBUTE, sessionToken);
 
         session.setAttribute("customerUsername", authUser.getUsername());
         session.setAttribute("customerName", authUser.getDisplayName());
