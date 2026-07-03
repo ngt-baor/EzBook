@@ -1,4 +1,0 @@
-interface:
-  display_name: "Taste"
-  short_description: "Improve frontend visual taste and interaction polish"
-  default_prompt: "Use $taste to make this UI feel more polished, intentional, and production-ready."
