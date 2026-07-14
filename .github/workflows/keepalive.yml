@@ -8,9 +8,23 @@ on:
 jobs:
   ping:
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 5
     steps:
       - name: Ping Render health endpoint
         run: |
-          curl --fail --show-error --silent --max-time 30 \
+          set +e
+
+          curl --fail --show-error --silent --location \
+            --connect-timeout 20 \
+            --max-time 120 \
+            --retry 5 \
+            --retry-delay 15 \
+            --retry-all-errors \
             https://ezbook-dz8b.onrender.com/health
+
+          status=$?
+          if [ "$status" -ne 0 ]; then
+            echo "::warning::Render health endpoint did not respond in time. Keepalive will not fail the workflow. curl exit code: $status"
+          fi
+
+          exit 0
